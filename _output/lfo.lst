@@ -1,0 +1,3088 @@
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.8.0 #5082 (Mar  9 2008) (MINGW32)
+               00004 ; This file was generated Thu Jul 10 15:16:03 2008
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008 
+               00009         .ident "SDCC version 2.8.0 #5082 [pic16 port]"
+               00010         .file   "lfo.c"
+               00011         list    p=18f4620
+               00012 
+               00013         radix dec
+               00014 
+               00015 ;--------------------------------------------------------
+               00016 ; public variables in this module
+               00017 ;--------------------------------------------------------
+               00018         global _save3
+               00019         global _LFO_Init
+               00020         global _LFO_Tick
+               00021         global _LFO_bpm
+               00022         global _lfo0_value
+               00023         global _lfo1_value
+               00024         global _lfo2_value
+               00025         global _LFO_bpm_tmp2
+               00026         global _save0
+               00027         global _save1
+               00028         global _save2
+               00029         global _lfox_bpm
+               00030         global _lfo_add_table
+               00031         global _lfo_add_table_bpm
+               00032 
+               00033 ;--------------------------------------------------------
+               00034 ; extern variables in this module
+               00035 ;--------------------------------------------------------
+               00036         extern _MIOS_BOX_CFG0
+               00037         extern _MIOS_BOX_CFG1
+               00038         extern _MIOS_BOX_STAT
+               00039         extern _MIOS_PARAMETER1
+               00040         extern _MIOS_PARAMETER2
+               00041         extern _MIOS_PARAMETER3
+               00042         extern _PORTAbits
+               00043         extern _PORTBbits
+               00044         extern _PORTCbits
+               00045         extern _PORTDbits
+               00046         extern _PORTEbits
+               00047         extern _LATAbits
+               00048         extern _LATBbits
+               00049         extern _LATCbits
+               00050         extern _LATDbits
+               00051         extern _LATEbits
+               00052         extern _TRISAbits
+               00053         extern _TRISBbits
+               00054         extern _TRISCbits
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _TRISDbits
+               00056         extern _TRISEbits
+               00057         extern _OSCTUNEbits
+               00058         extern _PIE1bits
+               00059         extern _PIR1bits
+               00060         extern _IPR1bits
+               00061         extern _PIE2bits
+               00062         extern _PIR2bits
+               00063         extern _IPR2bits
+               00064         extern _EECON1bits
+               00065         extern _RCSTAbits
+               00066         extern _TXSTAbits
+               00067         extern _T3CONbits
+               00068         extern _CMCONbits
+               00069         extern _CVRCONbits
+               00070         extern _ECCP1ASbits
+               00071         extern _PWM1CONbits
+               00072         extern _BAUDCONbits
+               00073         extern _CCP2CONbits
+               00074         extern _CCP1CONbits
+               00075         extern _ADCON2bits
+               00076         extern _ADCON1bits
+               00077         extern _ADCON0bits
+               00078         extern _SSPCON2bits
+               00079         extern _SSPCON1bits
+               00080         extern _SSPSTATbits
+               00081         extern _T2CONbits
+               00082         extern _T1CONbits
+               00083         extern _RCONbits
+               00084         extern _WDTCONbits
+               00085         extern _HLVDCONbits
+               00086         extern _OSCCONbits
+               00087         extern _T0CONbits
+               00088         extern _STATUSbits
+               00089         extern _FSR2Hbits
+               00090         extern _BSRbits
+               00091         extern _FSR1Hbits
+               00092         extern _FSR0Hbits
+               00093         extern _INTCON3bits
+               00094         extern _INTCON2bits
+               00095         extern _INTCONbits
+               00096         extern _TBLPTRUbits
+               00097         extern _PCLATHbits
+               00098         extern _PCLATUbits
+               00099         extern _STKPTRbits
+               00100         extern _TOSUbits
+               00101         extern _bank
+               00102         extern _preset
+               00103         extern _looper
+               00104         extern _app_flags
+               00105         extern _load_last
+               00106         extern _update_led
+               00107         extern _update_preset_led
+               00108         extern _midi_note
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _midi_cc_chn0
+               00110         extern _midi_pitch_bender
+               00111         extern _eg0
+               00112         extern _eg1
+               00113         extern _eg2
+               00114         extern _eg3
+               00115         extern _eg0_value
+               00116         extern _eg1_value
+               00117         extern _eg2_value
+               00118         extern _eg3_value
+               00119         extern _all_param
+               00120         extern _new_note
+               00121         extern _bpm
+               00122         extern _PORTA
+               00123         extern _PORTB
+               00124         extern _PORTC
+               00125         extern _PORTD
+               00126         extern _PORTE
+               00127         extern _LATA
+               00128         extern _LATB
+               00129         extern _LATC
+               00130         extern _LATD
+               00131         extern _LATE
+               00132         extern _TRISA
+               00133         extern _TRISB
+               00134         extern _TRISC
+               00135         extern _TRISD
+               00136         extern _TRISE
+               00137         extern _OSCTUNE
+               00138         extern _PIE1
+               00139         extern _PIR1
+               00140         extern _IPR1
+               00141         extern _PIE2
+               00142         extern _PIR2
+               00143         extern _IPR2
+               00144         extern _EECON1
+               00145         extern _EECON2
+               00146         extern _EEDATA
+               00147         extern _EEADR
+               00148         extern _RCSTA
+               00149         extern _TXSTA
+               00150         extern _TXREG
+               00151         extern _RCREG
+               00152         extern _SPBRG
+               00153         extern _SPBRGH
+               00154         extern _T3CON
+               00155         extern _TMR3L
+               00156         extern _TMR3H
+               00157         extern _CMCON
+               00158         extern _CVRCON
+               00159         extern _ECCP1AS
+               00160         extern _PWM1CON
+               00161         extern _BAUDCON
+               00162         extern _CCP2CON
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _CCPR2L
+               00164         extern _CCPR2H
+               00165         extern _CCP1CON
+               00166         extern _CCPR1L
+               00167         extern _CCPR1H
+               00168         extern _ADCON2
+               00169         extern _ADCON1
+               00170         extern _ADCON0
+               00171         extern _ADRESL
+               00172         extern _ADRESH
+               00173         extern _SSPCON2
+               00174         extern _SSPCON1
+               00175         extern _SSPSTAT
+               00176         extern _SSPADD
+               00177         extern _SSPBUF
+               00178         extern _T2CON
+               00179         extern _PR2
+               00180         extern _TMR2
+               00181         extern _T1CON
+               00182         extern _TMR1L
+               00183         extern _TMR1H
+               00184         extern _RCON
+               00185         extern _WDTCON
+               00186         extern _HLVDCON
+               00187         extern _OSCCON
+               00188         extern _T0CON
+               00189         extern _TMR0L
+               00190         extern _TMR0H
+               00191         extern _STATUS
+               00192         extern _FSR2L
+               00193         extern _FSR2H
+               00194         extern _PLUSW2
+               00195         extern _PREINC2
+               00196         extern _POSTDEC2
+               00197         extern _POSTINC2
+               00198         extern _INDF2
+               00199         extern _BSR
+               00200         extern _FSR1L
+               00201         extern _FSR1H
+               00202         extern _PLUSW1
+               00203         extern _PREINC1
+               00204         extern _POSTDEC1
+               00205         extern _POSTINC1
+               00206         extern _INDF1
+               00207         extern _WREG
+               00208         extern _FSR0L
+               00209         extern _FSR0H
+               00210         extern _PLUSW0
+               00211         extern _PREINC0
+               00212         extern _POSTDEC0
+               00213         extern _POSTINC0
+               00214         extern _INDF0
+               00215         extern _INTCON3
+               00216         extern _INTCON2
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _INTCON
+               00218         extern _PRODL
+               00219         extern _PRODH
+               00220         extern _TABLAT
+               00221         extern _TBLPTRL
+               00222         extern _TBLPTRH
+               00223         extern _TBLPTRU
+               00224         extern _PCL
+               00225         extern _PCLATH
+               00226         extern _PCLATU
+               00227         extern _STKPTR
+               00228         extern _TOSL
+               00229         extern _TOSH
+               00230         extern _TOSU
+               00231         extern _mios_enc_pin_table
+               00232         extern _mios_mproc_event_table
+               00233         extern _MIOS_MPROC_EVENT_TABLE
+               00234         extern _MIOS_ENC_PIN_TABLE
+               00235 ;--------------------------------------------------------
+               00236 ;       Equates to used internal registers
+               00237 ;--------------------------------------------------------
+  00000FD8     00238 STATUS  equ     0xfd8
+  00000FF9     00239 PCL     equ     0xff9
+  00000FFA     00240 PCLATH  equ     0xffa
+  00000FFB     00241 PCLATU  equ     0xffb
+  00000FE8     00242 WREG    equ     0xfe8
+  00000FF6     00243 TBLPTRL equ     0xff6
+  00000FF7     00244 TBLPTRH equ     0xff7
+  00000FF8     00245 TBLPTRU equ     0xff8
+  00000FF5     00246 TABLAT  equ     0xff5
+  00000FE9     00247 FSR1L equ 0xfe9 ;; normaly 0xfe1, changed by mios-gpasm
+  00000FD9     00248 FSR2L   equ     0xfd9
+  00000FED     00249 POSTDEC1 equ 0xfed ;; normaly 0xfe5, changed by mios-gpasm
+  00000FEC     00250 PREINC1 equ 0xfec ;; normaly 0xfe4, changed by mios-gpasm
+  00000FDB     00251 PLUSW2  equ     0xfdb
+               00252 
+               00253 
+               00254 ; Internal registers
+               00255 .registers udata_ovr 0x0010 ;; normaly 0x0000, changed by mios-gpasm
+               00256 r0x00   res     1
+               00257 r0x01   res     1
+               00258 r0x02   res     1
+               00259 r0x03   res     1
+               00260 r0x04   res     1
+               00261 
+               00262 
+               00263 gpr14   udata
+               00264 
+               00265 udata_lfo_0     udata
+               00266 _save3  res     1
+               00267 
+               00268 udata_lfo_1     udata
+               00269 _lfo0_value     res     2
+               00270 
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271 udata_lfo_2     udata
+               00272 _lfo1_value     res     2
+               00273 
+               00274 udata_lfo_3     udata
+               00275 _lfo2_value     res     2
+               00276 
+               00277 udata_lfo_4     udata
+               00278 _lfox_bpm       res     1
+               00279 
+               00280 udata_lfo_5     udata
+               00281 _save0  res     1
+               00282 
+               00283 udata_lfo_6     udata
+               00284 _save1  res     1
+               00285 
+               00286 udata_lfo_7     udata
+               00287 _save2  res     1
+               00288 
+               00289 udata_lfo_8     udata
+               00290 _LFO_bpm_tmp2   res     2
+               00291 
+               00292 udata_lfo_9     udata
+               00293 _LFO_bpm_LFO_bpm_tmp_1_1        res     2
+               00294 
+               00295 udata_lfo_10    udata
+               00296 _LFO_bpm_lfox_bpm_1_1   res     1
+               00297 
+               00298 ;--------------------------------------------------------
+               00299 ; global & static initialisations
+               00300 ;--------------------------------------------------------
+               00301 ; I code from now on!
+               00302 ; ; Starting pCode block
+               00303 S_lfo__LFO_bpm  code
+0000           00304 _LFO_bpm:
+               00305         .line   348; lfo.c      void LFO_bpm(volatile unsigned char lfox_bpm)
+0000 CFD9 FFED 00306         MOVFF   FSR2L, POSTDEC1
+0004 CFE9 FFD9 00307         MOVFF   FSR1L, FSR2L
+0008 C000 FFED 00308         MOVFF   r0x00, POSTDEC1
+000C C000 FFED 00309         MOVFF   r0x01, POSTDEC1
+0010 C000 FFED 00310         MOVFF   r0x02, POSTDEC1
+0014 0E02      00311         MOVLW   0x02
+0016 CFDB F000 00312         MOVFF   PLUSW2, _LFO_bpm_lfox_bpm_1_1
+               00313 ; ;multiply lit val:0x02 by variable (_all_param + 39) and store in r0x00
+               00314 ; ;Unrolled 8 X 8 multiplication
+               00315 ; ;FIXME: the function does not support result==WREG
+               00316         .line   354; lfo.c      LFO_bpm_tmp = lfo_add_table_bpm[all_param.bpm];
+001A 6A00      00317         CLRF    r0x01
+001C 90D8      00318         BCF     STATUS, 0
+001E 0000      00319         BANKSEL (_all_param + 39)
+0020 3500      00320         RLCF    (_all_param + 39), W, B
+0022 6E00      00321         MOVWF   r0x00
+0024 3600      00322         RLCF    r0x01, F
+0026 6A00      00323         CLRF    r0x02
+0028 0E00      00324         MOVLW   LOW(_lfo_add_table_bpm)
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+002A 2600      00325         ADDWF   r0x00, F
+002C 0E00      00326         MOVLW   HIGH(_lfo_add_table_bpm)
+002E 2200      00327         ADDWFC  r0x01, F
+0030 0E00      00328         MOVLW   UPPER(_lfo_add_table_bpm)
+0032 2200      00329         ADDWFC  r0x02, F
+0034 C000 FFF6 00330         MOVFF   r0x00, TBLPTRL
+0038 C000 FFF7 00331         MOVFF   r0x01, TBLPTRH
+003C C000 FFF8 00332         MOVFF   r0x02, TBLPTRU
+0040 0009      00333         TBLRD*+ 
+0042 CFF5 F000 00334         MOVFF   TABLAT, _LFO_bpm_LFO_bpm_tmp_1_1
+0046 0009      00335         TBLRD*+ 
+0048 CFF5 F000 00336         MOVFF   TABLAT, (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+               00337         .line   356; lfo.c      switch( lfox_bpm ) {
+004C C000 F000 00338         MOVFF   _LFO_bpm_lfox_bpm_1_1, r0x00
+0050 0E0B      00339         MOVLW   0x0b
+0052 5C00      00340         SUBWF   r0x00, W
+0054 B0D8      00341         BTFSC   STATUS, 0
+0056 D000      00342         BRA     _00391_DS_
+0058 C000 FFED 00343         MOVFF   r0x03, POSTDEC1
+005C C000 FFED 00344         MOVFF   r0x04, POSTDEC1
+0060 6A00      00345         CLRF    r0x04
+0062 3400      00346         RLCF    r0x00, W
+0064 3600      00347         RLCF    r0x04, F
+0066 34E8      00348         RLCF    WREG, W
+0068 3600      00349         RLCF    r0x04, F
+006A 0BFC      00350         ANDLW   0xfc
+006C 6E00      00351         MOVWF   r0x03
+006E 0E00      00352         MOVLW   UPPER(_00395_DS_)
+0070 6EFB      00353         MOVWF   PCLATU
+0072 0E00      00354         MOVLW   HIGH(_00395_DS_)
+0074 6EFA      00355         MOVWF   PCLATH
+0076 0E00      00356         MOVLW   LOW(_00395_DS_)
+0078 2600      00357         ADDWF   r0x03, F
+007A 5000      00358         MOVF    r0x04, W
+007C 22FA      00359         ADDWFC  PCLATH, F
+007E B0D8      00360         BTFSC   STATUS, 0
+0080 2AFB      00361         INCF    PCLATU, F
+0082 5000      00362         MOVF    r0x03, W
+0084 CFEC F000 00363         MOVFF   PREINC1, r0x04
+0088 CFEC F000 00364         MOVFF   PREINC1, r0x03
+008C 6EF9      00365         MOVWF   PCL
+008E           00366 _00395_DS_:
+008E EF00 F000 00367         GOTO    _00379_DS_
+0092 EF00 F000 00368         GOTO    _00380_DS_
+0096 EF00 F000 00369         GOTO    _00381_DS_
+009A EF00 F000 00370         GOTO    _00382_DS_
+009E EF00 F000 00371         GOTO    _00383_DS_
+00A2 EF00 F000 00372         GOTO    _00384_DS_
+00A6 EF00 F000 00373         GOTO    _00385_DS_
+00AA EF00 F000 00374         GOTO    _00386_DS_
+00AE EF00 F000 00375         GOTO    _00387_DS_
+00B2 EF00 F000 00376         GOTO    _00388_DS_
+00B6 EF00 F000 00377         GOTO    _00389_DS_
+00BA           00378 _00379_DS_:
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00BA 0000      00379         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+               00380         .line   359; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp << 6;
+00BC 3100      00381         RRCF    (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+00BE 0000      00382         BANKSEL (_LFO_bpm_tmp2 + 1)
+00C0 6F00      00383         MOVWF   (_LFO_bpm_tmp2 + 1), B
+               00384 ; removed redundant BANKSEL
+00C2 3100      00385         RRCF    _LFO_bpm_tmp2, W, B
+00C4 6F00      00386         MOVWF   _LFO_bpm_tmp2, B
+               00387 ; removed redundant BANKSEL
+00C6 3300      00388         RRCF    (_LFO_bpm_tmp2 + 1), F, B
+               00389 ; removed redundant BANKSEL
+00C8 3300      00390         RRCF    _LFO_bpm_tmp2, F, B
+               00391 ; removed redundant BANKSEL
+00CA 3100      00392         RRCF    (_LFO_bpm_tmp2 + 1), W, B
+00CC 0BC0      00393         ANDLW   0xc0
+               00394 ; removed redundant BANKSEL
+00CE 1900      00395         XORWF   _LFO_bpm_tmp2, W, B
+00D0 1B00      00396         XORWF   _LFO_bpm_tmp2, F, B
+00D2 1900      00397         XORWF   _LFO_bpm_tmp2, W, B
+               00398 ; removed redundant BANKSEL
+00D4 6F00      00399         MOVWF   (_LFO_bpm_tmp2 + 1), B
+               00400         .line   360; lfo.c      break;
+00D6 D000      00401         BRA     _00391_DS_
+00D8           00402 _00380_DS_:
+00D8 0000      00403         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+               00404         .line   362; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp << 5;
+00DA 3900      00405         SWAPF   (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+00DC 0BF0      00406         ANDLW   0xf0
+00DE 0000      00407         BANKSEL (_LFO_bpm_tmp2 + 1)
+00E0 6F00      00408         MOVWF   (_LFO_bpm_tmp2 + 1), B
+00E2 0000      00409         BANKSEL _LFO_bpm_LFO_bpm_tmp_1_1
+00E4 3900      00410         SWAPF   _LFO_bpm_LFO_bpm_tmp_1_1, W, B
+00E6 0000      00411         BANKSEL _LFO_bpm_tmp2
+00E8 6F00      00412         MOVWF   _LFO_bpm_tmp2, B
+00EA 0B0F      00413         ANDLW   0x0f
+               00414 ; removed redundant BANKSEL
+00EC 1B00      00415         XORWF   _LFO_bpm_tmp2, F, B
+               00416 ; removed redundant BANKSEL
+00EE 2700      00417         ADDWF   (_LFO_bpm_tmp2 + 1), F, B
+               00418 ; removed redundant BANKSEL
+00F0 3700      00419         RLCF    _LFO_bpm_tmp2, F, B
+               00420 ; removed redundant BANKSEL
+00F2 3700      00421         RLCF    (_LFO_bpm_tmp2 + 1), F, B
+               00422         .line   363; lfo.c      break;
+00F4 D000      00423         BRA     _00391_DS_
+00F6           00424 _00381_DS_:
+00F6 0000      00425         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+               00426         .line   365; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp << 4;
+00F8 3900      00427         SWAPF   (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+00FA 0BF0      00428         ANDLW   0xf0
+00FC 0000      00429         BANKSEL (_LFO_bpm_tmp2 + 1)
+00FE 6F00      00430         MOVWF   (_LFO_bpm_tmp2 + 1), B
+0100 0000      00431         BANKSEL _LFO_bpm_LFO_bpm_tmp_1_1
+0102 3900      00432         SWAPF   _LFO_bpm_LFO_bpm_tmp_1_1, W, B
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0104 0000      00433         BANKSEL _LFO_bpm_tmp2
+0106 6F00      00434         MOVWF   _LFO_bpm_tmp2, B
+0108 0B0F      00435         ANDLW   0x0f
+               00436 ; removed redundant BANKSEL
+010A 1B00      00437         XORWF   _LFO_bpm_tmp2, F, B
+               00438 ; removed redundant BANKSEL
+010C 2700      00439         ADDWF   (_LFO_bpm_tmp2 + 1), F, B
+               00440         .line   366; lfo.c      break;
+010E D000      00441         BRA     _00391_DS_
+0110           00442 _00382_DS_:
+0110 0000      00443         BANKSEL _LFO_bpm_LFO_bpm_tmp_1_1
+               00444         .line   368; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp << 3;
+0112 5100      00445         MOVF    _LFO_bpm_LFO_bpm_tmp_1_1, W, B
+0114 0000      00446         BANKSEL _LFO_bpm_tmp2
+0116 6F00      00447         MOVWF   _LFO_bpm_tmp2, B
+0118 2700      00448         ADDWF   _LFO_bpm_tmp2, F, B
+011A 0000      00449         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+011C 3500      00450         RLCF    (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+011E 0000      00451         BANKSEL (_LFO_bpm_tmp2 + 1)
+0120 6F00      00452         MOVWF   (_LFO_bpm_tmp2 + 1), B
+0122 90D8      00453         BCF     STATUS, 0
+               00454 ; removed redundant BANKSEL
+0124 3700      00455         RLCF    _LFO_bpm_tmp2, F, B
+               00456 ; removed redundant BANKSEL
+0126 3700      00457         RLCF    (_LFO_bpm_tmp2 + 1), F, B
+0128 90D8      00458         BCF     STATUS, 0
+               00459 ; removed redundant BANKSEL
+012A 3700      00460         RLCF    _LFO_bpm_tmp2, F, B
+               00461 ; removed redundant BANKSEL
+012C 3700      00462         RLCF    (_LFO_bpm_tmp2 + 1), F, B
+               00463         .line   369; lfo.c      break;
+012E D000      00464         BRA     _00391_DS_
+0130           00465 _00383_DS_:
+0130 0000      00466         BANKSEL _LFO_bpm_LFO_bpm_tmp_1_1
+               00467         .line   371; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp << 2;
+0132 5100      00468         MOVF    _LFO_bpm_LFO_bpm_tmp_1_1, W, B
+0134 0000      00469         BANKSEL _LFO_bpm_tmp2
+0136 6F00      00470         MOVWF   _LFO_bpm_tmp2, B
+0138 2700      00471         ADDWF   _LFO_bpm_tmp2, F, B
+013A 0000      00472         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+013C 3500      00473         RLCF    (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+013E 0000      00474         BANKSEL (_LFO_bpm_tmp2 + 1)
+0140 6F00      00475         MOVWF   (_LFO_bpm_tmp2 + 1), B
+0142 90D8      00476         BCF     STATUS, 0
+               00477 ; removed redundant BANKSEL
+0144 3700      00478         RLCF    _LFO_bpm_tmp2, F, B
+               00479 ; removed redundant BANKSEL
+0146 3700      00480         RLCF    (_LFO_bpm_tmp2 + 1), F, B
+               00481         .line   372; lfo.c      break;
+0148 D000      00482         BRA     _00391_DS_
+014A           00483 _00384_DS_:
+014A 0000      00484         BANKSEL _LFO_bpm_LFO_bpm_tmp_1_1
+               00485         .line   374; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp << 1;
+014C 5100      00486         MOVF    _LFO_bpm_LFO_bpm_tmp_1_1, W, B
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+014E 0000      00487         BANKSEL _LFO_bpm_tmp2
+0150 6F00      00488         MOVWF   _LFO_bpm_tmp2, B
+0152 2700      00489         ADDWF   _LFO_bpm_tmp2, F, B
+0154 0000      00490         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+0156 3500      00491         RLCF    (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+0158 0000      00492         BANKSEL (_LFO_bpm_tmp2 + 1)
+015A 6F00      00493         MOVWF   (_LFO_bpm_tmp2 + 1), B
+               00494         .line   375; lfo.c      break;
+015C D000      00495         BRA     _00391_DS_
+015E           00496 _00385_DS_:
+015E 0000      00497         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+               00498         .line   377; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp << 0;
+0160 5100      00499         MOVF    (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+0162 0000      00500         BANKSEL (_LFO_bpm_tmp2 + 1)
+0164 6F00      00501         MOVWF   (_LFO_bpm_tmp2 + 1), B
+0166 0000      00502         BANKSEL _LFO_bpm_LFO_bpm_tmp_1_1
+0168 5100      00503         MOVF    _LFO_bpm_LFO_bpm_tmp_1_1, W, B
+016A 0000      00504         BANKSEL _LFO_bpm_tmp2
+016C 6F00      00505         MOVWF   _LFO_bpm_tmp2, B
+               00506         .line   378; lfo.c      break;
+016E D000      00507         BRA     _00391_DS_
+0170           00508 _00386_DS_:
+               00509         .line   380; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp >> 1;
+0170 90D8      00510         BCF     STATUS, 0
+0172 0000      00511         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+0174 3100      00512         RRCF    (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+0176 0000      00513         BANKSEL (_LFO_bpm_tmp2 + 1)
+0178 6F00      00514         MOVWF   (_LFO_bpm_tmp2 + 1), B
+017A 0000      00515         BANKSEL _LFO_bpm_LFO_bpm_tmp_1_1
+017C 3100      00516         RRCF    _LFO_bpm_LFO_bpm_tmp_1_1, W, B
+017E 0000      00517         BANKSEL _LFO_bpm_tmp2
+0180 6F00      00518         MOVWF   _LFO_bpm_tmp2, B
+               00519         .line   381; lfo.c      break;
+0182 D000      00520         BRA     _00391_DS_
+0184           00521 _00387_DS_:
+               00522         .line   383; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp >> 2;
+0184 90D8      00523         BCF     STATUS, 0
+0186 0000      00524         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+0188 3100      00525         RRCF    (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+018A 0000      00526         BANKSEL (_LFO_bpm_tmp2 + 1)
+018C 6F00      00527         MOVWF   (_LFO_bpm_tmp2 + 1), B
+018E 0000      00528         BANKSEL _LFO_bpm_LFO_bpm_tmp_1_1
+0190 3100      00529         RRCF    _LFO_bpm_LFO_bpm_tmp_1_1, W, B
+0192 0000      00530         BANKSEL _LFO_bpm_tmp2
+0194 6F00      00531         MOVWF   _LFO_bpm_tmp2, B
+0196 90D8      00532         BCF     STATUS, 0
+               00533 ; removed redundant BANKSEL
+0198 3300      00534         RRCF    (_LFO_bpm_tmp2 + 1), F, B
+               00535 ; removed redundant BANKSEL
+019A 3300      00536         RRCF    _LFO_bpm_tmp2, F, B
+               00537         .line   384; lfo.c      break;
+019C D000      00538         BRA     _00391_DS_
+019E           00539 _00388_DS_:
+               00540         .line   386; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp >> 3;
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+019E 90D8      00541         BCF     STATUS, 0
+01A0 0000      00542         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+01A2 3100      00543         RRCF    (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+01A4 0000      00544         BANKSEL (_LFO_bpm_tmp2 + 1)
+01A6 6F00      00545         MOVWF   (_LFO_bpm_tmp2 + 1), B
+01A8 0000      00546         BANKSEL _LFO_bpm_LFO_bpm_tmp_1_1
+01AA 3100      00547         RRCF    _LFO_bpm_LFO_bpm_tmp_1_1, W, B
+01AC 0000      00548         BANKSEL _LFO_bpm_tmp2
+01AE 6F00      00549         MOVWF   _LFO_bpm_tmp2, B
+01B0 90D8      00550         BCF     STATUS, 0
+               00551 ; removed redundant BANKSEL
+01B2 3300      00552         RRCF    (_LFO_bpm_tmp2 + 1), F, B
+               00553 ; removed redundant BANKSEL
+01B4 3300      00554         RRCF    _LFO_bpm_tmp2, F, B
+01B6 90D8      00555         BCF     STATUS, 0
+               00556 ; removed redundant BANKSEL
+01B8 3300      00557         RRCF    (_LFO_bpm_tmp2 + 1), F, B
+               00558 ; removed redundant BANKSEL
+01BA 3300      00559         RRCF    _LFO_bpm_tmp2, F, B
+               00560         .line   387; lfo.c      break;
+01BC D000      00561         BRA     _00391_DS_
+01BE           00562 _00389_DS_:
+01BE 0000      00563         BANKSEL _LFO_bpm_LFO_bpm_tmp_1_1
+               00564         .line   389; lfo.c      LFO_bpm_tmp2 = LFO_bpm_tmp >> 4;
+01C0 3900      00565         SWAPF   _LFO_bpm_LFO_bpm_tmp_1_1, W, B
+01C2 0B0F      00566         ANDLW   0x0f
+01C4 0000      00567         BANKSEL _LFO_bpm_tmp2
+01C6 6F00      00568         MOVWF   _LFO_bpm_tmp2, B
+01C8 0000      00569         BANKSEL (_LFO_bpm_LFO_bpm_tmp_1_1 + 1)
+01CA 3900      00570         SWAPF   (_LFO_bpm_LFO_bpm_tmp_1_1 + 1), W, B
+01CC 0000      00571         BANKSEL (_LFO_bpm_tmp2 + 1)
+01CE 6F00      00572         MOVWF   (_LFO_bpm_tmp2 + 1), B
+01D0 0BF0      00573         ANDLW   0xf0
+               00574 ; removed redundant BANKSEL
+01D2 1B00      00575         XORWF   (_LFO_bpm_tmp2 + 1), F, B
+               00576 ; removed redundant BANKSEL
+01D4 2700      00577         ADDWF   _LFO_bpm_tmp2, F, B
+01D6           00578 _00391_DS_:
+               00579         .line   391; lfo.c      }
+01D6 CFEC F000 00580         MOVFF   PREINC1, r0x02
+01DA CFEC F000 00581         MOVFF   PREINC1, r0x01
+01DE CFEC F000 00582         MOVFF   PREINC1, r0x00
+01E2 CFEC FFD9 00583         MOVFF   PREINC1, FSR2L
+01E6 0012      00584         RETURN  
+               00585 
+               00586 ; ; Starting pCode block
+               00587 S_lfo__LFO_Tick code
+0000           00588 _LFO_Tick:
+               00589         .line   84; lfo.c       void LFO_Tick(void)
+0000 C000 FFED 00590         MOVFF   r0x00, POSTDEC1
+0004 C000 FFED 00591         MOVFF   r0x01, POSTDEC1
+0008 C000 FFED 00592         MOVFF   r0x02, POSTDEC1
+000C 0000      00593         BANKSEL _all_param
+               00594         .line   93; lfo.c       if( all_param.router_flags_lfo1.lfo1_note_start ) {
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+000E AB00      00595         BTFSS   _all_param, 5, B
+0010 D000      00596         BRA     _00112_DS_
+0012 0000      00597         BANKSEL _new_note
+               00598         .line   94; lfo.c       if( new_note ) {
+0014 5100      00599         MOVF    _new_note, W, B
+0016 E000      00600         BZ      _00112_DS_
+0018 0000      00601         BANKSEL _lfo0_value
+               00602         .line   95; lfo.c       lfo0_value = 0;
+001A 6B00      00603         CLRF    _lfo0_value, B
+               00604 ; removed redundant BANKSEL
+001C 6B00      00605         CLRF    (_lfo0_value + 1), B
+               00606         .line   96; lfo.c       new_note ^= 1; } }
+001E 0E01      00607         MOVLW   0x01
+0020 0000      00608         BANKSEL _new_note
+0022 1B00      00609         XORWF   _new_note, F, B
+0024           00610 _00112_DS_:
+0024 0000      00611         BANKSEL (_all_param + 32)
+               00612         .line   99; lfo.c       if( all_param.lfo0_rate > 0 ) {
+0026 5100      00613         MOVF    (_all_param + 32), W, B
+0028 B4D8      00614         BTFSC   STATUS, 2
+002A EF00 F000 00615         GOTO    _00145_DS_
+               00616 ; removed redundant BANKSEL
+               00617         .line   101; lfo.c      if( all_param.router_flags_lfo1.lfo1_sync_bpm ) {
+002E AD00      00618         BTFSS   _all_param, 6, B
+0030 D000      00619         BRA     _00142_DS_
+               00620         .line   103; lfo.c      lfox_bpm = all_param.lfo0_bpm;
+0032 C000 F000 00621         MOVFF   (_all_param + 35), _lfox_bpm
+0036 0000      00622         BANKSEL _lfox_bpm
+               00623         .line   104; lfo.c      LFO_bpm(lfox_bpm);
+0038 5100      00624         MOVF    _lfox_bpm, W, B
+003A 6EED      00625         MOVWF   POSTDEC1
+003C EC00 F000 00626         CALL    _LFO_bpm
+0040 2AE9      00627         INCF    FSR1L, F
+0042 0000      00628         BANKSEL (_all_param + 8)
+               00629         .line   106; lfo.c      switch( all_param.router_flags_Eg_to_lfo1.Eg_to_lfo1 ) {
+0044 5100      00630         MOVF    (_all_param + 8), W, B
+0046 0B0F      00631         ANDLW   0x0f
+0048 6E00      00632         MOVWF   r0x00
+004A C000 F000 00633         MOVFF   r0x00, r0x01
+004E 5000      00634         MOVF    r0x01, W
+0050 E000      00635         BZ      _00113_DS_
+0052 C000 F000 00636         MOVFF   r0x00, r0x01
+0056 5000      00637         MOVF    r0x01, W
+0058 0A01      00638         XORLW   0x01
+005A E000      00639         BZ      _00114_DS_
+005C C000 F000 00640         MOVFF   r0x00, r0x01
+0060 5000      00641         MOVF    r0x01, W
+0062 0A02      00642         XORLW   0x02
+0064 E100      00643         BNZ     _00294_DS_
+0066 D000      00644         BRA     _00117_DS_
+0068           00645 _00294_DS_:
+0068 C000 F000 00646         MOVFF   r0x00, r0x01
+006C 5000      00647         MOVF    r0x01, W
+006E 0A04      00648         XORLW   0x04
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0070 E100      00649         BNZ     _00296_DS_
+0072 D000      00650         BRA     _00120_DS_
+0074           00651 _00296_DS_:
+0074 5000      00652         MOVF    r0x00, W
+0076 0A08      00653         XORLW   0x08
+0078 E100      00654         BNZ     _00298_DS_
+007A D000      00655         BRA     _00123_DS_
+007C           00656 _00298_DS_:
+007C D000      00657         BRA     _00145_DS_
+007E           00658 _00113_DS_:
+007E 0000      00659         BANKSEL _LFO_bpm_tmp2
+               00660         .line   108; lfo.c      lfo0_value += LFO_bpm_tmp2;
+0080 5100      00661         MOVF    _LFO_bpm_tmp2, W, B
+0082 0000      00662         BANKSEL _lfo0_value
+0084 2700      00663         ADDWF   _lfo0_value, F, B
+0086 0000      00664         BANKSEL (_LFO_bpm_tmp2 + 1)
+0088 5100      00665         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+008A 0000      00666         BANKSEL (_lfo0_value + 1)
+008C 2300      00667         ADDWFC  (_lfo0_value + 1), F, B
+               00668         .line   109; lfo.c      break;
+008E D000      00669         BRA     _00145_DS_
+0090           00670 _00114_DS_:
+               00671         .line   111; lfo.c      lfo0_value = save0;
+0090 C000 F000 00672         MOVFF   _save0, _lfo0_value
+0094 0000      00673         BANKSEL (_lfo0_value + 1)
+0096 6B00      00674         CLRF    (_lfo0_value + 1), B
+0098 0000      00675         BANKSEL _LFO_bpm_tmp2
+               00676         .line   112; lfo.c      lfo0_value += LFO_bpm_tmp2;
+009A 5100      00677         MOVF    _LFO_bpm_tmp2, W, B
+009C 0000      00678         BANKSEL _lfo0_value
+009E 2700      00679         ADDWF   _lfo0_value, F, B
+00A0 0000      00680         BANKSEL (_LFO_bpm_tmp2 + 1)
+00A2 5100      00681         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+00A4 0000      00682         BANKSEL (_lfo0_value + 1)
+00A6 2300      00683         ADDWFC  (_lfo0_value + 1), F, B
+00A8 0000      00684         BANKSEL (_eg0_value + 1)
+               00685         .line   113; lfo.c      if( lfo0_value >= eg0_value ) {
+00AA 5100      00686         MOVF    (_eg0_value + 1), W, B
+00AC 0000      00687         BANKSEL (_lfo0_value + 1)
+00AE 5D00      00688         SUBWF   (_lfo0_value + 1), W, B
+00B0 E100      00689         BNZ     _00299_DS_
+00B2 0000      00690         BANKSEL _eg0_value
+00B4 5100      00691         MOVF    _eg0_value, W, B
+00B6 0000      00692         BANKSEL _lfo0_value
+00B8 5D00      00693         SUBWF   _lfo0_value, W, B
+00BA           00694 _00299_DS_:
+00BA E300      00695         BNC     _00117_DS_
+00BC 0000      00696         BANKSEL _lfo0_value
+               00697         .line   114; lfo.c      save0 = lfo0_value;
+00BE 5100      00698         MOVF    _lfo0_value, W, B
+00C0 0000      00699         BANKSEL _save0
+00C2 6F00      00700         MOVWF   _save0, B
+               00701         .line   115; lfo.c      lfo0_value = eg0_value;
+00C4 C000 F000 00702         MOVFF   _eg0_value, _lfo0_value
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00C8 C000 F000 00703         MOVFF   (_eg0_value + 1), (_lfo0_value + 1)
+               00704         .line   116; lfo.c      break;}
+00CC D000      00705         BRA     _00145_DS_
+00CE           00706 _00117_DS_:
+               00707         .line   118; lfo.c      lfo0_value = save0;
+00CE C000 F000 00708         MOVFF   _save0, _lfo0_value
+00D2 0000      00709         BANKSEL (_lfo0_value + 1)
+00D4 6B00      00710         CLRF    (_lfo0_value + 1), B
+00D6 0000      00711         BANKSEL _LFO_bpm_tmp2
+               00712         .line   119; lfo.c      lfo0_value += LFO_bpm_tmp2;
+00D8 5100      00713         MOVF    _LFO_bpm_tmp2, W, B
+00DA 0000      00714         BANKSEL _lfo0_value
+00DC 2700      00715         ADDWF   _lfo0_value, F, B
+00DE 0000      00716         BANKSEL (_LFO_bpm_tmp2 + 1)
+00E0 5100      00717         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+00E2 0000      00718         BANKSEL (_lfo0_value + 1)
+00E4 2300      00719         ADDWFC  (_lfo0_value + 1), F, B
+00E6 0000      00720         BANKSEL (_eg1_value + 1)
+               00721         .line   120; lfo.c      if( lfo0_value >= eg1_value ) {
+00E8 5100      00722         MOVF    (_eg1_value + 1), W, B
+00EA 0000      00723         BANKSEL (_lfo0_value + 1)
+00EC 5D00      00724         SUBWF   (_lfo0_value + 1), W, B
+00EE E100      00725         BNZ     _00300_DS_
+00F0 0000      00726         BANKSEL _eg1_value
+00F2 5100      00727         MOVF    _eg1_value, W, B
+00F4 0000      00728         BANKSEL _lfo0_value
+00F6 5D00      00729         SUBWF   _lfo0_value, W, B
+00F8           00730 _00300_DS_:
+00F8 E300      00731         BNC     _00120_DS_
+00FA 0000      00732         BANKSEL _lfo0_value
+               00733         .line   121; lfo.c      save0 = lfo0_value;
+00FC 5100      00734         MOVF    _lfo0_value, W, B
+00FE 0000      00735         BANKSEL _save0
+0100 6F00      00736         MOVWF   _save0, B
+               00737         .line   122; lfo.c      lfo0_value = eg1_value;
+0102 C000 F000 00738         MOVFF   _eg1_value, _lfo0_value
+0106 C000 F000 00739         MOVFF   (_eg1_value + 1), (_lfo0_value + 1)
+               00740         .line   123; lfo.c      break; }
+010A D000      00741         BRA     _00145_DS_
+010C           00742 _00120_DS_:
+               00743         .line   125; lfo.c      lfo0_value = save0;
+010C C000 F000 00744         MOVFF   _save0, _lfo0_value
+0110 0000      00745         BANKSEL (_lfo0_value + 1)
+0112 6B00      00746         CLRF    (_lfo0_value + 1), B
+0114 0000      00747         BANKSEL _LFO_bpm_tmp2
+               00748         .line   126; lfo.c      lfo0_value += LFO_bpm_tmp2;
+0116 5100      00749         MOVF    _LFO_bpm_tmp2, W, B
+0118 0000      00750         BANKSEL _lfo0_value
+011A 2700      00751         ADDWF   _lfo0_value, F, B
+011C 0000      00752         BANKSEL (_LFO_bpm_tmp2 + 1)
+011E 5100      00753         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+0120 0000      00754         BANKSEL (_lfo0_value + 1)
+0122 2300      00755         ADDWFC  (_lfo0_value + 1), F, B
+0124 0000      00756         BANKSEL (_eg2_value + 1)
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00757         .line   127; lfo.c      if( lfo0_value >= eg2_value ) {
+0126 5100      00758         MOVF    (_eg2_value + 1), W, B
+0128 0000      00759         BANKSEL (_lfo0_value + 1)
+012A 5D00      00760         SUBWF   (_lfo0_value + 1), W, B
+012C E100      00761         BNZ     _00301_DS_
+012E 0000      00762         BANKSEL _eg2_value
+0130 5100      00763         MOVF    _eg2_value, W, B
+0132 0000      00764         BANKSEL _lfo0_value
+0134 5D00      00765         SUBWF   _lfo0_value, W, B
+0136           00766 _00301_DS_:
+0136 A0D8      00767         BTFSS   STATUS, 0
+0138 D000      00768         BRA     _00145_DS_
+013A 0000      00769         BANKSEL _lfo0_value
+               00770         .line   128; lfo.c      save0 = lfo0_value;
+013C 5100      00771         MOVF    _lfo0_value, W, B
+013E 0000      00772         BANKSEL _save0
+0140 6F00      00773         MOVWF   _save0, B
+               00774         .line   129; lfo.c      lfo0_value = eg2_value; }
+0142 C000 F000 00775         MOVFF   _eg2_value, _lfo0_value
+0146 C000 F000 00776         MOVFF   (_eg2_value + 1), (_lfo0_value + 1)
+               00777         .line   130; lfo.c      break;
+014A D000      00778         BRA     _00145_DS_
+014C           00779 _00123_DS_:
+               00780         .line   132; lfo.c      lfo0_value = save0;
+014C C000 F000 00781         MOVFF   _save0, _lfo0_value
+0150 0000      00782         BANKSEL (_lfo0_value + 1)
+0152 6B00      00783         CLRF    (_lfo0_value + 1), B
+0154 0000      00784         BANKSEL _LFO_bpm_tmp2
+               00785         .line   133; lfo.c      lfo0_value += LFO_bpm_tmp2;
+0156 5100      00786         MOVF    _LFO_bpm_tmp2, W, B
+0158 0000      00787         BANKSEL _lfo0_value
+015A 2700      00788         ADDWF   _lfo0_value, F, B
+015C 0000      00789         BANKSEL (_LFO_bpm_tmp2 + 1)
+015E 5100      00790         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+0160 0000      00791         BANKSEL (_lfo0_value + 1)
+0162 2300      00792         ADDWFC  (_lfo0_value + 1), F, B
+0164 0000      00793         BANKSEL (_eg3_value + 1)
+               00794         .line   134; lfo.c      if( lfo0_value >= eg3_value ) {
+0166 5100      00795         MOVF    (_eg3_value + 1), W, B
+0168 0000      00796         BANKSEL (_lfo0_value + 1)
+016A 5D00      00797         SUBWF   (_lfo0_value + 1), W, B
+016C E100      00798         BNZ     _00302_DS_
+016E 0000      00799         BANKSEL _eg3_value
+0170 5100      00800         MOVF    _eg3_value, W, B
+0172 0000      00801         BANKSEL _lfo0_value
+0174 5D00      00802         SUBWF   _lfo0_value, W, B
+0176           00803 _00302_DS_:
+0176 A0D8      00804         BTFSS   STATUS, 0
+0178 D000      00805         BRA     _00145_DS_
+017A 0000      00806         BANKSEL _lfo0_value
+               00807         .line   135; lfo.c      save0 = lfo0_value;
+017C 5100      00808         MOVF    _lfo0_value, W, B
+017E 0000      00809         BANKSEL _save0
+0180 6F00      00810         MOVWF   _save0, B
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00811         .line   136; lfo.c      lfo0_value = eg3_value; }
+0182 C000 F000 00812         MOVFF   _eg3_value, _lfo0_value
+0186 C000 F000 00813         MOVFF   (_eg3_value + 1), (_lfo0_value + 1)
+               00814         .line   138; lfo.c      }
+018A D000      00815         BRA     _00145_DS_
+018C           00816 _00142_DS_:
+018C 0000      00817         BANKSEL (_all_param + 8)
+               00818         .line   141; lfo.c      switch( all_param.router_flags_Eg_to_lfo1.Eg_to_lfo1 ) {
+018E 5100      00819         MOVF    (_all_param + 8), W, B
+0190 0B0F      00820         ANDLW   0x0f
+0192 6E00      00821         MOVWF   r0x00
+0194 C000 F000 00822         MOVFF   r0x00, r0x01
+0198 5000      00823         MOVF    r0x01, W
+019A E000      00824         BZ      _00127_DS_
+019C C000 F000 00825         MOVFF   r0x00, r0x01
+01A0 5000      00826         MOVF    r0x01, W
+01A2 0A01      00827         XORLW   0x01
+01A4 E000      00828         BZ      _00128_DS_
+01A6 C000 F000 00829         MOVFF   r0x00, r0x01
+01AA 5000      00830         MOVF    r0x01, W
+01AC 0A02      00831         XORLW   0x02
+01AE E100      00832         BNZ     _00308_DS_
+01B0 D000      00833         BRA     _00131_DS_
+01B2           00834 _00308_DS_:
+01B2 C000 F000 00835         MOVFF   r0x00, r0x01
+01B6 5000      00836         MOVF    r0x01, W
+01B8 0A04      00837         XORLW   0x04
+01BA E100      00838         BNZ     _00310_DS_
+01BC D000      00839         BRA     _00134_DS_
+01BE           00840 _00310_DS_:
+01BE 5000      00841         MOVF    r0x00, W
+01C0 0A08      00842         XORLW   0x08
+01C2 E100      00843         BNZ     _00312_DS_
+01C4 D000      00844         BRA     _00137_DS_
+01C6           00845 _00312_DS_:
+01C6 D000      00846         BRA     _00145_DS_
+               00847 ; ;multiply lit val:0x02 by variable (_all_param + 32) and store in r0x00
+               00848 ; ;Unrolled 8 X 8 multiplication
+               00849 ; ;FIXME: the function does not support result==WREG
+01C8           00850 _00127_DS_:
+               00851         .line   143; lfo.c      lfo0_value += lfo_add_table[all_param.lfo0_rate];
+01C8 6A00      00852         CLRF    r0x01
+01CA 90D8      00853         BCF     STATUS, 0
+01CC 0000      00854         BANKSEL (_all_param + 32)
+01CE 3500      00855         RLCF    (_all_param + 32), W, B
+01D0 6E00      00856         MOVWF   r0x00
+01D2 3600      00857         RLCF    r0x01, F
+01D4 6A00      00858         CLRF    r0x02
+01D6 0E00      00859         MOVLW   LOW(_lfo_add_table)
+01D8 2600      00860         ADDWF   r0x00, F
+01DA 0E00      00861         MOVLW   HIGH(_lfo_add_table)
+01DC 2200      00862         ADDWFC  r0x01, F
+01DE 0E00      00863         MOVLW   UPPER(_lfo_add_table)
+01E0 2200      00864         ADDWFC  r0x02, F
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01E2 C000 FFF6 00865         MOVFF   r0x00, TBLPTRL
+01E6 C000 FFF7 00866         MOVFF   r0x01, TBLPTRH
+01EA C000 FFF8 00867         MOVFF   r0x02, TBLPTRU
+01EE 0009      00868         TBLRD*+ 
+01F0 CFF5 F000 00869         MOVFF   TABLAT, r0x00
+01F4 0009      00870         TBLRD*+ 
+01F6 CFF5 F000 00871         MOVFF   TABLAT, r0x01
+01FA 5000      00872         MOVF    r0x00, W
+01FC 0000      00873         BANKSEL _lfo0_value
+01FE 2700      00874         ADDWF   _lfo0_value, F, B
+0200 5000      00875         MOVF    r0x01, W
+               00876 ; removed redundant BANKSEL
+0202 2300      00877         ADDWFC  (_lfo0_value + 1), F, B
+               00878         .line   144; lfo.c      break;
+0204 D000      00879         BRA     _00145_DS_
+0206           00880 _00128_DS_:
+               00881         .line   146; lfo.c      lfo0_value = save0;
+0206 C000 F000 00882         MOVFF   _save0, _lfo0_value
+020A 0000      00883         BANKSEL (_lfo0_value + 1)
+020C 6B00      00884         CLRF    (_lfo0_value + 1), B
+               00885 ; ;multiply lit val:0x02 by variable (_all_param + 32) and store in r0x00
+               00886 ; ;Unrolled 8 X 8 multiplication
+               00887 ; ;FIXME: the function does not support result==WREG
+               00888         .line   147; lfo.c      lfo0_value += lfo_add_table[all_param.lfo0_rate];
+020E 6A00      00889         CLRF    r0x01
+0210 90D8      00890         BCF     STATUS, 0
+0212 0000      00891         BANKSEL (_all_param + 32)
+0214 3500      00892         RLCF    (_all_param + 32), W, B
+0216 6E00      00893         MOVWF   r0x00
+0218 3600      00894         RLCF    r0x01, F
+021A 6A00      00895         CLRF    r0x02
+021C 0E00      00896         MOVLW   LOW(_lfo_add_table)
+021E 2600      00897         ADDWF   r0x00, F
+0220 0E00      00898         MOVLW   HIGH(_lfo_add_table)
+0222 2200      00899         ADDWFC  r0x01, F
+0224 0E00      00900         MOVLW   UPPER(_lfo_add_table)
+0226 2200      00901         ADDWFC  r0x02, F
+0228 C000 FFF6 00902         MOVFF   r0x00, TBLPTRL
+022C C000 FFF7 00903         MOVFF   r0x01, TBLPTRH
+0230 C000 FFF8 00904         MOVFF   r0x02, TBLPTRU
+0234 0009      00905         TBLRD*+ 
+0236 CFF5 F000 00906         MOVFF   TABLAT, r0x00
+023A 0009      00907         TBLRD*+ 
+023C CFF5 F000 00908         MOVFF   TABLAT, r0x01
+0240 5000      00909         MOVF    r0x00, W
+0242 0000      00910         BANKSEL _lfo0_value
+0244 2700      00911         ADDWF   _lfo0_value, F, B
+0246 5000      00912         MOVF    r0x01, W
+               00913 ; removed redundant BANKSEL
+0248 2300      00914         ADDWFC  (_lfo0_value + 1), F, B
+024A 0000      00915         BANKSEL (_eg0_value + 1)
+               00916         .line   148; lfo.c      if( lfo0_value >= eg0_value ) {
+024C 5100      00917         MOVF    (_eg0_value + 1), W, B
+024E 0000      00918         BANKSEL (_lfo0_value + 1)
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0250 5D00      00919         SUBWF   (_lfo0_value + 1), W, B
+0252 E100      00920         BNZ     _00313_DS_
+0254 0000      00921         BANKSEL _eg0_value
+0256 5100      00922         MOVF    _eg0_value, W, B
+0258 0000      00923         BANKSEL _lfo0_value
+025A 5D00      00924         SUBWF   _lfo0_value, W, B
+025C           00925 _00313_DS_:
+025C E300      00926         BNC     _00131_DS_
+025E 0000      00927         BANKSEL _lfo0_value
+               00928         .line   149; lfo.c      save0 = lfo0_value;
+0260 5100      00929         MOVF    _lfo0_value, W, B
+0262 0000      00930         BANKSEL _save0
+0264 6F00      00931         MOVWF   _save0, B
+               00932         .line   150; lfo.c      lfo0_value = eg0_value;
+0266 C000 F000 00933         MOVFF   _eg0_value, _lfo0_value
+026A C000 F000 00934         MOVFF   (_eg0_value + 1), (_lfo0_value + 1)
+               00935         .line   151; lfo.c      break;}
+026E D000      00936         BRA     _00145_DS_
+0270           00937 _00131_DS_:
+               00938         .line   153; lfo.c      lfo0_value = save0;
+0270 C000 F000 00939         MOVFF   _save0, _lfo0_value
+0274 0000      00940         BANKSEL (_lfo0_value + 1)
+0276 6B00      00941         CLRF    (_lfo0_value + 1), B
+               00942 ; ;multiply lit val:0x02 by variable (_all_param + 32) and store in r0x00
+               00943 ; ;Unrolled 8 X 8 multiplication
+               00944 ; ;FIXME: the function does not support result==WREG
+               00945         .line   154; lfo.c      lfo0_value += lfo_add_table[all_param.lfo0_rate];
+0278 6A00      00946         CLRF    r0x01
+027A 90D8      00947         BCF     STATUS, 0
+027C 0000      00948         BANKSEL (_all_param + 32)
+027E 3500      00949         RLCF    (_all_param + 32), W, B
+0280 6E00      00950         MOVWF   r0x00
+0282 3600      00951         RLCF    r0x01, F
+0284 6A00      00952         CLRF    r0x02
+0286 0E00      00953         MOVLW   LOW(_lfo_add_table)
+0288 2600      00954         ADDWF   r0x00, F
+028A 0E00      00955         MOVLW   HIGH(_lfo_add_table)
+028C 2200      00956         ADDWFC  r0x01, F
+028E 0E00      00957         MOVLW   UPPER(_lfo_add_table)
+0290 2200      00958         ADDWFC  r0x02, F
+0292 C000 FFF6 00959         MOVFF   r0x00, TBLPTRL
+0296 C000 FFF7 00960         MOVFF   r0x01, TBLPTRH
+029A C000 FFF8 00961         MOVFF   r0x02, TBLPTRU
+029E 0009      00962         TBLRD*+ 
+02A0 CFF5 F000 00963         MOVFF   TABLAT, r0x00
+02A4 0009      00964         TBLRD*+ 
+02A6 CFF5 F000 00965         MOVFF   TABLAT, r0x01
+02AA 5000      00966         MOVF    r0x00, W
+02AC 0000      00967         BANKSEL _lfo0_value
+02AE 2700      00968         ADDWF   _lfo0_value, F, B
+02B0 5000      00969         MOVF    r0x01, W
+               00970 ; removed redundant BANKSEL
+02B2 2300      00971         ADDWFC  (_lfo0_value + 1), F, B
+02B4 0000      00972         BANKSEL (_eg1_value + 1)
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00973         .line   155; lfo.c      if( lfo0_value >= eg1_value ) {
+02B6 5100      00974         MOVF    (_eg1_value + 1), W, B
+02B8 0000      00975         BANKSEL (_lfo0_value + 1)
+02BA 5D00      00976         SUBWF   (_lfo0_value + 1), W, B
+02BC E100      00977         BNZ     _00314_DS_
+02BE 0000      00978         BANKSEL _eg1_value
+02C0 5100      00979         MOVF    _eg1_value, W, B
+02C2 0000      00980         BANKSEL _lfo0_value
+02C4 5D00      00981         SUBWF   _lfo0_value, W, B
+02C6           00982 _00314_DS_:
+02C6 E300      00983         BNC     _00134_DS_
+02C8 0000      00984         BANKSEL _lfo0_value
+               00985         .line   156; lfo.c      save0 = lfo0_value;
+02CA 5100      00986         MOVF    _lfo0_value, W, B
+02CC 0000      00987         BANKSEL _save0
+02CE 6F00      00988         MOVWF   _save0, B
+               00989         .line   157; lfo.c      lfo0_value = eg1_value;
+02D0 C000 F000 00990         MOVFF   _eg1_value, _lfo0_value
+02D4 C000 F000 00991         MOVFF   (_eg1_value + 1), (_lfo0_value + 1)
+               00992         .line   158; lfo.c      break; }
+02D8 D000      00993         BRA     _00145_DS_
+02DA           00994 _00134_DS_:
+               00995         .line   160; lfo.c      lfo0_value = save0;
+02DA C000 F000 00996         MOVFF   _save0, _lfo0_value
+02DE 0000      00997         BANKSEL (_lfo0_value + 1)
+02E0 6B00      00998         CLRF    (_lfo0_value + 1), B
+               00999 ; ;multiply lit val:0x02 by variable (_all_param + 32) and store in r0x00
+               01000 ; ;Unrolled 8 X 8 multiplication
+               01001 ; ;FIXME: the function does not support result==WREG
+               01002         .line   161; lfo.c      lfo0_value += lfo_add_table[all_param.lfo0_rate];
+02E2 6A00      01003         CLRF    r0x01
+02E4 90D8      01004         BCF     STATUS, 0
+02E6 0000      01005         BANKSEL (_all_param + 32)
+02E8 3500      01006         RLCF    (_all_param + 32), W, B
+02EA 6E00      01007         MOVWF   r0x00
+02EC 3600      01008         RLCF    r0x01, F
+02EE 6A00      01009         CLRF    r0x02
+02F0 0E00      01010         MOVLW   LOW(_lfo_add_table)
+02F2 2600      01011         ADDWF   r0x00, F
+02F4 0E00      01012         MOVLW   HIGH(_lfo_add_table)
+02F6 2200      01013         ADDWFC  r0x01, F
+02F8 0E00      01014         MOVLW   UPPER(_lfo_add_table)
+02FA 2200      01015         ADDWFC  r0x02, F
+02FC C000 FFF6 01016         MOVFF   r0x00, TBLPTRL
+0300 C000 FFF7 01017         MOVFF   r0x01, TBLPTRH
+0304 C000 FFF8 01018         MOVFF   r0x02, TBLPTRU
+0308 0009      01019         TBLRD*+ 
+030A CFF5 F000 01020         MOVFF   TABLAT, r0x00
+030E 0009      01021         TBLRD*+ 
+0310 CFF5 F000 01022         MOVFF   TABLAT, r0x01
+0314 5000      01023         MOVF    r0x00, W
+0316 0000      01024         BANKSEL _lfo0_value
+0318 2700      01025         ADDWF   _lfo0_value, F, B
+031A 5000      01026         MOVF    r0x01, W
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               01027 ; removed redundant BANKSEL
+031C 2300      01028         ADDWFC  (_lfo0_value + 1), F, B
+031E 0000      01029         BANKSEL (_eg2_value + 1)
+               01030         .line   162; lfo.c      if( lfo0_value >= eg2_value ) {
+0320 5100      01031         MOVF    (_eg2_value + 1), W, B
+0322 0000      01032         BANKSEL (_lfo0_value + 1)
+0324 5D00      01033         SUBWF   (_lfo0_value + 1), W, B
+0326 E100      01034         BNZ     _00315_DS_
+0328 0000      01035         BANKSEL _eg2_value
+032A 5100      01036         MOVF    _eg2_value, W, B
+032C 0000      01037         BANKSEL _lfo0_value
+032E 5D00      01038         SUBWF   _lfo0_value, W, B
+0330           01039 _00315_DS_:
+0330 A0D8      01040         BTFSS   STATUS, 0
+0332 D000      01041         BRA     _00145_DS_
+0334 0000      01042         BANKSEL _lfo0_value
+               01043         .line   163; lfo.c      save0 = lfo0_value;
+0336 5100      01044         MOVF    _lfo0_value, W, B
+0338 0000      01045         BANKSEL _save0
+033A 6F00      01046         MOVWF   _save0, B
+               01047         .line   164; lfo.c      lfo0_value = eg2_value; }
+033C C000 F000 01048         MOVFF   _eg2_value, _lfo0_value
+0340 C000 F000 01049         MOVFF   (_eg2_value + 1), (_lfo0_value + 1)
+               01050         .line   165; lfo.c      break;
+0344 D000      01051         BRA     _00145_DS_
+0346           01052 _00137_DS_:
+               01053         .line   167; lfo.c      lfo0_value = save0;
+0346 C000 F000 01054         MOVFF   _save0, _lfo0_value
+034A 0000      01055         BANKSEL (_lfo0_value + 1)
+034C 6B00      01056         CLRF    (_lfo0_value + 1), B
+               01057 ; ;multiply lit val:0x02 by variable (_all_param + 32) and store in r0x00
+               01058 ; ;Unrolled 8 X 8 multiplication
+               01059 ; ;FIXME: the function does not support result==WREG
+               01060         .line   168; lfo.c      lfo0_value += lfo_add_table[all_param.lfo0_rate];
+034E 6A00      01061         CLRF    r0x01
+0350 90D8      01062         BCF     STATUS, 0
+0352 0000      01063         BANKSEL (_all_param + 32)
+0354 3500      01064         RLCF    (_all_param + 32), W, B
+0356 6E00      01065         MOVWF   r0x00
+0358 3600      01066         RLCF    r0x01, F
+035A 6A00      01067         CLRF    r0x02
+035C 0E00      01068         MOVLW   LOW(_lfo_add_table)
+035E 2600      01069         ADDWF   r0x00, F
+0360 0E00      01070         MOVLW   HIGH(_lfo_add_table)
+0362 2200      01071         ADDWFC  r0x01, F
+0364 0E00      01072         MOVLW   UPPER(_lfo_add_table)
+0366 2200      01073         ADDWFC  r0x02, F
+0368 C000 FFF6 01074         MOVFF   r0x00, TBLPTRL
+036C C000 FFF7 01075         MOVFF   r0x01, TBLPTRH
+0370 C000 FFF8 01076         MOVFF   r0x02, TBLPTRU
+0374 0009      01077         TBLRD*+ 
+0376 CFF5 F000 01078         MOVFF   TABLAT, r0x00
+037A 0009      01079         TBLRD*+ 
+037C CFF5 F000 01080         MOVFF   TABLAT, r0x01
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0380 5000      01081         MOVF    r0x00, W
+0382 0000      01082         BANKSEL _lfo0_value
+0384 2700      01083         ADDWF   _lfo0_value, F, B
+0386 5000      01084         MOVF    r0x01, W
+               01085 ; removed redundant BANKSEL
+0388 2300      01086         ADDWFC  (_lfo0_value + 1), F, B
+038A 0000      01087         BANKSEL (_eg3_value + 1)
+               01088         .line   169; lfo.c      if( lfo0_value >= eg3_value ) {
+038C 5100      01089         MOVF    (_eg3_value + 1), W, B
+038E 0000      01090         BANKSEL (_lfo0_value + 1)
+0390 5D00      01091         SUBWF   (_lfo0_value + 1), W, B
+0392 E100      01092         BNZ     _00316_DS_
+0394 0000      01093         BANKSEL _eg3_value
+0396 5100      01094         MOVF    _eg3_value, W, B
+0398 0000      01095         BANKSEL _lfo0_value
+039A 5D00      01096         SUBWF   _lfo0_value, W, B
+039C           01097 _00316_DS_:
+039C E300      01098         BNC     _00145_DS_
+039E 0000      01099         BANKSEL _lfo0_value
+               01100         .line   170; lfo.c      save0 = lfo0_value;
+03A0 5100      01101         MOVF    _lfo0_value, W, B
+03A2 0000      01102         BANKSEL _save0
+03A4 6F00      01103         MOVWF   _save0, B
+               01104         .line   171; lfo.c      lfo0_value = eg3_value; }
+03A6 C000 F000 01105         MOVFF   _eg3_value, _lfo0_value
+03AA C000 F000 01106         MOVFF   (_eg3_value + 1), (_lfo0_value + 1)
+03AE           01107 _00145_DS_:
+03AE 0000      01108         BANKSEL (_all_param + 1)
+               01109         .line   176; lfo.c      if( all_param.router_flags_lfo2.lfo2_note_start ) {
+03B0 AB00      01110         BTFSS   (_all_param + 1), 5, B
+03B2 D000      01111         BRA     _00149_DS_
+03B4 0000      01112         BANKSEL _new_note
+               01113         .line   177; lfo.c      if( new_note ) {
+03B6 5100      01114         MOVF    _new_note, W, B
+03B8 E000      01115         BZ      _00149_DS_
+03BA 0000      01116         BANKSEL _lfo1_value
+               01117         .line   178; lfo.c      lfo1_value = 0;
+03BC 6B00      01118         CLRF    _lfo1_value, B
+               01119 ; removed redundant BANKSEL
+03BE 6B00      01120         CLRF    (_lfo1_value + 1), B
+               01121         .line   179; lfo.c      new_note ^= 2; } }
+03C0 0E02      01122         MOVLW   0x02
+03C2 0000      01123         BANKSEL _new_note
+03C4 1B00      01124         XORWF   _new_note, F, B
+03C6           01125 _00149_DS_:
+03C6 0000      01126         BANKSEL (_all_param + 33)
+               01127         .line   181; lfo.c      if( all_param.lfo1_rate > 0 ) {
+03C8 5100      01128         MOVF    (_all_param + 33), W, B
+03CA B4D8      01129         BTFSC   STATUS, 2
+03CC EF00 F000 01130         GOTO    _00182_DS_
+               01131 ; removed redundant BANKSEL
+               01132         .line   183; lfo.c      if( all_param.router_flags_lfo2.lfo2_sync_bpm ) {
+03D0 AD00      01133         BTFSS   (_all_param + 1), 6, B
+03D2 D000      01134         BRA     _00179_DS_
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               01135         .line   185; lfo.c      lfox_bpm = all_param.lfo1_bpm;
+03D4 C000 F000 01136         MOVFF   (_all_param + 36), _lfox_bpm
+03D8 0000      01137         BANKSEL _lfox_bpm
+               01138         .line   186; lfo.c      LFO_bpm(lfox_bpm);
+03DA 5100      01139         MOVF    _lfox_bpm, W, B
+03DC 6EED      01140         MOVWF   POSTDEC1
+03DE EC00 F000 01141         CALL    _LFO_bpm
+03E2 2AE9      01142         INCF    FSR1L, F
+03E4 0000      01143         BANKSEL (_all_param + 9)
+               01144         .line   188; lfo.c      switch( all_param.router_flags_Eg_to_lfo2.Eg_to_lfo2 ) {
+03E6 5100      01145         MOVF    (_all_param + 9), W, B
+03E8 0B0F      01146         ANDLW   0x0f
+03EA 6E00      01147         MOVWF   r0x00
+03EC C000 F000 01148         MOVFF   r0x00, r0x01
+03F0 5000      01149         MOVF    r0x01, W
+03F2 E000      01150         BZ      _00150_DS_
+03F4 C000 F000 01151         MOVFF   r0x00, r0x01
+03F8 5000      01152         MOVF    r0x01, W
+03FA 0A01      01153         XORLW   0x01
+03FC E000      01154         BZ      _00151_DS_
+03FE C000 F000 01155         MOVFF   r0x00, r0x01
+0402 5000      01156         MOVF    r0x01, W
+0404 0A02      01157         XORLW   0x02
+0406 E100      01158         BNZ     _00323_DS_
+0408 D000      01159         BRA     _00154_DS_
+040A           01160 _00323_DS_:
+040A C000 F000 01161         MOVFF   r0x00, r0x01
+040E 5000      01162         MOVF    r0x01, W
+0410 0A04      01163         XORLW   0x04
+0412 E100      01164         BNZ     _00325_DS_
+0414 D000      01165         BRA     _00157_DS_
+0416           01166 _00325_DS_:
+0416 5000      01167         MOVF    r0x00, W
+0418 0A08      01168         XORLW   0x08
+041A E100      01169         BNZ     _00327_DS_
+041C D000      01170         BRA     _00160_DS_
+041E           01171 _00327_DS_:
+041E D000      01172         BRA     _00182_DS_
+0420           01173 _00150_DS_:
+0420 0000      01174         BANKSEL _LFO_bpm_tmp2
+               01175         .line   190; lfo.c      lfo1_value += LFO_bpm_tmp2;
+0422 5100      01176         MOVF    _LFO_bpm_tmp2, W, B
+0424 0000      01177         BANKSEL _lfo1_value
+0426 2700      01178         ADDWF   _lfo1_value, F, B
+0428 0000      01179         BANKSEL (_LFO_bpm_tmp2 + 1)
+042A 5100      01180         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+042C 0000      01181         BANKSEL (_lfo1_value + 1)
+042E 2300      01182         ADDWFC  (_lfo1_value + 1), F, B
+               01183         .line   191; lfo.c      break;
+0430 D000      01184         BRA     _00182_DS_
+0432           01185 _00151_DS_:
+               01186         .line   193; lfo.c      lfo1_value = save1;
+0432 C000 F000 01187         MOVFF   _save1, _lfo1_value
+0436 0000      01188         BANKSEL (_lfo1_value + 1)
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0438 6B00      01189         CLRF    (_lfo1_value + 1), B
+043A 0000      01190         BANKSEL _LFO_bpm_tmp2
+               01191         .line   194; lfo.c      lfo1_value += LFO_bpm_tmp2;
+043C 5100      01192         MOVF    _LFO_bpm_tmp2, W, B
+043E 0000      01193         BANKSEL _lfo1_value
+0440 2700      01194         ADDWF   _lfo1_value, F, B
+0442 0000      01195         BANKSEL (_LFO_bpm_tmp2 + 1)
+0444 5100      01196         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+0446 0000      01197         BANKSEL (_lfo1_value + 1)
+0448 2300      01198         ADDWFC  (_lfo1_value + 1), F, B
+044A 0000      01199         BANKSEL (_eg0_value + 1)
+               01200         .line   195; lfo.c      if( lfo1_value >= eg0_value ) {
+044C 5100      01201         MOVF    (_eg0_value + 1), W, B
+044E 0000      01202         BANKSEL (_lfo1_value + 1)
+0450 5D00      01203         SUBWF   (_lfo1_value + 1), W, B
+0452 E100      01204         BNZ     _00328_DS_
+0454 0000      01205         BANKSEL _eg0_value
+0456 5100      01206         MOVF    _eg0_value, W, B
+0458 0000      01207         BANKSEL _lfo1_value
+045A 5D00      01208         SUBWF   _lfo1_value, W, B
+045C           01209 _00328_DS_:
+045C E300      01210         BNC     _00154_DS_
+045E 0000      01211         BANKSEL _lfo1_value
+               01212         .line   196; lfo.c      save1 = lfo1_value;
+0460 5100      01213         MOVF    _lfo1_value, W, B
+0462 0000      01214         BANKSEL _save1
+0464 6F00      01215         MOVWF   _save1, B
+               01216         .line   197; lfo.c      lfo1_value = eg0_value;
+0466 C000 F000 01217         MOVFF   _eg0_value, _lfo1_value
+046A C000 F000 01218         MOVFF   (_eg0_value + 1), (_lfo1_value + 1)
+               01219         .line   198; lfo.c      break; }
+046E D000      01220         BRA     _00182_DS_
+0470           01221 _00154_DS_:
+               01222         .line   200; lfo.c      lfo1_value = save1;
+0470 C000 F000 01223         MOVFF   _save1, _lfo1_value
+0474 0000      01224         BANKSEL (_lfo1_value + 1)
+0476 6B00      01225         CLRF    (_lfo1_value + 1), B
+0478 0000      01226         BANKSEL _LFO_bpm_tmp2
+               01227         .line   201; lfo.c      lfo1_value += LFO_bpm_tmp2;
+047A 5100      01228         MOVF    _LFO_bpm_tmp2, W, B
+047C 0000      01229         BANKSEL _lfo1_value
+047E 2700      01230         ADDWF   _lfo1_value, F, B
+0480 0000      01231         BANKSEL (_LFO_bpm_tmp2 + 1)
+0482 5100      01232         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+0484 0000      01233         BANKSEL (_lfo1_value + 1)
+0486 2300      01234         ADDWFC  (_lfo1_value + 1), F, B
+0488 0000      01235         BANKSEL (_eg1_value + 1)
+               01236         .line   202; lfo.c      if( lfo1_value >= eg1_value ) {
+048A 5100      01237         MOVF    (_eg1_value + 1), W, B
+048C 0000      01238         BANKSEL (_lfo1_value + 1)
+048E 5D00      01239         SUBWF   (_lfo1_value + 1), W, B
+0490 E100      01240         BNZ     _00329_DS_
+0492 0000      01241         BANKSEL _eg1_value
+0494 5100      01242         MOVF    _eg1_value, W, B
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0496 0000      01243         BANKSEL _lfo1_value
+0498 5D00      01244         SUBWF   _lfo1_value, W, B
+049A           01245 _00329_DS_:
+049A E300      01246         BNC     _00157_DS_
+049C 0000      01247         BANKSEL _lfo1_value
+               01248         .line   203; lfo.c      save1 = lfo1_value;
+049E 5100      01249         MOVF    _lfo1_value, W, B
+04A0 0000      01250         BANKSEL _save1
+04A2 6F00      01251         MOVWF   _save1, B
+               01252         .line   204; lfo.c      lfo1_value = eg1_value;
+04A4 C000 F000 01253         MOVFF   _eg1_value, _lfo1_value
+04A8 C000 F000 01254         MOVFF   (_eg1_value + 1), (_lfo1_value + 1)
+               01255         .line   205; lfo.c      break; }
+04AC D000      01256         BRA     _00182_DS_
+04AE           01257 _00157_DS_:
+               01258         .line   207; lfo.c      lfo1_value = save1;
+04AE C000 F000 01259         MOVFF   _save1, _lfo1_value
+04B2 0000      01260         BANKSEL (_lfo1_value + 1)
+04B4 6B00      01261         CLRF    (_lfo1_value + 1), B
+04B6 0000      01262         BANKSEL _LFO_bpm_tmp2
+               01263         .line   208; lfo.c      lfo1_value += LFO_bpm_tmp2;
+04B8 5100      01264         MOVF    _LFO_bpm_tmp2, W, B
+04BA 0000      01265         BANKSEL _lfo1_value
+04BC 2700      01266         ADDWF   _lfo1_value, F, B
+04BE 0000      01267         BANKSEL (_LFO_bpm_tmp2 + 1)
+04C0 5100      01268         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+04C2 0000      01269         BANKSEL (_lfo1_value + 1)
+04C4 2300      01270         ADDWFC  (_lfo1_value + 1), F, B
+04C6 0000      01271         BANKSEL (_eg2_value + 1)
+               01272         .line   209; lfo.c      if( lfo1_value >= eg2_value ) {
+04C8 5100      01273         MOVF    (_eg2_value + 1), W, B
+04CA 0000      01274         BANKSEL (_lfo1_value + 1)
+04CC 5D00      01275         SUBWF   (_lfo1_value + 1), W, B
+04CE E100      01276         BNZ     _00330_DS_
+04D0 0000      01277         BANKSEL _eg2_value
+04D2 5100      01278         MOVF    _eg2_value, W, B
+04D4 0000      01279         BANKSEL _lfo1_value
+04D6 5D00      01280         SUBWF   _lfo1_value, W, B
+04D8           01281 _00330_DS_:
+04D8 E300      01282         BNC     _00160_DS_
+04DA 0000      01283         BANKSEL _lfo1_value
+               01284         .line   210; lfo.c      save1 = lfo1_value;
+04DC 5100      01285         MOVF    _lfo1_value, W, B
+04DE 0000      01286         BANKSEL _save1
+04E0 6F00      01287         MOVWF   _save1, B
+               01288         .line   211; lfo.c      lfo1_value = eg2_value;
+04E2 C000 F000 01289         MOVFF   _eg2_value, _lfo1_value
+04E6 C000 F000 01290         MOVFF   (_eg2_value + 1), (_lfo1_value + 1)
+               01291         .line   212; lfo.c      break; }
+04EA D000      01292         BRA     _00182_DS_
+04EC           01293 _00160_DS_:
+               01294         .line   214; lfo.c      lfo1_value = save1;
+04EC C000 F000 01295         MOVFF   _save1, _lfo1_value
+04F0 0000      01296         BANKSEL (_lfo1_value + 1)
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+04F2 6B00      01297         CLRF    (_lfo1_value + 1), B
+04F4 0000      01298         BANKSEL _LFO_bpm_tmp2
+               01299         .line   215; lfo.c      lfo1_value += LFO_bpm_tmp2;
+04F6 5100      01300         MOVF    _LFO_bpm_tmp2, W, B
+04F8 0000      01301         BANKSEL _lfo1_value
+04FA 2700      01302         ADDWF   _lfo1_value, F, B
+04FC 0000      01303         BANKSEL (_LFO_bpm_tmp2 + 1)
+04FE 5100      01304         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+0500 0000      01305         BANKSEL (_lfo1_value + 1)
+0502 2300      01306         ADDWFC  (_lfo1_value + 1), F, B
+0504 0000      01307         BANKSEL (_eg3_value + 1)
+               01308         .line   216; lfo.c      if( lfo0_value >= eg3_value ) {
+0506 5100      01309         MOVF    (_eg3_value + 1), W, B
+0508 0000      01310         BANKSEL (_lfo0_value + 1)
+050A 5D00      01311         SUBWF   (_lfo0_value + 1), W, B
+050C E100      01312         BNZ     _00331_DS_
+050E 0000      01313         BANKSEL _eg3_value
+0510 5100      01314         MOVF    _eg3_value, W, B
+0512 0000      01315         BANKSEL _lfo0_value
+0514 5D00      01316         SUBWF   _lfo0_value, W, B
+0516           01317 _00331_DS_:
+0516 A0D8      01318         BTFSS   STATUS, 0
+0518 D000      01319         BRA     _00182_DS_
+051A 0000      01320         BANKSEL _lfo1_value
+               01321         .line   217; lfo.c      save1 = lfo1_value;
+051C 5100      01322         MOVF    _lfo1_value, W, B
+051E 0000      01323         BANKSEL _save1
+0520 6F00      01324         MOVWF   _save1, B
+               01325         .line   218; lfo.c      lfo1_value = eg3_value;
+0522 C000 F000 01326         MOVFF   _eg3_value, _lfo1_value
+0526 C000 F000 01327         MOVFF   (_eg3_value + 1), (_lfo1_value + 1)
+               01328         .line   219; lfo.c      break; }
+052A D000      01329         BRA     _00182_DS_
+052C           01330 _00179_DS_:
+052C 0000      01331         BANKSEL (_all_param + 9)
+               01332         .line   223; lfo.c      switch( all_param.router_flags_Eg_to_lfo2.Eg_to_lfo2 ) {
+052E 5100      01333         MOVF    (_all_param + 9), W, B
+0530 0B0F      01334         ANDLW   0x0f
+0532 6E00      01335         MOVWF   r0x00
+0534 C000 F000 01336         MOVFF   r0x00, r0x01
+0538 5000      01337         MOVF    r0x01, W
+053A E000      01338         BZ      _00164_DS_
+053C C000 F000 01339         MOVFF   r0x00, r0x01
+0540 5000      01340         MOVF    r0x01, W
+0542 0A01      01341         XORLW   0x01
+0544 E000      01342         BZ      _00165_DS_
+0546 C000 F000 01343         MOVFF   r0x00, r0x01
+054A 5000      01344         MOVF    r0x01, W
+054C 0A02      01345         XORLW   0x02
+054E E100      01346         BNZ     _00337_DS_
+0550 D000      01347         BRA     _00168_DS_
+0552           01348 _00337_DS_:
+0552 C000 F000 01349         MOVFF   r0x00, r0x01
+0556 5000      01350         MOVF    r0x01, W
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0558 0A04      01351         XORLW   0x04
+055A E100      01352         BNZ     _00339_DS_
+055C D000      01353         BRA     _00171_DS_
+055E           01354 _00339_DS_:
+055E 5000      01355         MOVF    r0x00, W
+0560 0A08      01356         XORLW   0x08
+0562 E100      01357         BNZ     _00341_DS_
+0564 D000      01358         BRA     _00174_DS_
+0566           01359 _00341_DS_:
+0566 D000      01360         BRA     _00182_DS_
+               01361 ; ;multiply lit val:0x02 by variable (_all_param + 33) and store in r0x00
+               01362 ; ;Unrolled 8 X 8 multiplication
+               01363 ; ;FIXME: the function does not support result==WREG
+0568           01364 _00164_DS_:
+               01365         .line   225; lfo.c      lfo1_value += lfo_add_table[all_param.lfo1_rate];
+0568 6A00      01366         CLRF    r0x01
+056A 90D8      01367         BCF     STATUS, 0
+056C 0000      01368         BANKSEL (_all_param + 33)
+056E 3500      01369         RLCF    (_all_param + 33), W, B
+0570 6E00      01370         MOVWF   r0x00
+0572 3600      01371         RLCF    r0x01, F
+0574 6A00      01372         CLRF    r0x02
+0576 0E00      01373         MOVLW   LOW(_lfo_add_table)
+0578 2600      01374         ADDWF   r0x00, F
+057A 0E00      01375         MOVLW   HIGH(_lfo_add_table)
+057C 2200      01376         ADDWFC  r0x01, F
+057E 0E00      01377         MOVLW   UPPER(_lfo_add_table)
+0580 2200      01378         ADDWFC  r0x02, F
+0582 C000 FFF6 01379         MOVFF   r0x00, TBLPTRL
+0586 C000 FFF7 01380         MOVFF   r0x01, TBLPTRH
+058A C000 FFF8 01381         MOVFF   r0x02, TBLPTRU
+058E 0009      01382         TBLRD*+ 
+0590 CFF5 F000 01383         MOVFF   TABLAT, r0x00
+0594 0009      01384         TBLRD*+ 
+0596 CFF5 F000 01385         MOVFF   TABLAT, r0x01
+059A 5000      01386         MOVF    r0x00, W
+059C 0000      01387         BANKSEL _lfo1_value
+059E 2700      01388         ADDWF   _lfo1_value, F, B
+05A0 5000      01389         MOVF    r0x01, W
+               01390 ; removed redundant BANKSEL
+05A2 2300      01391         ADDWFC  (_lfo1_value + 1), F, B
+               01392         .line   226; lfo.c      break;
+05A4 D000      01393         BRA     _00182_DS_
+05A6           01394 _00165_DS_:
+               01395         .line   228; lfo.c      lfo1_value = save1;
+05A6 C000 F000 01396         MOVFF   _save1, _lfo1_value
+05AA 0000      01397         BANKSEL (_lfo1_value + 1)
+05AC 6B00      01398         CLRF    (_lfo1_value + 1), B
+               01399 ; ;multiply lit val:0x02 by variable (_all_param + 33) and store in r0x00
+               01400 ; ;Unrolled 8 X 8 multiplication
+               01401 ; ;FIXME: the function does not support result==WREG
+               01402         .line   229; lfo.c      lfo1_value += lfo_add_table[all_param.lfo1_rate];
+05AE 6A00      01403         CLRF    r0x01
+05B0 90D8      01404         BCF     STATUS, 0
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 27
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+05B2 0000      01405         BANKSEL (_all_param + 33)
+05B4 3500      01406         RLCF    (_all_param + 33), W, B
+05B6 6E00      01407         MOVWF   r0x00
+05B8 3600      01408         RLCF    r0x01, F
+05BA 6A00      01409         CLRF    r0x02
+05BC 0E00      01410         MOVLW   LOW(_lfo_add_table)
+05BE 2600      01411         ADDWF   r0x00, F
+05C0 0E00      01412         MOVLW   HIGH(_lfo_add_table)
+05C2 2200      01413         ADDWFC  r0x01, F
+05C4 0E00      01414         MOVLW   UPPER(_lfo_add_table)
+05C6 2200      01415         ADDWFC  r0x02, F
+05C8 C000 FFF6 01416         MOVFF   r0x00, TBLPTRL
+05CC C000 FFF7 01417         MOVFF   r0x01, TBLPTRH
+05D0 C000 FFF8 01418         MOVFF   r0x02, TBLPTRU
+05D4 0009      01419         TBLRD*+ 
+05D6 CFF5 F000 01420         MOVFF   TABLAT, r0x00
+05DA 0009      01421         TBLRD*+ 
+05DC CFF5 F000 01422         MOVFF   TABLAT, r0x01
+05E0 5000      01423         MOVF    r0x00, W
+05E2 0000      01424         BANKSEL _lfo1_value
+05E4 2700      01425         ADDWF   _lfo1_value, F, B
+05E6 5000      01426         MOVF    r0x01, W
+               01427 ; removed redundant BANKSEL
+05E8 2300      01428         ADDWFC  (_lfo1_value + 1), F, B
+05EA 0000      01429         BANKSEL (_eg0_value + 1)
+               01430         .line   230; lfo.c      if( lfo1_value >= eg0_value ) {
+05EC 5100      01431         MOVF    (_eg0_value + 1), W, B
+05EE 0000      01432         BANKSEL (_lfo1_value + 1)
+05F0 5D00      01433         SUBWF   (_lfo1_value + 1), W, B
+05F2 E100      01434         BNZ     _00342_DS_
+05F4 0000      01435         BANKSEL _eg0_value
+05F6 5100      01436         MOVF    _eg0_value, W, B
+05F8 0000      01437         BANKSEL _lfo1_value
+05FA 5D00      01438         SUBWF   _lfo1_value, W, B
+05FC           01439 _00342_DS_:
+05FC E300      01440         BNC     _00168_DS_
+05FE 0000      01441         BANKSEL _lfo1_value
+               01442         .line   231; lfo.c      save1 = lfo1_value;
+0600 5100      01443         MOVF    _lfo1_value, W, B
+0602 0000      01444         BANKSEL _save1
+0604 6F00      01445         MOVWF   _save1, B
+               01446         .line   232; lfo.c      lfo1_value = eg0_value;
+0606 C000 F000 01447         MOVFF   _eg0_value, _lfo1_value
+060A C000 F000 01448         MOVFF   (_eg0_value + 1), (_lfo1_value + 1)
+               01449         .line   233; lfo.c      break; }
+060E D000      01450         BRA     _00182_DS_
+0610           01451 _00168_DS_:
+               01452         .line   235; lfo.c      lfo1_value = save1;
+0610 C000 F000 01453         MOVFF   _save1, _lfo1_value
+0614 0000      01454         BANKSEL (_lfo1_value + 1)
+0616 6B00      01455         CLRF    (_lfo1_value + 1), B
+               01456 ; ;multiply lit val:0x02 by variable (_all_param + 33) and store in r0x00
+               01457 ; ;Unrolled 8 X 8 multiplication
+               01458 ; ;FIXME: the function does not support result==WREG
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 28
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               01459         .line   236; lfo.c      lfo1_value += lfo_add_table[all_param.lfo1_rate];
+0618 6A00      01460         CLRF    r0x01
+061A 90D8      01461         BCF     STATUS, 0
+061C 0000      01462         BANKSEL (_all_param + 33)
+061E 3500      01463         RLCF    (_all_param + 33), W, B
+0620 6E00      01464         MOVWF   r0x00
+0622 3600      01465         RLCF    r0x01, F
+0624 6A00      01466         CLRF    r0x02
+0626 0E00      01467         MOVLW   LOW(_lfo_add_table)
+0628 2600      01468         ADDWF   r0x00, F
+062A 0E00      01469         MOVLW   HIGH(_lfo_add_table)
+062C 2200      01470         ADDWFC  r0x01, F
+062E 0E00      01471         MOVLW   UPPER(_lfo_add_table)
+0630 2200      01472         ADDWFC  r0x02, F
+0632 C000 FFF6 01473         MOVFF   r0x00, TBLPTRL
+0636 C000 FFF7 01474         MOVFF   r0x01, TBLPTRH
+063A C000 FFF8 01475         MOVFF   r0x02, TBLPTRU
+063E 0009      01476         TBLRD*+ 
+0640 CFF5 F000 01477         MOVFF   TABLAT, r0x00
+0644 0009      01478         TBLRD*+ 
+0646 CFF5 F000 01479         MOVFF   TABLAT, r0x01
+064A 5000      01480         MOVF    r0x00, W
+064C 0000      01481         BANKSEL _lfo1_value
+064E 2700      01482         ADDWF   _lfo1_value, F, B
+0650 5000      01483         MOVF    r0x01, W
+               01484 ; removed redundant BANKSEL
+0652 2300      01485         ADDWFC  (_lfo1_value + 1), F, B
+0654 0000      01486         BANKSEL (_eg1_value + 1)
+               01487         .line   237; lfo.c      if( lfo1_value >= eg1_value ) {
+0656 5100      01488         MOVF    (_eg1_value + 1), W, B
+0658 0000      01489         BANKSEL (_lfo1_value + 1)
+065A 5D00      01490         SUBWF   (_lfo1_value + 1), W, B
+065C E100      01491         BNZ     _00343_DS_
+065E 0000      01492         BANKSEL _eg1_value
+0660 5100      01493         MOVF    _eg1_value, W, B
+0662 0000      01494         BANKSEL _lfo1_value
+0664 5D00      01495         SUBWF   _lfo1_value, W, B
+0666           01496 _00343_DS_:
+0666 E300      01497         BNC     _00171_DS_
+0668 0000      01498         BANKSEL _lfo1_value
+               01499         .line   238; lfo.c      save1 = lfo1_value;
+066A 5100      01500         MOVF    _lfo1_value, W, B
+066C 0000      01501         BANKSEL _save1
+066E 6F00      01502         MOVWF   _save1, B
+               01503         .line   239; lfo.c      lfo1_value = eg1_value;
+0670 C000 F000 01504         MOVFF   _eg1_value, _lfo1_value
+0674 C000 F000 01505         MOVFF   (_eg1_value + 1), (_lfo1_value + 1)
+               01506         .line   240; lfo.c      break; }
+0678 D000      01507         BRA     _00182_DS_
+067A           01508 _00171_DS_:
+               01509         .line   242; lfo.c      lfo1_value = save1;
+067A C000 F000 01510         MOVFF   _save1, _lfo1_value
+067E 0000      01511         BANKSEL (_lfo1_value + 1)
+0680 6B00      01512         CLRF    (_lfo1_value + 1), B
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 29
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               01513 ; ;multiply lit val:0x02 by variable (_all_param + 33) and store in r0x00
+               01514 ; ;Unrolled 8 X 8 multiplication
+               01515 ; ;FIXME: the function does not support result==WREG
+               01516         .line   243; lfo.c      lfo1_value += lfo_add_table[all_param.lfo1_rate];
+0682 6A00      01517         CLRF    r0x01
+0684 90D8      01518         BCF     STATUS, 0
+0686 0000      01519         BANKSEL (_all_param + 33)
+0688 3500      01520         RLCF    (_all_param + 33), W, B
+068A 6E00      01521         MOVWF   r0x00
+068C 3600      01522         RLCF    r0x01, F
+068E 6A00      01523         CLRF    r0x02
+0690 0E00      01524         MOVLW   LOW(_lfo_add_table)
+0692 2600      01525         ADDWF   r0x00, F
+0694 0E00      01526         MOVLW   HIGH(_lfo_add_table)
+0696 2200      01527         ADDWFC  r0x01, F
+0698 0E00      01528         MOVLW   UPPER(_lfo_add_table)
+069A 2200      01529         ADDWFC  r0x02, F
+069C C000 FFF6 01530         MOVFF   r0x00, TBLPTRL
+06A0 C000 FFF7 01531         MOVFF   r0x01, TBLPTRH
+06A4 C000 FFF8 01532         MOVFF   r0x02, TBLPTRU
+06A8 0009      01533         TBLRD*+ 
+06AA CFF5 F000 01534         MOVFF   TABLAT, r0x00
+06AE 0009      01535         TBLRD*+ 
+06B0 CFF5 F000 01536         MOVFF   TABLAT, r0x01
+06B4 5000      01537         MOVF    r0x00, W
+06B6 0000      01538         BANKSEL _lfo1_value
+06B8 2700      01539         ADDWF   _lfo1_value, F, B
+06BA 5000      01540         MOVF    r0x01, W
+               01541 ; removed redundant BANKSEL
+06BC 2300      01542         ADDWFC  (_lfo1_value + 1), F, B
+06BE 0000      01543         BANKSEL (_eg2_value + 1)
+               01544         .line   244; lfo.c      if( lfo1_value >= eg2_value ) {
+06C0 5100      01545         MOVF    (_eg2_value + 1), W, B
+06C2 0000      01546         BANKSEL (_lfo1_value + 1)
+06C4 5D00      01547         SUBWF   (_lfo1_value + 1), W, B
+06C6 E100      01548         BNZ     _00344_DS_
+06C8 0000      01549         BANKSEL _eg2_value
+06CA 5100      01550         MOVF    _eg2_value, W, B
+06CC 0000      01551         BANKSEL _lfo1_value
+06CE 5D00      01552         SUBWF   _lfo1_value, W, B
+06D0           01553 _00344_DS_:
+06D0 E300      01554         BNC     _00174_DS_
+06D2 0000      01555         BANKSEL _lfo1_value
+               01556         .line   245; lfo.c      save1 = lfo1_value;
+06D4 5100      01557         MOVF    _lfo1_value, W, B
+06D6 0000      01558         BANKSEL _save1
+06D8 6F00      01559         MOVWF   _save1, B
+               01560         .line   246; lfo.c      lfo1_value = eg2_value;
+06DA C000 F000 01561         MOVFF   _eg2_value, _lfo1_value
+06DE C000 F000 01562         MOVFF   (_eg2_value + 1), (_lfo1_value + 1)
+               01563         .line   247; lfo.c      break; }
+06E2 D000      01564         BRA     _00182_DS_
+06E4           01565 _00174_DS_:
+               01566         .line   249; lfo.c      lfo1_value = save1;
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 30
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+06E4 C000 F000 01567         MOVFF   _save1, _lfo1_value
+06E8 0000      01568         BANKSEL (_lfo1_value + 1)
+06EA 6B00      01569         CLRF    (_lfo1_value + 1), B
+               01570 ; ;multiply lit val:0x02 by variable (_all_param + 33) and store in r0x00
+               01571 ; ;Unrolled 8 X 8 multiplication
+               01572 ; ;FIXME: the function does not support result==WREG
+               01573         .line   250; lfo.c      lfo1_value += lfo_add_table[all_param.lfo1_rate];
+06EC 6A00      01574         CLRF    r0x01
+06EE 90D8      01575         BCF     STATUS, 0
+06F0 0000      01576         BANKSEL (_all_param + 33)
+06F2 3500      01577         RLCF    (_all_param + 33), W, B
+06F4 6E00      01578         MOVWF   r0x00
+06F6 3600      01579         RLCF    r0x01, F
+06F8 6A00      01580         CLRF    r0x02
+06FA 0E00      01581         MOVLW   LOW(_lfo_add_table)
+06FC 2600      01582         ADDWF   r0x00, F
+06FE 0E00      01583         MOVLW   HIGH(_lfo_add_table)
+0700 2200      01584         ADDWFC  r0x01, F
+0702 0E00      01585         MOVLW   UPPER(_lfo_add_table)
+0704 2200      01586         ADDWFC  r0x02, F
+0706 C000 FFF6 01587         MOVFF   r0x00, TBLPTRL
+070A C000 FFF7 01588         MOVFF   r0x01, TBLPTRH
+070E C000 FFF8 01589         MOVFF   r0x02, TBLPTRU
+0712 0009      01590         TBLRD*+ 
+0714 CFF5 F000 01591         MOVFF   TABLAT, r0x00
+0718 0009      01592         TBLRD*+ 
+071A CFF5 F000 01593         MOVFF   TABLAT, r0x01
+071E 5000      01594         MOVF    r0x00, W
+0720 0000      01595         BANKSEL _lfo1_value
+0722 2700      01596         ADDWF   _lfo1_value, F, B
+0724 5000      01597         MOVF    r0x01, W
+               01598 ; removed redundant BANKSEL
+0726 2300      01599         ADDWFC  (_lfo1_value + 1), F, B
+0728 0000      01600         BANKSEL (_eg3_value + 1)
+               01601         .line   251; lfo.c      if( lfo0_value >= eg3_value ) {
+072A 5100      01602         MOVF    (_eg3_value + 1), W, B
+072C 0000      01603         BANKSEL (_lfo0_value + 1)
+072E 5D00      01604         SUBWF   (_lfo0_value + 1), W, B
+0730 E100      01605         BNZ     _00345_DS_
+0732 0000      01606         BANKSEL _eg3_value
+0734 5100      01607         MOVF    _eg3_value, W, B
+0736 0000      01608         BANKSEL _lfo0_value
+0738 5D00      01609         SUBWF   _lfo0_value, W, B
+073A           01610 _00345_DS_:
+073A E300      01611         BNC     _00182_DS_
+073C 0000      01612         BANKSEL _lfo1_value
+               01613         .line   252; lfo.c      save1 = lfo1_value;
+073E 5100      01614         MOVF    _lfo1_value, W, B
+0740 0000      01615         BANKSEL _save1
+0742 6F00      01616         MOVWF   _save1, B
+               01617         .line   253; lfo.c      lfo1_value = eg3_value;
+0744 C000 F000 01618         MOVFF   _eg3_value, _lfo1_value
+0748 C000 F000 01619         MOVFF   (_eg3_value + 1), (_lfo1_value + 1)
+074C           01620 _00182_DS_:
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 31
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+074C 0000      01621         BANKSEL (_all_param + 2)
+               01622         .line   258; lfo.c      if( all_param.router_flags_lfo3.lfo3_note_start ) {
+074E AB00      01623         BTFSS   (_all_param + 2), 5, B
+0750 D000      01624         BRA     _00186_DS_
+0752 0000      01625         BANKSEL _new_note
+               01626         .line   259; lfo.c      if( new_note ) {
+0754 5100      01627         MOVF    _new_note, W, B
+0756 E000      01628         BZ      _00186_DS_
+0758 0000      01629         BANKSEL _lfo1_value
+               01630         .line   260; lfo.c      lfo1_value = 0;
+075A 6B00      01631         CLRF    _lfo1_value, B
+               01632 ; removed redundant BANKSEL
+075C 6B00      01633         CLRF    (_lfo1_value + 1), B
+               01634         .line   261; lfo.c      new_note ^= 4; } }
+075E 0E04      01635         MOVLW   0x04
+0760 0000      01636         BANKSEL _new_note
+0762 1B00      01637         XORWF   _new_note, F, B
+0764           01638 _00186_DS_:
+0764 0000      01639         BANKSEL (_all_param + 34)
+               01640         .line   263; lfo.c      if( all_param.lfo2_rate > 0 ) {
+0766 5100      01641         MOVF    (_all_param + 34), W, B
+0768 B4D8      01642         BTFSC   STATUS, 2
+076A EF00 F000 01643         GOTO    _00220_DS_
+               01644 ; removed redundant BANKSEL
+               01645         .line   265; lfo.c      if(all_param.router_flags_lfo2.lfo2_sync_bpm ) {
+076E AD00      01646         BTFSS   (_all_param + 1), 6, B
+0770 D000      01647         BRA     _00216_DS_
+               01648         .line   267; lfo.c      lfox_bpm = all_param.lfo2_bpm;
+0772 C000 F000 01649         MOVFF   (_all_param + 37), _lfox_bpm
+0776 0000      01650         BANKSEL _lfox_bpm
+               01651         .line   268; lfo.c      LFO_bpm(lfox_bpm);
+0778 5100      01652         MOVF    _lfox_bpm, W, B
+077A 6EED      01653         MOVWF   POSTDEC1
+077C EC00 F000 01654         CALL    _LFO_bpm
+0780 2AE9      01655         INCF    FSR1L, F
+0782 0000      01656         BANKSEL (_all_param + 10)
+               01657         .line   270; lfo.c      switch( all_param.router_flags_Eg_to_lfo3.Eg_to_lfo3 ) {
+0784 5100      01658         MOVF    (_all_param + 10), W, B
+0786 0B0F      01659         ANDLW   0x0f
+0788 6E00      01660         MOVWF   r0x00
+078A C000 F000 01661         MOVFF   r0x00, r0x01
+078E 5000      01662         MOVF    r0x01, W
+0790 E000      01663         BZ      _00187_DS_
+0792 C000 F000 01664         MOVFF   r0x00, r0x01
+0796 5000      01665         MOVF    r0x01, W
+0798 0A01      01666         XORLW   0x01
+079A E000      01667         BZ      _00188_DS_
+079C C000 F000 01668         MOVFF   r0x00, r0x01
+07A0 5000      01669         MOVF    r0x01, W
+07A2 0A02      01670         XORLW   0x02
+07A4 E100      01671         BNZ     _00352_DS_
+07A6 D000      01672         BRA     _00191_DS_
+07A8           01673 _00352_DS_:
+07A8 C000 F000 01674         MOVFF   r0x00, r0x01
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 32
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+07AC 5000      01675         MOVF    r0x01, W
+07AE 0A04      01676         XORLW   0x04
+07B0 E100      01677         BNZ     _00354_DS_
+07B2 D000      01678         BRA     _00194_DS_
+07B4           01679 _00354_DS_:
+07B4 5000      01680         MOVF    r0x00, W
+07B6 0A08      01681         XORLW   0x08
+07B8 E100      01682         BNZ     _00356_DS_
+07BA D000      01683         BRA     _00197_DS_
+07BC           01684 _00356_DS_:
+07BC D000      01685         BRA     _00220_DS_
+07BE           01686 _00187_DS_:
+07BE 0000      01687         BANKSEL _LFO_bpm_tmp2
+               01688         .line   272; lfo.c      lfo2_value += LFO_bpm_tmp2;
+07C0 5100      01689         MOVF    _LFO_bpm_tmp2, W, B
+07C2 0000      01690         BANKSEL _lfo2_value
+07C4 2700      01691         ADDWF   _lfo2_value, F, B
+07C6 0000      01692         BANKSEL (_LFO_bpm_tmp2 + 1)
+07C8 5100      01693         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+07CA 0000      01694         BANKSEL (_lfo2_value + 1)
+07CC 2300      01695         ADDWFC  (_lfo2_value + 1), F, B
+               01696         .line   273; lfo.c      break;
+07CE D000      01697         BRA     _00220_DS_
+07D0           01698 _00188_DS_:
+               01699         .line   275; lfo.c      lfo2_value = save2;
+07D0 C000 F000 01700         MOVFF   _save2, _lfo2_value
+07D4 0000      01701         BANKSEL (_lfo2_value + 1)
+07D6 6B00      01702         CLRF    (_lfo2_value + 1), B
+07D8 0000      01703         BANKSEL _LFO_bpm_tmp2
+               01704         .line   276; lfo.c      lfo2_value += LFO_bpm_tmp2;
+07DA 5100      01705         MOVF    _LFO_bpm_tmp2, W, B
+07DC 0000      01706         BANKSEL _lfo2_value
+07DE 2700      01707         ADDWF   _lfo2_value, F, B
+07E0 0000      01708         BANKSEL (_LFO_bpm_tmp2 + 1)
+07E2 5100      01709         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+07E4 0000      01710         BANKSEL (_lfo2_value + 1)
+07E6 2300      01711         ADDWFC  (_lfo2_value + 1), F, B
+07E8 0000      01712         BANKSEL (_eg0_value + 1)
+               01713         .line   277; lfo.c      if( lfo2_value >= eg0_value ) {
+07EA 5100      01714         MOVF    (_eg0_value + 1), W, B
+07EC 0000      01715         BANKSEL (_lfo2_value + 1)
+07EE 5D00      01716         SUBWF   (_lfo2_value + 1), W, B
+07F0 E100      01717         BNZ     _00357_DS_
+07F2 0000      01718         BANKSEL _eg0_value
+07F4 5100      01719         MOVF    _eg0_value, W, B
+07F6 0000      01720         BANKSEL _lfo2_value
+07F8 5D00      01721         SUBWF   _lfo2_value, W, B
+07FA           01722 _00357_DS_:
+07FA E300      01723         BNC     _00191_DS_
+07FC 0000      01724         BANKSEL _lfo2_value
+               01725         .line   278; lfo.c      save2 = lfo2_value;
+07FE 5100      01726         MOVF    _lfo2_value, W, B
+0800 0000      01727         BANKSEL _save2
+0802 6F00      01728         MOVWF   _save2, B
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 33
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               01729         .line   279; lfo.c      lfo2_value = eg0_value;
+0804 C000 F000 01730         MOVFF   _eg0_value, _lfo2_value
+0808 C000 F000 01731         MOVFF   (_eg0_value + 1), (_lfo2_value + 1)
+               01732         .line   280; lfo.c      break;  }
+080C D000      01733         BRA     _00220_DS_
+080E           01734 _00191_DS_:
+               01735         .line   282; lfo.c      lfo2_value = save2;
+080E C000 F000 01736         MOVFF   _save2, _lfo2_value
+0812 0000      01737         BANKSEL (_lfo2_value + 1)
+0814 6B00      01738         CLRF    (_lfo2_value + 1), B
+0816 0000      01739         BANKSEL _LFO_bpm_tmp2
+               01740         .line   283; lfo.c      lfo2_value += LFO_bpm_tmp2;
+0818 5100      01741         MOVF    _LFO_bpm_tmp2, W, B
+081A 0000      01742         BANKSEL _lfo2_value
+081C 2700      01743         ADDWF   _lfo2_value, F, B
+081E 0000      01744         BANKSEL (_LFO_bpm_tmp2 + 1)
+0820 5100      01745         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+0822 0000      01746         BANKSEL (_lfo2_value + 1)
+0824 2300      01747         ADDWFC  (_lfo2_value + 1), F, B
+0826 0000      01748         BANKSEL (_eg1_value + 1)
+               01749         .line   284; lfo.c      if( lfo2_value >= eg1_value ) {
+0828 5100      01750         MOVF    (_eg1_value + 1), W, B
+082A 0000      01751         BANKSEL (_lfo2_value + 1)
+082C 5D00      01752         SUBWF   (_lfo2_value + 1), W, B
+082E E100      01753         BNZ     _00358_DS_
+0830 0000      01754         BANKSEL _eg1_value
+0832 5100      01755         MOVF    _eg1_value, W, B
+0834 0000      01756         BANKSEL _lfo2_value
+0836 5D00      01757         SUBWF   _lfo2_value, W, B
+0838           01758 _00358_DS_:
+0838 E300      01759         BNC     _00194_DS_
+083A 0000      01760         BANKSEL _lfo2_value
+               01761         .line   285; lfo.c      save2 = lfo2_value;
+083C 5100      01762         MOVF    _lfo2_value, W, B
+083E 0000      01763         BANKSEL _save2
+0840 6F00      01764         MOVWF   _save2, B
+               01765         .line   286; lfo.c      lfo2_value = eg1_value;
+0842 C000 F000 01766         MOVFF   _eg1_value, _lfo2_value
+0846 C000 F000 01767         MOVFF   (_eg1_value + 1), (_lfo2_value + 1)
+               01768         .line   287; lfo.c      break;  }
+084A D000      01769         BRA     _00220_DS_
+084C           01770 _00194_DS_:
+               01771         .line   289; lfo.c      lfo2_value = save2;
+084C C000 F000 01772         MOVFF   _save2, _lfo2_value
+0850 0000      01773         BANKSEL (_lfo2_value + 1)
+0852 6B00      01774         CLRF    (_lfo2_value + 1), B
+0854 0000      01775         BANKSEL _LFO_bpm_tmp2
+               01776         .line   290; lfo.c      lfo2_value += LFO_bpm_tmp2;
+0856 5100      01777         MOVF    _LFO_bpm_tmp2, W, B
+0858 0000      01778         BANKSEL _lfo2_value
+085A 2700      01779         ADDWF   _lfo2_value, F, B
+085C 0000      01780         BANKSEL (_LFO_bpm_tmp2 + 1)
+085E 5100      01781         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+0860 0000      01782         BANKSEL (_lfo2_value + 1)
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 34
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0862 2300      01783         ADDWFC  (_lfo2_value + 1), F, B
+0864 0000      01784         BANKSEL (_eg2_value + 1)
+               01785         .line   291; lfo.c      if( lfo2_value >= eg2_value ) {
+0866 5100      01786         MOVF    (_eg2_value + 1), W, B
+0868 0000      01787         BANKSEL (_lfo2_value + 1)
+086A 5D00      01788         SUBWF   (_lfo2_value + 1), W, B
+086C E100      01789         BNZ     _00359_DS_
+086E 0000      01790         BANKSEL _eg2_value
+0870 5100      01791         MOVF    _eg2_value, W, B
+0872 0000      01792         BANKSEL _lfo2_value
+0874 5D00      01793         SUBWF   _lfo2_value, W, B
+0876           01794 _00359_DS_:
+0876 E300      01795         BNC     _00197_DS_
+0878 0000      01796         BANKSEL _lfo2_value
+               01797         .line   292; lfo.c      save2 = lfo2_value;
+087A 5100      01798         MOVF    _lfo2_value, W, B
+087C 0000      01799         BANKSEL _save2
+087E 6F00      01800         MOVWF   _save2, B
+               01801         .line   293; lfo.c      lfo2_value = eg2_value;
+0880 C000 F000 01802         MOVFF   _eg2_value, _lfo2_value
+0884 C000 F000 01803         MOVFF   (_eg2_value + 1), (_lfo2_value + 1)
+               01804         .line   294; lfo.c      break; }
+0888 D000      01805         BRA     _00220_DS_
+088A           01806 _00197_DS_:
+               01807         .line   296; lfo.c      lfo2_value = save2;
+088A C000 F000 01808         MOVFF   _save2, _lfo2_value
+088E 0000      01809         BANKSEL (_lfo2_value + 1)
+0890 6B00      01810         CLRF    (_lfo2_value + 1), B
+0892 0000      01811         BANKSEL _LFO_bpm_tmp2
+               01812         .line   297; lfo.c      lfo2_value += LFO_bpm_tmp2;
+0894 5100      01813         MOVF    _LFO_bpm_tmp2, W, B
+0896 0000      01814         BANKSEL _lfo2_value
+0898 2700      01815         ADDWF   _lfo2_value, F, B
+089A 0000      01816         BANKSEL (_LFO_bpm_tmp2 + 1)
+089C 5100      01817         MOVF    (_LFO_bpm_tmp2 + 1), W, B
+089E 0000      01818         BANKSEL (_lfo2_value + 1)
+08A0 2300      01819         ADDWFC  (_lfo2_value + 1), F, B
+08A2 0000      01820         BANKSEL (_eg3_value + 1)
+               01821         .line   298; lfo.c      if( lfo2_value >= eg3_value ) {
+08A4 5100      01822         MOVF    (_eg3_value + 1), W, B
+08A6 0000      01823         BANKSEL (_lfo2_value + 1)
+08A8 5D00      01824         SUBWF   (_lfo2_value + 1), W, B
+08AA E100      01825         BNZ     _00360_DS_
+08AC 0000      01826         BANKSEL _eg3_value
+08AE 5100      01827         MOVF    _eg3_value, W, B
+08B0 0000      01828         BANKSEL _lfo2_value
+08B2 5D00      01829         SUBWF   _lfo2_value, W, B
+08B4           01830 _00360_DS_:
+08B4 A0D8      01831         BTFSS   STATUS, 0
+08B6 D000      01832         BRA     _00220_DS_
+08B8 0000      01833         BANKSEL _lfo2_value
+               01834         .line   299; lfo.c      save2 = lfo2_value;
+08BA 5100      01835         MOVF    _lfo2_value, W, B
+08BC 0000      01836         BANKSEL _save2
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 35
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+08BE 6F00      01837         MOVWF   _save2, B
+               01838         .line   300; lfo.c      lfo2_value = eg3_value;
+08C0 C000 F000 01839         MOVFF   _eg3_value, _lfo2_value
+08C4 C000 F000 01840         MOVFF   (_eg3_value + 1), (_lfo2_value + 1)
+               01841         .line   301; lfo.c      break;}
+08C8 D000      01842         BRA     _00220_DS_
+08CA           01843 _00216_DS_:
+08CA 0000      01844         BANKSEL (_all_param + 10)
+               01845         .line   306; lfo.c      switch( all_param.router_flags_Eg_to_lfo3.Eg_to_lfo3 ) {
+08CC 5100      01846         MOVF    (_all_param + 10), W, B
+08CE 0B0F      01847         ANDLW   0x0f
+08D0 6E00      01848         MOVWF   r0x00
+08D2 C000 F000 01849         MOVFF   r0x00, r0x01
+08D6 5000      01850         MOVF    r0x01, W
+08D8 E000      01851         BZ      _00201_DS_
+08DA C000 F000 01852         MOVFF   r0x00, r0x01
+08DE 5000      01853         MOVF    r0x01, W
+08E0 0A01      01854         XORLW   0x01
+08E2 E000      01855         BZ      _00202_DS_
+08E4 C000 F000 01856         MOVFF   r0x00, r0x01
+08E8 5000      01857         MOVF    r0x01, W
+08EA 0A02      01858         XORLW   0x02
+08EC E100      01859         BNZ     _00366_DS_
+08EE D000      01860         BRA     _00205_DS_
+08F0           01861 _00366_DS_:
+08F0 C000 F000 01862         MOVFF   r0x00, r0x01
+08F4 5000      01863         MOVF    r0x01, W
+08F6 0A04      01864         XORLW   0x04
+08F8 E100      01865         BNZ     _00368_DS_
+08FA D000      01866         BRA     _00208_DS_
+08FC           01867 _00368_DS_:
+08FC 5000      01868         MOVF    r0x00, W
+08FE 0A08      01869         XORLW   0x08
+0900 E100      01870         BNZ     _00370_DS_
+0902 D000      01871         BRA     _00211_DS_
+0904           01872 _00370_DS_:
+0904 D000      01873         BRA     _00220_DS_
+               01874 ; ;multiply lit val:0x02 by variable (_all_param + 34) and store in r0x00
+               01875 ; ;Unrolled 8 X 8 multiplication
+               01876 ; ;FIXME: the function does not support result==WREG
+0906           01877 _00201_DS_:
+               01878         .line   309; lfo.c      lfo2_value += lfo_add_table[all_param.lfo2_rate];
+0906 6A00      01879         CLRF    r0x01
+0908 90D8      01880         BCF     STATUS, 0
+090A 0000      01881         BANKSEL (_all_param + 34)
+090C 3500      01882         RLCF    (_all_param + 34), W, B
+090E 6E00      01883         MOVWF   r0x00
+0910 3600      01884         RLCF    r0x01, F
+0912 6A00      01885         CLRF    r0x02
+0914 0E00      01886         MOVLW   LOW(_lfo_add_table)
+0916 2600      01887         ADDWF   r0x00, F
+0918 0E00      01888         MOVLW   HIGH(_lfo_add_table)
+091A 2200      01889         ADDWFC  r0x01, F
+091C 0E00      01890         MOVLW   UPPER(_lfo_add_table)
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 36
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+091E 2200      01891         ADDWFC  r0x02, F
+0920 C000 FFF6 01892         MOVFF   r0x00, TBLPTRL
+0924 C000 FFF7 01893         MOVFF   r0x01, TBLPTRH
+0928 C000 FFF8 01894         MOVFF   r0x02, TBLPTRU
+092C 0009      01895         TBLRD*+ 
+092E CFF5 F000 01896         MOVFF   TABLAT, r0x00
+0932 0009      01897         TBLRD*+ 
+0934 CFF5 F000 01898         MOVFF   TABLAT, r0x01
+0938 5000      01899         MOVF    r0x00, W
+093A 0000      01900         BANKSEL _lfo2_value
+093C 2700      01901         ADDWF   _lfo2_value, F, B
+093E 5000      01902         MOVF    r0x01, W
+               01903 ; removed redundant BANKSEL
+0940 2300      01904         ADDWFC  (_lfo2_value + 1), F, B
+               01905         .line   310; lfo.c      break;
+0942 D000      01906         BRA     _00220_DS_
+0944           01907 _00202_DS_:
+               01908         .line   312; lfo.c      lfo2_value = save2;
+0944 C000 F000 01909         MOVFF   _save2, _lfo2_value
+0948 0000      01910         BANKSEL (_lfo2_value + 1)
+094A 6B00      01911         CLRF    (_lfo2_value + 1), B
+               01912 ; ;multiply lit val:0x02 by variable (_all_param + 34) and store in r0x00
+               01913 ; ;Unrolled 8 X 8 multiplication
+               01914 ; ;FIXME: the function does not support result==WREG
+               01915         .line   313; lfo.c      lfo2_value += lfo_add_table[all_param.lfo2_rate];
+094C 6A00      01916         CLRF    r0x01
+094E 90D8      01917         BCF     STATUS, 0
+0950 0000      01918         BANKSEL (_all_param + 34)
+0952 3500      01919         RLCF    (_all_param + 34), W, B
+0954 6E00      01920         MOVWF   r0x00
+0956 3600      01921         RLCF    r0x01, F
+0958 6A00      01922         CLRF    r0x02
+095A 0E00      01923         MOVLW   LOW(_lfo_add_table)
+095C 2600      01924         ADDWF   r0x00, F
+095E 0E00      01925         MOVLW   HIGH(_lfo_add_table)
+0960 2200      01926         ADDWFC  r0x01, F
+0962 0E00      01927         MOVLW   UPPER(_lfo_add_table)
+0964 2200      01928         ADDWFC  r0x02, F
+0966 C000 FFF6 01929         MOVFF   r0x00, TBLPTRL
+096A C000 FFF7 01930         MOVFF   r0x01, TBLPTRH
+096E C000 FFF8 01931         MOVFF   r0x02, TBLPTRU
+0972 0009      01932         TBLRD*+ 
+0974 CFF5 F000 01933         MOVFF   TABLAT, r0x00
+0978 0009      01934         TBLRD*+ 
+097A CFF5 F000 01935         MOVFF   TABLAT, r0x01
+097E 5000      01936         MOVF    r0x00, W
+0980 0000      01937         BANKSEL _lfo2_value
+0982 2700      01938         ADDWF   _lfo2_value, F, B
+0984 5000      01939         MOVF    r0x01, W
+               01940 ; removed redundant BANKSEL
+0986 2300      01941         ADDWFC  (_lfo2_value + 1), F, B
+0988 0000      01942         BANKSEL (_eg0_value + 1)
+               01943         .line   314; lfo.c      if( lfo2_value >= eg0_value ) {
+098A 5100      01944         MOVF    (_eg0_value + 1), W, B
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 37
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+098C 0000      01945         BANKSEL (_lfo2_value + 1)
+098E 5D00      01946         SUBWF   (_lfo2_value + 1), W, B
+0990 E100      01947         BNZ     _00371_DS_
+0992 0000      01948         BANKSEL _eg0_value
+0994 5100      01949         MOVF    _eg0_value, W, B
+0996 0000      01950         BANKSEL _lfo2_value
+0998 5D00      01951         SUBWF   _lfo2_value, W, B
+099A           01952 _00371_DS_:
+099A E300      01953         BNC     _00205_DS_
+099C 0000      01954         BANKSEL _lfo2_value
+               01955         .line   315; lfo.c      save2 = lfo2_value;
+099E 5100      01956         MOVF    _lfo2_value, W, B
+09A0 0000      01957         BANKSEL _save2
+09A2 6F00      01958         MOVWF   _save2, B
+               01959         .line   316; lfo.c      lfo2_value = eg0_value;
+09A4 C000 F000 01960         MOVFF   _eg0_value, _lfo2_value
+09A8 C000 F000 01961         MOVFF   (_eg0_value + 1), (_lfo2_value + 1)
+               01962         .line   317; lfo.c      break;  }
+09AC D000      01963         BRA     _00220_DS_
+09AE           01964 _00205_DS_:
+               01965         .line   319; lfo.c      lfo2_value = save2;
+09AE C000 F000 01966         MOVFF   _save2, _lfo2_value
+09B2 0000      01967         BANKSEL (_lfo2_value + 1)
+09B4 6B00      01968         CLRF    (_lfo2_value + 1), B
+               01969 ; ;multiply lit val:0x02 by variable (_all_param + 34) and store in r0x00
+               01970 ; ;Unrolled 8 X 8 multiplication
+               01971 ; ;FIXME: the function does not support result==WREG
+               01972         .line   320; lfo.c      lfo2_value += lfo_add_table[all_param.lfo2_rate];
+09B6 6A00      01973         CLRF    r0x01
+09B8 90D8      01974         BCF     STATUS, 0
+09BA 0000      01975         BANKSEL (_all_param + 34)
+09BC 3500      01976         RLCF    (_all_param + 34), W, B
+09BE 6E00      01977         MOVWF   r0x00
+09C0 3600      01978         RLCF    r0x01, F
+09C2 6A00      01979         CLRF    r0x02
+09C4 0E00      01980         MOVLW   LOW(_lfo_add_table)
+09C6 2600      01981         ADDWF   r0x00, F
+09C8 0E00      01982         MOVLW   HIGH(_lfo_add_table)
+09CA 2200      01983         ADDWFC  r0x01, F
+09CC 0E00      01984         MOVLW   UPPER(_lfo_add_table)
+09CE 2200      01985         ADDWFC  r0x02, F
+09D0 C000 FFF6 01986         MOVFF   r0x00, TBLPTRL
+09D4 C000 FFF7 01987         MOVFF   r0x01, TBLPTRH
+09D8 C000 FFF8 01988         MOVFF   r0x02, TBLPTRU
+09DC 0009      01989         TBLRD*+ 
+09DE CFF5 F000 01990         MOVFF   TABLAT, r0x00
+09E2 0009      01991         TBLRD*+ 
+09E4 CFF5 F000 01992         MOVFF   TABLAT, r0x01
+09E8 5000      01993         MOVF    r0x00, W
+09EA 0000      01994         BANKSEL _lfo2_value
+09EC 2700      01995         ADDWF   _lfo2_value, F, B
+09EE 5000      01996         MOVF    r0x01, W
+               01997 ; removed redundant BANKSEL
+09F0 2300      01998         ADDWFC  (_lfo2_value + 1), F, B
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 38
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+09F2 0000      01999         BANKSEL (_eg1_value + 1)
+               02000         .line   321; lfo.c      if( lfo2_value >= eg1_value ) {
+09F4 5100      02001         MOVF    (_eg1_value + 1), W, B
+09F6 0000      02002         BANKSEL (_lfo2_value + 1)
+09F8 5D00      02003         SUBWF   (_lfo2_value + 1), W, B
+09FA E100      02004         BNZ     _00372_DS_
+09FC 0000      02005         BANKSEL _eg1_value
+09FE 5100      02006         MOVF    _eg1_value, W, B
+0A00 0000      02007         BANKSEL _lfo2_value
+0A02 5D00      02008         SUBWF   _lfo2_value, W, B
+0A04           02009 _00372_DS_:
+0A04 E300      02010         BNC     _00208_DS_
+0A06 0000      02011         BANKSEL _lfo2_value
+               02012         .line   322; lfo.c      save2 = lfo2_value;
+0A08 5100      02013         MOVF    _lfo2_value, W, B
+0A0A 0000      02014         BANKSEL _save2
+0A0C 6F00      02015         MOVWF   _save2, B
+               02016         .line   323; lfo.c      lfo2_value = eg1_value;
+0A0E C000 F000 02017         MOVFF   _eg1_value, _lfo2_value
+0A12 C000 F000 02018         MOVFF   (_eg1_value + 1), (_lfo2_value + 1)
+               02019         .line   324; lfo.c      break;  }
+0A16 D000      02020         BRA     _00220_DS_
+0A18           02021 _00208_DS_:
+               02022         .line   326; lfo.c      lfo2_value = save2;
+0A18 C000 F000 02023         MOVFF   _save2, _lfo2_value
+0A1C 0000      02024         BANKSEL (_lfo2_value + 1)
+0A1E 6B00      02025         CLRF    (_lfo2_value + 1), B
+               02026 ; ;multiply lit val:0x02 by variable (_all_param + 34) and store in r0x00
+               02027 ; ;Unrolled 8 X 8 multiplication
+               02028 ; ;FIXME: the function does not support result==WREG
+               02029         .line   327; lfo.c      lfo2_value += lfo_add_table[all_param.lfo2_rate];
+0A20 6A00      02030         CLRF    r0x01
+0A22 90D8      02031         BCF     STATUS, 0
+0A24 0000      02032         BANKSEL (_all_param + 34)
+0A26 3500      02033         RLCF    (_all_param + 34), W, B
+0A28 6E00      02034         MOVWF   r0x00
+0A2A 3600      02035         RLCF    r0x01, F
+0A2C 6A00      02036         CLRF    r0x02
+0A2E 0E00      02037         MOVLW   LOW(_lfo_add_table)
+0A30 2600      02038         ADDWF   r0x00, F
+0A32 0E00      02039         MOVLW   HIGH(_lfo_add_table)
+0A34 2200      02040         ADDWFC  r0x01, F
+0A36 0E00      02041         MOVLW   UPPER(_lfo_add_table)
+0A38 2200      02042         ADDWFC  r0x02, F
+0A3A C000 FFF6 02043         MOVFF   r0x00, TBLPTRL
+0A3E C000 FFF7 02044         MOVFF   r0x01, TBLPTRH
+0A42 C000 FFF8 02045         MOVFF   r0x02, TBLPTRU
+0A46 0009      02046         TBLRD*+ 
+0A48 CFF5 F000 02047         MOVFF   TABLAT, r0x00
+0A4C 0009      02048         TBLRD*+ 
+0A4E CFF5 F000 02049         MOVFF   TABLAT, r0x01
+0A52 5000      02050         MOVF    r0x00, W
+0A54 0000      02051         BANKSEL _lfo2_value
+0A56 2700      02052         ADDWF   _lfo2_value, F, B
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 39
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0A58 5000      02053         MOVF    r0x01, W
+               02054 ; removed redundant BANKSEL
+0A5A 2300      02055         ADDWFC  (_lfo2_value + 1), F, B
+0A5C 0000      02056         BANKSEL (_eg2_value + 1)
+               02057         .line   328; lfo.c      if( lfo2_value >= eg2_value ) {
+0A5E 5100      02058         MOVF    (_eg2_value + 1), W, B
+0A60 0000      02059         BANKSEL (_lfo2_value + 1)
+0A62 5D00      02060         SUBWF   (_lfo2_value + 1), W, B
+0A64 E100      02061         BNZ     _00373_DS_
+0A66 0000      02062         BANKSEL _eg2_value
+0A68 5100      02063         MOVF    _eg2_value, W, B
+0A6A 0000      02064         BANKSEL _lfo2_value
+0A6C 5D00      02065         SUBWF   _lfo2_value, W, B
+0A6E           02066 _00373_DS_:
+0A6E E300      02067         BNC     _00211_DS_
+0A70 0000      02068         BANKSEL _lfo2_value
+               02069         .line   329; lfo.c      save2 = lfo2_value;
+0A72 5100      02070         MOVF    _lfo2_value, W, B
+0A74 0000      02071         BANKSEL _save2
+0A76 6F00      02072         MOVWF   _save2, B
+               02073         .line   330; lfo.c      lfo2_value = eg2_value;
+0A78 C000 F000 02074         MOVFF   _eg2_value, _lfo2_value
+0A7C C000 F000 02075         MOVFF   (_eg2_value + 1), (_lfo2_value + 1)
+               02076         .line   331; lfo.c      break; }
+0A80 D000      02077         BRA     _00220_DS_
+0A82           02078 _00211_DS_:
+               02079         .line   333; lfo.c      lfo2_value = save2;
+0A82 C000 F000 02080         MOVFF   _save2, _lfo2_value
+0A86 0000      02081         BANKSEL (_lfo2_value + 1)
+0A88 6B00      02082         CLRF    (_lfo2_value + 1), B
+               02083 ; ;multiply lit val:0x02 by variable (_all_param + 34) and store in r0x00
+               02084 ; ;Unrolled 8 X 8 multiplication
+               02085 ; ;FIXME: the function does not support result==WREG
+               02086         .line   334; lfo.c      lfo2_value += lfo_add_table[all_param.lfo2_rate];
+0A8A 6A00      02087         CLRF    r0x01
+0A8C 90D8      02088         BCF     STATUS, 0
+0A8E 0000      02089         BANKSEL (_all_param + 34)
+0A90 3500      02090         RLCF    (_all_param + 34), W, B
+0A92 6E00      02091         MOVWF   r0x00
+0A94 3600      02092         RLCF    r0x01, F
+0A96 6A00      02093         CLRF    r0x02
+0A98 0E00      02094         MOVLW   LOW(_lfo_add_table)
+0A9A 2600      02095         ADDWF   r0x00, F
+0A9C 0E00      02096         MOVLW   HIGH(_lfo_add_table)
+0A9E 2200      02097         ADDWFC  r0x01, F
+0AA0 0E00      02098         MOVLW   UPPER(_lfo_add_table)
+0AA2 2200      02099         ADDWFC  r0x02, F
+0AA4 C000 FFF6 02100         MOVFF   r0x00, TBLPTRL
+0AA8 C000 FFF7 02101         MOVFF   r0x01, TBLPTRH
+0AAC C000 FFF8 02102         MOVFF   r0x02, TBLPTRU
+0AB0 0009      02103         TBLRD*+ 
+0AB2 CFF5 F000 02104         MOVFF   TABLAT, r0x00
+0AB6 0009      02105         TBLRD*+ 
+0AB8 CFF5 F000 02106         MOVFF   TABLAT, r0x01
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 40
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0ABC 5000      02107         MOVF    r0x00, W
+0ABE 0000      02108         BANKSEL _lfo2_value
+0AC0 2700      02109         ADDWF   _lfo2_value, F, B
+0AC2 5000      02110         MOVF    r0x01, W
+               02111 ; removed redundant BANKSEL
+0AC4 2300      02112         ADDWFC  (_lfo2_value + 1), F, B
+0AC6 0000      02113         BANKSEL (_eg3_value + 1)
+               02114         .line   335; lfo.c      if( lfo2_value >= eg3_value ) {
+0AC8 5100      02115         MOVF    (_eg3_value + 1), W, B
+0ACA 0000      02116         BANKSEL (_lfo2_value + 1)
+0ACC 5D00      02117         SUBWF   (_lfo2_value + 1), W, B
+0ACE E100      02118         BNZ     _00374_DS_
+0AD0 0000      02119         BANKSEL _eg3_value
+0AD2 5100      02120         MOVF    _eg3_value, W, B
+0AD4 0000      02121         BANKSEL _lfo2_value
+0AD6 5D00      02122         SUBWF   _lfo2_value, W, B
+0AD8           02123 _00374_DS_:
+0AD8 E300      02124         BNC     _00220_DS_
+0ADA 0000      02125         BANKSEL _lfo2_value
+               02126         .line   336; lfo.c      save2 = lfo2_value;
+0ADC 5100      02127         MOVF    _lfo2_value, W, B
+0ADE 0000      02128         BANKSEL _save2
+0AE0 6F00      02129         MOVWF   _save2, B
+               02130         .line   337; lfo.c      lfo2_value = eg3_value;
+0AE2 C000 F000 02131         MOVFF   _eg3_value, _lfo2_value
+0AE6 C000 F000 02132         MOVFF   (_eg3_value + 1), (_lfo2_value + 1)
+0AEA           02133 _00220_DS_:
+               02134         .line   339; lfo.c      }
+0AEA CFEC F000 02135         MOVFF   PREINC1, r0x02
+0AEE CFEC F000 02136         MOVFF   PREINC1, r0x01
+0AF2 CFEC F000 02137         MOVFF   PREINC1, r0x00
+0AF6 0012      02138         RETURN  
+               02139 
+               02140 ; ; Starting pCode block
+               02141 S_lfo__LFO_Init code
+0000           02142 _LFO_Init:
+               02143         .line   74; lfo.c       lfo0_value = 0x7fff;
+0000 0EFF      02144         MOVLW   0xff
+0002 0000      02145         BANKSEL _lfo0_value
+0004 6F00      02146         MOVWF   _lfo0_value, B
+0006 0E7F      02147         MOVLW   0x7f
+               02148 ; removed redundant BANKSEL
+0008 6F00      02149         MOVWF   (_lfo0_value + 1), B
+               02150         .line   75; lfo.c       lfo1_value = 0x7fff;
+000A 0EFF      02151         MOVLW   0xff
+000C 0000      02152         BANKSEL _lfo1_value
+000E 6F00      02153         MOVWF   _lfo1_value, B
+0010 0E7F      02154         MOVLW   0x7f
+               02155 ; removed redundant BANKSEL
+0012 6F00      02156         MOVWF   (_lfo1_value + 1), B
+               02157         .line   76; lfo.c       lfo2_value = 0x7fff;
+0014 0EFF      02158         MOVLW   0xff
+0016 0000      02159         BANKSEL _lfo2_value
+0018 6F00      02160         MOVWF   _lfo2_value, B
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 41
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+001A 0E7F      02161         MOVLW   0x7f
+               02162 ; removed redundant BANKSEL
+001C 6F00      02163         MOVWF   (_lfo2_value + 1), B
+001E 0012      02164         RETURN  
+               02165 
+               02166 ; ; Starting pCode block for Ival
+               02167         code
+0000           02168 _lfo_add_table:
+0000 0000 0001 02169         DB      0x00, 0x00, 0x01, 0x00, 0x02, 0x00, 0x03, 0x00, 0x04, 0x00, 0x06, 0x00
+0004 0002 0003
+0008 0004 0006
+000C 0007 0008 02170         DB      0x07, 0x00, 0x08, 0x00, 0x0a, 0x00, 0x0b, 0x00, 0x0c, 0x00, 0x0e, 0x00
+0010 000A 000B
+0014 000C 000E
+0018 000F 0011 02171         DB      0x0f, 0x00, 0x11, 0x00, 0x12, 0x00, 0x14, 0x00, 0x15, 0x00, 0x17, 0x00
+001C 0012 0014
+0020 0015 0017
+0024 0019 001A 02172         DB      0x19, 0x00, 0x1a, 0x00, 0x1c, 0x00, 0x1e, 0x00, 0x1f, 0x00, 0x21, 0x00
+0028 001C 001E
+002C 001F 0021
+0030 0023 0025 02173         DB      0x23, 0x00, 0x25, 0x00, 0x27, 0x00, 0x29, 0x00, 0x2a, 0x00, 0x2c, 0x00
+0034 0027 0029
+0038 002A 002C
+003C 002E 0030 02174         DB      0x2e, 0x00, 0x30, 0x00, 0x33, 0x00, 0x35, 0x00, 0x37, 0x00, 0x39, 0x00
+0040 0033 0035
+0044 0037 0039
+0048 003B 003E 02175         DB      0x3b, 0x00, 0x3e, 0x00, 0x40, 0x00, 0x42, 0x00, 0x45, 0x00, 0x47, 0x00
+004C 0040 0042
+0050 0045 0047
+0054 004A 004C 02176         DB      0x4a, 0x00, 0x4c, 0x00, 0x4f, 0x00, 0x51, 0x00, 0x54, 0x00, 0x57, 0x00
+0058 004F 0051
+005C 0054 0057
+0060 0059 005C 02177         DB      0x59, 0x00, 0x5c, 0x00, 0x5f, 0x00, 0x62, 0x00, 0x65, 0x00, 0x68, 0x00
+0064 005F 0062
+0068 0065 0068
+006C 006B 006E 02178         DB      0x6b, 0x00, 0x6e, 0x00, 0x72, 0x00, 0x75, 0x00, 0x78, 0x00, 0x7c, 0x00
+0070 0072 0075
+0074 0078 007C
+0078 007F 0082 02179         DB      0x7f, 0x00, 0x82, 0x00, 0x86, 0x00, 0x8a, 0x00, 0x8d, 0x00, 0x91, 0x00
+007C 0086 008A
+0080 008D 0091
+0084 0095 0099 02180         DB      0x95, 0x00, 0x99, 0x00, 0x9d, 0x00, 0xa1, 0x00, 0xa5, 0x00, 0xa9, 0x00
+0088 009D 00A1
+008C 00A5 00A9
+0090 00AD 00B2 02181         DB      0xad, 0x00, 0xb2, 0x00, 0xb6, 0x00, 0xbb, 0x00, 0xbf, 0x00, 0xc4, 0x00
+0094 00B6 00BB
+0098 00BF 00C4
+009C 00C9 00CE 02182         DB      0xc9, 0x00, 0xce, 0x00, 0xd3, 0x00, 0xd8, 0x00, 0xdd, 0x00, 0xe2, 0x00
+00A0 00D3 00D8
+00A4 00DD 00E2
+00A8 00E7 00ED 02183         DB      0xe7, 0x00, 0xed, 0x00, 0xf2, 0x00, 0xf8, 0x00, 0xfd, 0x00, 0x03, 0x01
+00AC 00F2 00F8
+00B0 00FD 0103
+00B4 0109 010F 02184         DB      0x09, 0x01, 0x0f, 0x01, 0x15, 0x01, 0x1b, 0x01, 0x22, 0x01, 0x28, 0x01
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 42
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00B8 0115 011B
+00BC 0122 0128
+00C0 012F 0136 02185         DB      0x2f, 0x01, 0x36, 0x01, 0x3c, 0x01, 0x43, 0x01, 0x4a, 0x01, 0x52, 0x01
+00C4 013C 0143
+00C8 014A 0152
+00CC 0159 0160 02186         DB      0x59, 0x01, 0x60, 0x01, 0x68, 0x01, 0x70, 0x01, 0x78, 0x01, 0x80, 0x01
+00D0 0168 0170
+00D4 0178 0180
+00D8 0188 0190 02187         DB      0x88, 0x01, 0x90, 0x01, 0x99, 0x01, 0xa1, 0x01, 0xaa, 0x01, 0xb3, 0x01
+00DC 0199 01A1
+00E0 01AA 01B3
+00E4 01BC 01C5 02188         DB      0xbc, 0x01, 0xc5, 0x01, 0xcf, 0x01, 0xd8, 0x01, 0xe2, 0x01, 0xec, 0x01
+00E8 01CF 01D8
+00EC 01E2 01EC
+00F0 01F6 0201 02189         DB      0xf6, 0x01, 0x01, 0x02, 0x0b, 0x02, 0x16, 0x02, 0x21, 0x02, 0x2c, 0x02
+00F4 020B 0216
+00F8 0221 022C
+00FC 0237 0243 02190         DB      0x37, 0x02, 0x43, 0x02, 0x4e, 0x02, 0x5a, 0x02, 0x66, 0x02, 0x73, 0x02
+0100 024E 025A
+0104 0266 0273
+0108 027F 028C 02191         DB      0x7f, 0x02, 0x8c, 0x02, 0x99, 0x02, 0xa6, 0x02, 0xb4, 0x02, 0xc2, 0x02
+010C 0299 02A6
+0110 02B4 02C2
+0114 02D0 02DE 02192         DB      0xd0, 0x02, 0xde, 0x02, 0xec, 0x02, 0xfb, 0x02, 0x0a, 0x03, 0x1a, 0x03
+0118 02EC 02FB
+011C 030A 031A
+0120 0329 0339 02193         DB      0x29, 0x03, 0x39, 0x03, 0x49, 0x03, 0x5a, 0x03, 0x6b, 0x03, 0x7c, 0x03
+0124 0349 035A
+0128 036B 037C
+012C 038D 039F 02194         DB      0x8d, 0x03, 0x9f, 0x03, 0xb1, 0x03, 0xc3, 0x03, 0xd6, 0x03, 0xe9, 0x03
+0130 03B1 03C3
+0134 03D6 03E9
+0138 03FC 0410 02195         DB      0xfc, 0x03, 0x10, 0x04, 0x24, 0x04, 0x39, 0x04, 0x4d, 0x04, 0x63, 0x04
+013C 0424 0439
+0140 044D 0463
+0144 0478 048E 02196         DB      0x78, 0x04, 0x8e, 0x04, 0xa5, 0x04, 0xbb, 0x04, 0xd3, 0x04, 0xea, 0x04
+0148 04A5 04BB
+014C 04D3 04EA
+0150 0502 051B 02197         DB      0x02, 0x05, 0x1b, 0x05, 0x34, 0x05, 0x4d, 0x05, 0x67, 0x05, 0x81, 0x05
+0154 0534 054D
+0158 0567 0581
+015C 059C 05B7 02198         DB      0x9c, 0x05, 0xb7, 0x05, 0xd3, 0x05, 0xef, 0x05, 0x0c, 0x06, 0x29, 0x06
+0160 05D3 05EF
+0164 060C 0629
+0168 0647 0666 02199         DB      0x47, 0x06, 0x66, 0x06, 0x85, 0x06, 0xa4, 0x06, 0xc4, 0x06, 0xe5, 0x06
+016C 0685 06A4
+0170 06C4 06E5
+0174 0706 0728 02200         DB      0x06, 0x07, 0x28, 0x07, 0x4b, 0x07, 0x6e, 0x07, 0x91, 0x07, 0xb6, 0x07
+0178 074B 076E
+017C 0791 07B6
+0180 07DB 0801 02201         DB      0xdb, 0x07, 0x01, 0x08, 0x27, 0x08, 0x4e, 0x08, 0x76, 0x08, 0x9e, 0x08
+0184 0827 084E
+0188 0876 089E
+018C 08C8 08F2 02202         DB      0xc8, 0x08, 0xf2, 0x08, 0x1c, 0x09, 0x48, 0x09, 0x74, 0x09, 0xa2, 0x09
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 43
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0190 091C 0948
+0194 0974 09A2
+0198 09D0 09FE 02203         DB      0xd0, 0x09, 0xfe, 0x09, 0x2e, 0x0a, 0x5f, 0x0a, 0x90, 0x0a, 0xc2, 0x0a
+019C 0A2E 0A5F
+01A0 0A90 0AC2
+01A4 0AF5 0B2A 02204         DB      0xf5, 0x0a, 0x2a, 0x0b, 0x5f, 0x0b, 0x95, 0x0b, 0xcc, 0x0b, 0x04, 0x0c
+01A8 0B5F 0B95
+01AC 0BCC 0C04
+01B0 0C3D 0C77 02205         DB      0x3d, 0x0c, 0x77, 0x0c, 0xb2, 0x0c, 0xee, 0x0c, 0x2c, 0x0d, 0x6a, 0x0d
+01B4 0CB2 0CEE
+01B8 0D2C 0D6A
+01BC 0DAA 0DEB 02206         DB      0xaa, 0x0d, 0xeb, 0x0d, 0x2c, 0x0e, 0x70, 0x0e, 0xb4, 0x0e, 0xf9, 0x0e
+01C0 0E2C 0E70
+01C4 0EB4 0EF9
+01C8 0F40 0F88 02207         DB      0x40, 0x0f, 0x88, 0x0f, 0xd2, 0x0f, 0x1d, 0x10, 0x69, 0x10, 0xb6, 0x10
+01CC 0FD2 101D
+01D0 1069 10B6
+01D4 1105 1155 02208         DB      0x05, 0x11, 0x55, 0x11, 0xa7, 0x11, 0xfa, 0x11, 0x4f, 0x12, 0xa6, 0x12
+01D8 11A7 11FA
+01DC 124F 12A6
+01E0 12FE 1357 02209         DB      0xfe, 0x12, 0x57, 0x13, 0xb2, 0x13, 0x0f, 0x14, 0x6d, 0x14, 0xce, 0x14
+01E4 13B2 140F
+01E8 146D 14CE
+01EC 1530 1593 02210         DB      0x30, 0x15, 0x93, 0x15, 0xf9, 0x15, 0x60, 0x16, 0xc9, 0x16, 0x34, 0x17
+01F0 15F9 1660
+01F4 16C9 1734
+01F8 17A2 1811 02211         DB      0xa2, 0x17, 0x11, 0x18, 0x82, 0x18, 0xf5, 0x18
+01FC 1882 18F5
+               02212 ; ; Starting pCode block for Ival
+0200           02213 _lfo_add_table_bpm:
+0200 0000 0000 02214         DB      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+0204 0000 0000
+0208 0000 0000
+020C 0000 0000 02215         DB      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+0210 0000 0000
+0214 0000 0000
+0218 0000 0000 02216         DB      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+021C 0000 0000
+0220 0000 0000
+0224 0000 0000 02217         DB      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+0228 0000 0000
+022C 0000 0000
+0230 0000 0000 02218         DB      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+0234 0000 0000
+0238 0000 0000
+023C 0000 0000 02219         DB      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+0240 0000 0000
+0244 0000 0000
+0248 0000 0000 02220         DB      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+024C 0000 0000
+0250 0000 0000
+0254 0000 0000 02221         DB      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+0258 0000 0000
+025C 0000 0000
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 44
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0260 0034 0035 02222         DB      0x34, 0x00, 0x35, 0x00, 0x36, 0x00, 0x37, 0x00, 0x38, 0x00, 0x39, 0x00
+0264 0036 0037
+0268 0038 0039
+026C 003A 003C 02223         DB      0x3a, 0x00, 0x3c, 0x00, 0x3d, 0x00, 0x3e, 0x00, 0x3f, 0x00, 0x40, 0x00
+0270 003D 003E
+0274 003F 0040
+0278 0041 0042 02224         DB      0x41, 0x00, 0x42, 0x00, 0x43, 0x00, 0x44, 0x00, 0x45, 0x00, 0x46, 0x00
+027C 0043 0044
+0280 0045 0046
+0284 0048 0049 02225         DB      0x48, 0x00, 0x49, 0x00, 0x4a, 0x00, 0x4b, 0x00, 0x4c, 0x00, 0x4d, 0x00
+0288 004A 004B
+028C 004C 004D
+0290 004E 004F 02226         DB      0x4e, 0x00, 0x4f, 0x00, 0x50, 0x00, 0x51, 0x00, 0x53, 0x00, 0x54, 0x00
+0294 0050 0051
+0298 0053 0054
+029C 0055 0056 02227         DB      0x55, 0x00, 0x56, 0x00, 0x57, 0x00, 0x58, 0x00, 0x59, 0x00, 0x5a, 0x00
+02A0 0057 0058
+02A4 0059 005A
+02A8 005B 005C 02228         DB      0x5b, 0x00, 0x5c, 0x00, 0x5d, 0x00, 0x5f, 0x00, 0x60, 0x00, 0x61, 0x00
+02AC 005D 005F
+02B0 0060 0061
+02B4 0062 0063 02229         DB      0x62, 0x00, 0x63, 0x00, 0x64, 0x00, 0x65, 0x00, 0x66, 0x00, 0x67, 0x00
+02B8 0064 0065
+02BC 0066 0067
+02C0 0068 0069 02230         DB      0x68, 0x00, 0x69, 0x00, 0x6b, 0x00, 0x6c, 0x00, 0x6d, 0x00, 0x6e, 0x00
+02C4 006B 006C
+02C8 006D 006E
+02CC 006F 0070 02231         DB      0x6f, 0x00, 0x70, 0x00, 0x71, 0x00, 0x72, 0x00, 0x73, 0x00, 0x74, 0x00
+02D0 0071 0072
+02D4 0073 0074
+02D8 0075 0077 02232         DB      0x75, 0x00, 0x77, 0x00, 0x78, 0x00, 0x79, 0x00, 0x7a, 0x00, 0x7b, 0x00
+02DC 0078 0079
+02E0 007A 007B
+02E4 007C 007D 02233         DB      0x7c, 0x00, 0x7d, 0x00, 0x7e, 0x00, 0x7f, 0x00, 0x80, 0x00, 0x81, 0x00
+02E8 007E 007F
+02EC 0080 0081
+02F0 0083 0084 02234         DB      0x83, 0x00, 0x84, 0x00, 0x85, 0x00, 0x86, 0x00, 0x87, 0x00, 0x88, 0x00
+02F4 0085 0086
+02F8 0087 0088
+02FC 0089 008A 02235         DB      0x89, 0x00, 0x8a, 0x00, 0x8b, 0x00, 0x8c, 0x00, 0x8d, 0x00, 0x8f, 0x00
+0300 008B 008C
+0304 008D 008F
+0308 0090 0091 02236         DB      0x90, 0x00, 0x91, 0x00, 0x92, 0x00, 0x93, 0x00, 0x94, 0x00, 0x95, 0x00
+030C 0092 0093
+0310 0094 0095
+0314 0096 0097 02237         DB      0x96, 0x00, 0x97, 0x00, 0x98, 0x00, 0x9a, 0x00, 0x9b, 0x00, 0x9c, 0x00
+0318 0098 009A
+031C 009B 009C
+0320 009D 009E 02238         DB      0x9d, 0x00, 0x9e, 0x00, 0x9f, 0x00, 0xa0, 0x00, 0xa1, 0x00, 0xa2, 0x00
+0324 009F 00A0
+0328 00A1 00A2
+032C 00A3 00A4 02239         DB      0xa3, 0x00, 0xa4, 0x00, 0xa6, 0x00, 0xa7, 0x00, 0xa8, 0x00, 0xa9, 0x00
+0330 00A6 00A7
+0334 00A8 00A9
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 45
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0338 00AA 00AB 02240         DB      0xaa, 0x00, 0xab, 0x00, 0xac, 0x00, 0xad, 0x00, 0xae, 0x00, 0xaf, 0x00
+033C 00AC 00AD
+0340 00AE 00AF
+0344 00B0 00B2 02241         DB      0xb0, 0x00, 0xb2, 0x00, 0xb3, 0x00, 0xb4, 0x00, 0xb5, 0x00, 0xb6, 0x00
+0348 00B3 00B4
+034C 00B5 00B6
+0350 00B7 00B8 02242         DB      0xb7, 0x00, 0xb8, 0x00, 0xb9, 0x00, 0xba, 0x00, 0xbb, 0x00, 0xbc, 0x00
+0354 00B9 00BA
+0358 00BB 00BC
+035C 00BE 00BF 02243         DB      0xbe, 0x00, 0xbf, 0x00, 0xc0, 0x00, 0xc1, 0x00, 0xc2, 0x00, 0xc3, 0x00
+0360 00C0 00C1
+0364 00C2 00C3
+0368 00C4 00C5 02244         DB      0xc4, 0x00, 0xc5, 0x00, 0xc6, 0x00, 0xc7, 0x00, 0xc8, 0x00, 0xca, 0x00
+036C 00C6 00C7
+0370 00C8 00CA
+0374 00CB 00CC 02245         DB      0xcb, 0x00, 0xcc, 0x00, 0xcd, 0x00, 0xce, 0x00, 0xcf, 0x00, 0xd0, 0x00
+0378 00CD 00CE
+037C 00CF 00D0
+0380 00D1 00D2 02246         DB      0xd1, 0x00, 0xd2, 0x00, 0xd3, 0x00, 0xd4, 0x00, 0xd6, 0x00, 0xd7, 0x00
+0384 00D3 00D4
+0388 00D6 00D7
+038C 00D8 00D9 02247         DB      0xd8, 0x00, 0xd9, 0x00, 0xda, 0x00, 0xdb, 0x00, 0xdc, 0x00, 0xdd, 0x00
+0390 00DA 00DB
+0394 00DC 00DD
+0398 00DE 00DF 02248         DB      0xde, 0x00, 0xdf, 0x00, 0xe1, 0x00, 0xe2, 0x00, 0xe3, 0x00, 0xe4, 0x00
+039C 00E1 00E2
+03A0 00E3 00E4
+03A4 00E5 00E6 02249         DB      0xe5, 0x00, 0xe6, 0x00, 0xe7, 0x00, 0xe8, 0x00, 0xe9, 0x00, 0xea, 0x00
+03A8 00E7 00E8
+03AC 00E9 00EA
+03B0 00EB 00ED 02250         DB      0xeb, 0x00, 0xed, 0x00, 0xee, 0x00, 0xef, 0x00, 0xf0, 0x00, 0xf1, 0x00
+03B4 00EE 00EF
+03B8 00F0 00F1
+03BC 00F2 00F3 02251         DB      0xf2, 0x00, 0xf3, 0x00, 0xf4, 0x00, 0xf5, 0x00, 0xf6, 0x00, 0xf7, 0x00
+03C0 00F4 00F5
+03C4 00F6 00F7
+03C8 00F9 00FA 02252         DB      0xf9, 0x00, 0xfa, 0x00, 0xfb, 0x00, 0xfc, 0x00, 0xfd, 0x00, 0xfe, 0x00
+03CC 00FB 00FC
+03D0 00FD 00FE
+03D4 00FF 0100 02253         DB      0xff, 0x00, 0x00, 0x01, 0x01, 0x01, 0x02, 0x01, 0x03, 0x01, 0x05, 0x01
+03D8 0101 0102
+03DC 0103 0105
+03E0 0106 0107 02254         DB      0x06, 0x01, 0x07, 0x01, 0x08, 0x01, 0x09, 0x01, 0x0a, 0x01, 0x0b, 0x01
+03E4 0108 0109
+03E8 010A 010B
+03EC 010C 010D 02255         DB      0x0c, 0x01, 0x0d, 0x01, 0x0e, 0x01, 0x0f, 0x01, 0x11, 0x01, 0x12, 0x01
+03F0 010E 010F
+03F4 0111 0112
+03F8 0113 0114 02256         DB      0x13, 0x01, 0x14, 0x01, 0x15, 0x01, 0x16, 0x01
+03FC 0115 0116
+               02257 
+               02258 
+               02259 ; Statistics:
+               02260 ; code size:     3502 (0x0dae) bytes ( 2.67%)
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 46
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               02261 ;                1751 (0x06d7) words
+               02262 ; udata size:      16 (0x0010) bytes ( 0.42%)
+               02263 ; access size:      5 (0x0005) bytes
+               02264 
+               02265 
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 47
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FSR1L                             00000FE9
+FSR2L                             00000FD9
+PCL                               00000FF9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+PLUSW2                            00000FDB
+POSTDEC1                          00000FED
+PREINC1                           00000FEC
+STATUS                            00000FD8
+TABLAT                            00000FF5
+TBLPTRH                           00000FF7
+TBLPTRL                           00000FF6
+TBLPTRU                           00000FF8
+WREG                              00000FE8
+_00112_DS_                        00000024
+_00113_DS_                        0000007E
+_00114_DS_                        00000090
+_00117_DS_                        000000CE
+_00120_DS_                        0000010C
+_00123_DS_                        0000014C
+_00127_DS_                        000001C8
+_00128_DS_                        00000206
+_00131_DS_                        00000270
+_00134_DS_                        000002DA
+_00137_DS_                        00000346
+_00142_DS_                        0000018C
+_00145_DS_                        000003AE
+_00149_DS_                        000003C6
+_00150_DS_                        00000420
+_00151_DS_                        00000432
+_00154_DS_                        00000470
+_00157_DS_                        000004AE
+_00160_DS_                        000004EC
+_00164_DS_                        00000568
+_00165_DS_                        000005A6
+_00168_DS_                        00000610
+_00171_DS_                        0000067A
+_00174_DS_                        000006E4
+_00179_DS_                        0000052C
+_00182_DS_                        0000074C
+_00186_DS_                        00000764
+_00187_DS_                        000007BE
+_00188_DS_                        000007D0
+_00191_DS_                        0000080E
+_00194_DS_                        0000084C
+_00197_DS_                        0000088A
+_00201_DS_                        00000906
+_00202_DS_                        00000944
+_00205_DS_                        000009AE
+_00208_DS_                        00000A18
+_00211_DS_                        00000A82
+_00216_DS_                        000008CA
+_00220_DS_                        00000AEA
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 48
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_00294_DS_                        00000068
+_00296_DS_                        00000074
+_00298_DS_                        0000007C
+_00299_DS_                        000000BA
+_00300_DS_                        000000F8
+_00301_DS_                        00000136
+_00302_DS_                        00000176
+_00308_DS_                        000001B2
+_00310_DS_                        000001BE
+_00312_DS_                        000001C6
+_00313_DS_                        0000025C
+_00314_DS_                        000002C6
+_00315_DS_                        00000330
+_00316_DS_                        0000039C
+_00323_DS_                        0000040A
+_00325_DS_                        00000416
+_00327_DS_                        0000041E
+_00328_DS_                        0000045C
+_00329_DS_                        0000049A
+_00330_DS_                        000004D8
+_00331_DS_                        00000516
+_00337_DS_                        00000552
+_00339_DS_                        0000055E
+_00341_DS_                        00000566
+_00342_DS_                        000005FC
+_00343_DS_                        00000666
+_00344_DS_                        000006D0
+_00345_DS_                        0000073A
+_00352_DS_                        000007A8
+_00354_DS_                        000007B4
+_00356_DS_                        000007BC
+_00357_DS_                        000007FA
+_00358_DS_                        00000838
+_00359_DS_                        00000876
+_00360_DS_                        000008B4
+_00366_DS_                        000008F0
+_00368_DS_                        000008FC
+_00370_DS_                        00000904
+_00371_DS_                        0000099A
+_00372_DS_                        00000A04
+_00373_DS_                        00000A6E
+_00374_DS_                        00000AD8
+_00379_DS_                        000000BA
+_00380_DS_                        000000D8
+_00381_DS_                        000000F6
+_00382_DS_                        00000110
+_00383_DS_                        00000130
+_00384_DS_                        0000014A
+_00385_DS_                        0000015E
+_00386_DS_                        00000170
+_00387_DS_                        00000184
+_00388_DS_                        0000019E
+_00389_DS_                        000001BE
+_00391_DS_                        000001D6
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 49
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_00395_DS_                        0000008E
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_BAUDCON                          00000000
+_BAUDCONbits                      00000000
+_BSR                              00000000
+_BSRbits                          00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_EEADR                            00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EEDATA                           00000000
+_FSR0H                            00000000
+_FSR0Hbits                        00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1Hbits                        00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2Hbits                        00000000
+_FSR2L                            00000000
+_HLVDCON                          00000000
+_HLVDCONbits                      00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 50
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_IPR2                             00000000
+_IPR2bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_LFO_Init                         00000000
+_LFO_Tick                         00000000
+_LFO_bpm                          00000000
+_LFO_bpm_LFO_bpm_tmp_1_1          00000000
+_LFO_bpm_lfox_bpm_1_1             00000000
+_LFO_bpm_tmp2                     00000000
+_MIOS_BOX_CFG0                    00000000
+_MIOS_BOX_CFG1                    00000000
+_MIOS_BOX_STAT                    00000000
+_MIOS_ENC_PIN_TABLE               00000000
+_MIOS_MPROC_EVENT_TABLE           00000000
+_MIOS_PARAMETER1                  00000000
+_MIOS_PARAMETER2                  00000000
+_MIOS_PARAMETER3                  00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATHbits                       00000000
+_PCLATU                           00000000
+_PCLATUbits                       00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 51
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PORTE                            00000000
+_PORTEbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PWM1CON                          00000000
+_PWM1CONbits                      00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCSTA                            00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRGH                           00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TBLPTRUbits                      00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 52
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_TMR3L                            00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TOSUbits                         00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TXREG                            00000000
+_TXSTA                            00000000
+_TXSTAbits                        00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F4620                         00000001
+_all_param                        00000000
+_app_flags                        00000000
+_bank                             00000000
+_bpm                              00000000
+_eg0                              00000000
+_eg0_value                        00000000
+_eg1                              00000000
+_eg1_value                        00000000
+_eg2                              00000000
+_eg2_value                        00000000
+_eg3                              00000000
+_eg3_value                        00000000
+_lfo0_value                       00000000
+_lfo1_value                       00000000
+_lfo2_value                       00000000
+_lfo_add_table                    00000000
+_lfo_add_table_bpm                00000200
+_lfox_bpm                         00000000
+_load_last                        00000000
+_looper                           00000000
+_midi_cc_chn0                     00000000
+_midi_note                        00000000
+_midi_pitch_bender                00000000
+_mios_enc_pin_table               00000000
+_mios_mproc_event_table           00000000
+_new_note                         00000000
+_preset                           00000000
+_save0                            00000000
+_save1                            00000000
+_save2                            00000000
+_save3                            00000000
+_update_led                       00000000
+gpasm-0.13.6 beta               _output/lfo__mios-gpasm-tmp.asm7-10-2008  15:16:04          PAGE 53
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_update_preset_led                00000000
+r0x00                             00000010
+r0x01                             00000011
+r0x02                             00000012
+r0x03                             00000013
+r0x04                             00000014
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

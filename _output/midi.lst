@@ -1,0 +1,850 @@
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.8.0 #5082 (Mar  9 2008) (MINGW32)
+               00004 ; This file was generated Thu Jul 10 15:16:02 2008
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008 
+               00009         .ident "SDCC version 2.8.0 #5082 [pic16 port]"
+               00010         .file   "midi.c"
+               00011         list    p=18f4620
+               00012 
+               00013         radix dec
+               00014 
+               00015 ;--------------------------------------------------------
+               00016 ; public variables in this module
+               00017 ;--------------------------------------------------------
+               00018         global _new_note
+               00019         global _MIDI_Init
+               00020         global _MIDI_Evnt
+               00021         global _midi_note
+               00022         global _midi_cc_chn0
+               00023         global _midi_pitch_bender
+               00024 
+               00025 ;--------------------------------------------------------
+               00026 ; extern variables in this module
+               00027 ;--------------------------------------------------------
+               00028         extern _MIOS_BOX_CFG0
+               00029         extern _MIOS_BOX_CFG1
+               00030         extern _MIOS_BOX_STAT
+               00031         extern _MIOS_PARAMETER1
+               00032         extern _MIOS_PARAMETER2
+               00033         extern _MIOS_PARAMETER3
+               00034         extern _PORTAbits
+               00035         extern _PORTBbits
+               00036         extern _PORTCbits
+               00037         extern _PORTDbits
+               00038         extern _PORTEbits
+               00039         extern _LATAbits
+               00040         extern _LATBbits
+               00041         extern _LATCbits
+               00042         extern _LATDbits
+               00043         extern _LATEbits
+               00044         extern _TRISAbits
+               00045         extern _TRISBbits
+               00046         extern _TRISCbits
+               00047         extern _TRISDbits
+               00048         extern _TRISEbits
+               00049         extern _OSCTUNEbits
+               00050         extern _PIE1bits
+               00051         extern _PIR1bits
+               00052         extern _IPR1bits
+               00053         extern _PIE2bits
+               00054         extern _PIR2bits
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _IPR2bits
+               00056         extern _EECON1bits
+               00057         extern _RCSTAbits
+               00058         extern _TXSTAbits
+               00059         extern _T3CONbits
+               00060         extern _CMCONbits
+               00061         extern _CVRCONbits
+               00062         extern _ECCP1ASbits
+               00063         extern _PWM1CONbits
+               00064         extern _BAUDCONbits
+               00065         extern _CCP2CONbits
+               00066         extern _CCP1CONbits
+               00067         extern _ADCON2bits
+               00068         extern _ADCON1bits
+               00069         extern _ADCON0bits
+               00070         extern _SSPCON2bits
+               00071         extern _SSPCON1bits
+               00072         extern _SSPSTATbits
+               00073         extern _T2CONbits
+               00074         extern _T1CONbits
+               00075         extern _RCONbits
+               00076         extern _WDTCONbits
+               00077         extern _HLVDCONbits
+               00078         extern _OSCCONbits
+               00079         extern _T0CONbits
+               00080         extern _STATUSbits
+               00081         extern _FSR2Hbits
+               00082         extern _BSRbits
+               00083         extern _FSR1Hbits
+               00084         extern _FSR0Hbits
+               00085         extern _INTCON3bits
+               00086         extern _INTCON2bits
+               00087         extern _INTCONbits
+               00088         extern _TBLPTRUbits
+               00089         extern _PCLATHbits
+               00090         extern _PCLATUbits
+               00091         extern _STKPTRbits
+               00092         extern _TOSUbits
+               00093         extern _bank
+               00094         extern _preset
+               00095         extern _looper
+               00096         extern _app_flags
+               00097         extern _load_last
+               00098         extern _update_led
+               00099         extern _update_preset_led
+               00100         extern _lfo0_value
+               00101         extern _lfo1_value
+               00102         extern _lfo2_value
+               00103         extern _eg0
+               00104         extern _eg1
+               00105         extern _eg2
+               00106         extern _eg3
+               00107         extern _eg0_value
+               00108         extern _eg1_value
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _eg2_value
+               00110         extern _eg3_value
+               00111         extern _all_param
+               00112         extern _PORTA
+               00113         extern _PORTB
+               00114         extern _PORTC
+               00115         extern _PORTD
+               00116         extern _PORTE
+               00117         extern _LATA
+               00118         extern _LATB
+               00119         extern _LATC
+               00120         extern _LATD
+               00121         extern _LATE
+               00122         extern _TRISA
+               00123         extern _TRISB
+               00124         extern _TRISC
+               00125         extern _TRISD
+               00126         extern _TRISE
+               00127         extern _OSCTUNE
+               00128         extern _PIE1
+               00129         extern _PIR1
+               00130         extern _IPR1
+               00131         extern _PIE2
+               00132         extern _PIR2
+               00133         extern _IPR2
+               00134         extern _EECON1
+               00135         extern _EECON2
+               00136         extern _EEDATA
+               00137         extern _EEADR
+               00138         extern _RCSTA
+               00139         extern _TXSTA
+               00140         extern _TXREG
+               00141         extern _RCREG
+               00142         extern _SPBRG
+               00143         extern _SPBRGH
+               00144         extern _T3CON
+               00145         extern _TMR3L
+               00146         extern _TMR3H
+               00147         extern _CMCON
+               00148         extern _CVRCON
+               00149         extern _ECCP1AS
+               00150         extern _PWM1CON
+               00151         extern _BAUDCON
+               00152         extern _CCP2CON
+               00153         extern _CCPR2L
+               00154         extern _CCPR2H
+               00155         extern _CCP1CON
+               00156         extern _CCPR1L
+               00157         extern _CCPR1H
+               00158         extern _ADCON2
+               00159         extern _ADCON1
+               00160         extern _ADCON0
+               00161         extern _ADRESL
+               00162         extern _ADRESH
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _SSPCON2
+               00164         extern _SSPCON1
+               00165         extern _SSPSTAT
+               00166         extern _SSPADD
+               00167         extern _SSPBUF
+               00168         extern _T2CON
+               00169         extern _PR2
+               00170         extern _TMR2
+               00171         extern _T1CON
+               00172         extern _TMR1L
+               00173         extern _TMR1H
+               00174         extern _RCON
+               00175         extern _WDTCON
+               00176         extern _HLVDCON
+               00177         extern _OSCCON
+               00178         extern _T0CON
+               00179         extern _TMR0L
+               00180         extern _TMR0H
+               00181         extern _STATUS
+               00182         extern _FSR2L
+               00183         extern _FSR2H
+               00184         extern _PLUSW2
+               00185         extern _PREINC2
+               00186         extern _POSTDEC2
+               00187         extern _POSTINC2
+               00188         extern _INDF2
+               00189         extern _BSR
+               00190         extern _FSR1L
+               00191         extern _FSR1H
+               00192         extern _PLUSW1
+               00193         extern _PREINC1
+               00194         extern _POSTDEC1
+               00195         extern _POSTINC1
+               00196         extern _INDF1
+               00197         extern _WREG
+               00198         extern _FSR0L
+               00199         extern _FSR0H
+               00200         extern _PLUSW0
+               00201         extern _PREINC0
+               00202         extern _POSTDEC0
+               00203         extern _POSTINC0
+               00204         extern _INDF0
+               00205         extern _INTCON3
+               00206         extern _INTCON2
+               00207         extern _INTCON
+               00208         extern _PRODL
+               00209         extern _PRODH
+               00210         extern _TABLAT
+               00211         extern _TBLPTRL
+               00212         extern _TBLPTRH
+               00213         extern _TBLPTRU
+               00214         extern _PCL
+               00215         extern _PCLATH
+               00216         extern _PCLATU
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _STKPTR
+               00218         extern _TOSL
+               00219         extern _TOSH
+               00220         extern _TOSU
+               00221         extern _mios_enc_pin_table
+               00222         extern _mios_mproc_event_table
+               00223         extern _MIOS_MPROC_EVENT_TABLE
+               00224         extern _MIOS_ENC_PIN_TABLE
+               00225 ;--------------------------------------------------------
+               00226 ;       Equates to used internal registers
+               00227 ;--------------------------------------------------------
+  00000FD8     00228 STATUS  equ     0xfd8
+  00000FE8     00229 WREG    equ     0xfe8
+  00000FE1     00230 FSR0L equ 0xfe1 ;; normaly 0xfe9, changed by mios-gpasm
+  00000FE2     00231 FSR0H equ 0xfe2 ;; normaly 0xfea, changed by mios-gpasm
+  00000FE9     00232 FSR1L equ 0xfe9 ;; normaly 0xfe1, changed by mios-gpasm
+  00000FD9     00233 FSR2L   equ     0xfd9
+  00000FE7     00234 INDF0 equ 0xfe7 ;; normaly 0xfef, changed by mios-gpasm
+  00000FE6     00235 POSTINC0 equ 0xfe6 ;; normaly 0xfee, changed by mios-gpasm
+  00000FED     00236 POSTDEC1 equ 0xfed ;; normaly 0xfe5, changed by mios-gpasm
+  00000FEC     00237 PREINC1 equ 0xfec ;; normaly 0xfe4, changed by mios-gpasm
+  00000FDB     00238 PLUSW2  equ     0xfdb
+  00000FF4     00239 PRODH   equ     0xff4
+               00240 
+               00241 
+               00242 ; Internal registers
+               00243 .registers udata_ovr 0x0010 ;; normaly 0x0000, changed by mios-gpasm
+               00244 r0x00   res     1
+               00245 r0x01   res     1
+               00246 r0x02   res     1
+               00247 r0x03   res     1
+               00248 r0x04   res     1
+               00249 r0x05   res     1
+               00250 r0x06   res     1
+               00251 r0x07   res     1
+               00252 
+               00253 
+               00254 gpr14   udata
+               00255 
+               00256 udata_midi_0    udata
+               00257 _new_note       res     1
+               00258 
+               00259 udata_midi_1    udata
+               00260 _midi_note      res     16
+               00261 
+               00262 udata_midi_2    udata
+               00263 _midi_cc_chn0   res     128
+               00264 
+               00265 udata_midi_3    udata
+               00266 _midi_pitch_bender      res     32
+               00267 
+               00268 ;--------------------------------------------------------
+               00269 ; global & static initialisations
+               00270 ;--------------------------------------------------------
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271 ; I code from now on!
+               00272 ; ; Starting pCode block
+               00273 S_midi__MIDI_Evnt       code
+0000           00274 _MIDI_Evnt:
+               00275         .line   81; midi.c      void MIDI_Evnt(unsigned char evnt0, unsigned char evnt1, unsigned char evnt2)
+0000 CFD9 FFED 00276         MOVFF   FSR2L, POSTDEC1
+0004 CFE9 FFD9 00277         MOVFF   FSR1L, FSR2L
+0008 C000 FFED 00278         MOVFF   r0x00, POSTDEC1
+000C C000 FFED 00279         MOVFF   r0x01, POSTDEC1
+0010 C000 FFED 00280         MOVFF   r0x02, POSTDEC1
+0014 C000 FFED 00281         MOVFF   r0x03, POSTDEC1
+0018 C000 FFED 00282         MOVFF   r0x04, POSTDEC1
+001C C000 FFED 00283         MOVFF   r0x05, POSTDEC1
+0020 C000 FFED 00284         MOVFF   r0x06, POSTDEC1
+0024 C000 FFED 00285         MOVFF   r0x07, POSTDEC1
+0028 0E02      00286         MOVLW   0x02
+002A CFDB F000 00287         MOVFF   PLUSW2, r0x00
+002E 0E03      00288         MOVLW   0x03
+0030 CFDB F000 00289         MOVFF   PLUSW2, r0x01
+0034 0E04      00290         MOVLW   0x04
+0036 CFDB F000 00291         MOVFF   PLUSW2, r0x02
+               00292         .line   83; midi.c      unsigned char midi_cmd = evnt0 & 0xf0;
+003A 0EF0      00293         MOVLW   0xf0
+003C 1400      00294         ANDWF   r0x00, W
+003E 6E00      00295         MOVWF   r0x03
+               00296         .line   84; midi.c      unsigned char midi_chn = evnt0 & 0x0f;
+0040 0E0F      00297         MOVLW   0x0f
+0042 1600      00298         ANDWF   r0x00, F
+               00299         .line   86; midi.c      switch( midi_cmd ) {
+0044 5000      00300         MOVF    r0x03, W
+0046 0A80      00301         XORLW   0x80
+0048 E000      00302         BZ      _00121_DS_
+004A 5000      00303         MOVF    r0x03, W
+004C 0A90      00304         XORLW   0x90
+004E E000      00305         BZ      _00122_DS_
+0050 5000      00306         MOVF    r0x03, W
+0052 0AA0      00307         XORLW   0xa0
+0054 E100      00308         BNZ     _00148_DS_
+0056 D000      00309         BRA     _00131_DS_
+0058           00310 _00148_DS_:
+0058 5000      00311         MOVF    r0x03, W
+005A 0AB0      00312         XORLW   0xb0
+005C E000      00313         BZ      _00124_DS_
+005E 5000      00314         MOVF    r0x03, W
+0060 0AC0      00315         XORLW   0xc0
+0062 E100      00316         BNZ     _00152_DS_
+0064 D000      00317         BRA     _00131_DS_
+0066           00318 _00152_DS_:
+0066 5000      00319         MOVF    r0x03, W
+0068 0AD0      00320         XORLW   0xd0
+006A E100      00321         BNZ     _00154_DS_
+006C D000      00322         BRA     _00131_DS_
+006E           00323 _00154_DS_:
+006E 5000      00324         MOVF    r0x03, W
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0070 0AE0      00325         XORLW   0xe0
+0072 E000      00326         BZ      _00129_DS_
+0074 D000      00327         BRA     _00131_DS_
+0076           00328 _00121_DS_:
+               00329         .line   89; midi.c      evnt2 = 0x00; // force velocity to zero
+0076 6A00      00330         CLRF    r0x02
+0078           00331 _00122_DS_:
+               00332         .line   91; midi.c      midi_note[midi_chn].NOTE = evnt1;
+0078 0E00      00333         MOVLW   LOW(_midi_note)
+007A 2400      00334         ADDWF   r0x00, W
+007C 6E00      00335         MOVWF   r0x03
+007E 6A00      00336         CLRF    r0x04
+0080 0E00      00337         MOVLW   HIGH(_midi_note)
+0082 2200      00338         ADDWFC  r0x04, F
+0084 5000      00339         MOVF    r0x01, W
+0086 0B7F      00340         ANDLW   0x7f
+0088 6EF4      00341         MOVWF   PRODH
+008A C000 FFE1 00342         MOVFF   r0x03, FSR0L
+008E C000 FFE2 00343         MOVFF   r0x04, FSR0H
+0092 50E7      00344         MOVF    INDF0, W
+0094 0B80      00345         ANDLW   0x80
+0096 10F4      00346         IORWF   PRODH, W
+0098 6EE7      00347         MOVWF   INDF0
+               00348         .line   92; midi.c      midi_note[midi_chn].GATE = evnt2 > 0 ? 1 : 0;
+009A 0E00      00349         MOVLW   LOW(_midi_note)
+009C 2400      00350         ADDWF   r0x00, W
+009E 6E00      00351         MOVWF   r0x03
+00A0 6A00      00352         CLRF    r0x04
+00A2 0E00      00353         MOVLW   HIGH(_midi_note)
+00A4 2200      00354         ADDWFC  r0x04, F
+00A6 5000      00355         MOVF    r0x02, W
+00A8 0B01      00356         ANDLW   0x01
+00AA 40E8      00357         RRNCF   WREG, W
+00AC 6EF4      00358         MOVWF   PRODH
+00AE C000 FFE1 00359         MOVFF   r0x03, FSR0L
+00B2 C000 FFE2 00360         MOVFF   r0x04, FSR0H
+00B6 50E7      00361         MOVF    INDF0, W
+00B8 0B7F      00362         ANDLW   0x7f
+00BA 10F4      00363         IORWF   PRODH, W
+00BC 6EE7      00364         MOVWF   INDF0
+               00365         .line   93; midi.c      new_note = 0x07;
+00BE 0E07      00366         MOVLW   0x07
+00C0 0000      00367         BANKSEL _new_note
+00C2 6F00      00368         MOVWF   _new_note, B
+               00369         .line   94; midi.c      break;
+00C4 D000      00370         BRA     _00131_DS_
+00C6           00371 _00124_DS_:
+               00372         .line   102; midi.c     if( midi_chn == 0x00 ) {
+00C6 5000      00373         MOVF    r0x00, W
+00C8 E100      00374         BNZ     _00131_DS_
+               00375         .line   103; midi.c     midi_cc_chn0[evnt1] = evnt2;
+00CA 0E00      00376         MOVLW   LOW(_midi_cc_chn0)
+00CC 2400      00377         ADDWF   r0x01, W
+00CE 6E00      00378         MOVWF   r0x03
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00D0 6A00      00379         CLRF    r0x04
+00D2 0E00      00380         MOVLW   HIGH(_midi_cc_chn0)
+00D4 2200      00381         ADDWFC  r0x04, F
+00D6 C000 FFE1 00382         MOVFF   r0x03, FSR0L
+00DA C000 FFE2 00383         MOVFF   r0x04, FSR0H
+00DE C000 FFE7 00384         MOVFF   r0x02, INDF0
+               00385         .line   105; midi.c     break;
+00E2 D000      00386         BRA     _00131_DS_
+               00387 ; ;multiply lit val:0x02 by variable r0x00 and store in r0x00
+               00388 ; ;Unrolled 8 X 8 multiplication
+               00389 ; ;FIXME: the function does not support result==WREG
+00E4           00390 _00129_DS_:
+               00391         .line   116; midi.c     midi_pitch_bender[midi_chn] = (evnt2 << 7) | evnt1;
+00E4 90D8      00392         BCF     STATUS, 0
+00E6 3600      00393         RLCF    r0x00, F
+00E8 6A00      00394         CLRF    r0x03
+00EA 0E00      00395         MOVLW   LOW(_midi_pitch_bender)
+00EC 2600      00396         ADDWF   r0x00, F
+00EE 0E00      00397         MOVLW   HIGH(_midi_pitch_bender)
+00F0 2200      00398         ADDWFC  r0x03, F
+00F2 6A00      00399         CLRF    r0x04
+00F4 3000      00400         RRCF    r0x04, W
+00F6 3000      00401         RRCF    r0x02, W
+00F8 6E00      00402         MOVWF   r0x06
+00FA 6A00      00403         CLRF    r0x05
+00FC 3200      00404         RRCF    r0x05, F
+00FE 6A00      00405         CLRF    r0x07
+0100 5000      00406         MOVF    r0x01, W
+0102 1200      00407         IORWF   r0x05, F
+0104 5000      00408         MOVF    r0x07, W
+0106 1200      00409         IORWF   r0x06, F
+0108 C000 FFE1 00410         MOVFF   r0x00, FSR0L
+010C C000 FFE2 00411         MOVFF   r0x03, FSR0H
+0110 C000 FFE6 00412         MOVFF   r0x05, POSTINC0
+0114 C000 FFE7 00413         MOVFF   r0x06, INDF0
+0118           00414 _00131_DS_:
+               00415         .line   119; midi.c     }
+0118 CFEC F000 00416         MOVFF   PREINC1, r0x07
+011C CFEC F000 00417         MOVFF   PREINC1, r0x06
+0120 CFEC F000 00418         MOVFF   PREINC1, r0x05
+0124 CFEC F000 00419         MOVFF   PREINC1, r0x04
+0128 CFEC F000 00420         MOVFF   PREINC1, r0x03
+012C CFEC F000 00421         MOVFF   PREINC1, r0x02
+0130 CFEC F000 00422         MOVFF   PREINC1, r0x01
+0134 CFEC F000 00423         MOVFF   PREINC1, r0x00
+0138 CFEC FFD9 00424         MOVFF   PREINC1, FSR2L
+013C 0012      00425         RETURN  
+               00426 
+               00427 ; ; Starting pCode block
+               00428 S_midi__MIDI_Init       code
+0000           00429 _MIDI_Init:
+               00430         .line   59; midi.c      void MIDI_Init(void)
+0000 C000 FFED 00431         MOVFF   r0x00, POSTDEC1
+0004 C000 FFED 00432         MOVFF   r0x01, POSTDEC1
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0008 C000 FFED 00433         MOVFF   r0x02, POSTDEC1
+000C C000 FFED 00434         MOVFF   r0x03, POSTDEC1
+               00435         .line   63; midi.c      for(i=0; i<sizeof(midi_note); ++i) {
+0010 0E10      00436         MOVLW   0x10
+0012 6E00      00437         MOVWF   r0x00
+0014           00438 _00107_DS_:
+               00439         .line   64; midi.c      midi_note[i].ALL = 0;
+0014 0400      00440         DECF    r0x00, W
+0016 6E00      00441         MOVWF   r0x01
+0018 0E00      00442         MOVLW   LOW(_midi_note)
+001A 2400      00443         ADDWF   r0x01, W
+001C 6E00      00444         MOVWF   r0x02
+001E 6A00      00445         CLRF    r0x03
+0020 0E00      00446         MOVLW   HIGH(_midi_note)
+0022 2200      00447         ADDWFC  r0x03, F
+0024 0E00      00448         MOVLW   0x00
+0026 C000 FFE1 00449         MOVFF   r0x02, FSR0L
+002A C000 FFE2 00450         MOVFF   r0x03, FSR0H
+002E 6EE7      00451         MOVWF   INDF0
+0030 C000 F000 00452         MOVFF   r0x01, r0x00
+               00453         .line   63; midi.c      for(i=0; i<sizeof(midi_note); ++i) {
+0034 5000      00454         MOVF    r0x00, W
+0036 E100      00455         BNZ     _00107_DS_
+               00456         .line   67; midi.c      for(i=0; i<sizeof(midi_cc_chn0); ++i) {
+0038 6A00      00457         CLRF    r0x00
+003A           00458 _00108_DS_:
+003A 0E80      00459         MOVLW   0x80
+003C 5C00      00460         SUBWF   r0x00, W
+003E E200      00461         BC      _00111_DS_
+               00462         .line   68; midi.c      midi_cc_chn0[i] = 0;
+0040 0E00      00463         MOVLW   LOW(_midi_cc_chn0)
+0042 2400      00464         ADDWF   r0x00, W
+0044 6E00      00465         MOVWF   r0x01
+0046 6A00      00466         CLRF    r0x02
+0048 0E00      00467         MOVLW   HIGH(_midi_cc_chn0)
+004A 2200      00468         ADDWFC  r0x02, F
+004C C000 FFE1 00469         MOVFF   r0x01, FSR0L
+0050 C000 FFE2 00470         MOVFF   r0x02, FSR0H
+0054 0E00      00471         MOVLW   0x00
+0056 6EE7      00472         MOVWF   INDF0
+               00473         .line   67; midi.c      for(i=0; i<sizeof(midi_cc_chn0); ++i) {
+0058 2A00      00474         INCF    r0x00, F
+005A D000      00475         BRA     _00108_DS_
+005C           00476 _00111_DS_:
+               00477         .line   71; midi.c      for(i=0; i<sizeof(midi_pitch_bender); ++i) {
+005C 6A00      00478         CLRF    r0x00
+005E 6A00      00479         CLRF    r0x01
+0060           00480 _00112_DS_:
+0060 0E20      00481         MOVLW   0x20
+0062 5C00      00482         SUBWF   r0x00, W
+0064 E200      00483         BC      _00116_DS_
+               00484         .line   72; midi.c      midi_pitch_bender[i] = 0;
+0066 0E00      00485         MOVLW   LOW(_midi_pitch_bender)
+0068 2400      00486         ADDWF   r0x01, W
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+006A 6E00      00487         MOVWF   r0x02
+006C 6A00      00488         CLRF    r0x03
+006E 0E00      00489         MOVLW   HIGH(_midi_pitch_bender)
+0070 2200      00490         ADDWFC  r0x03, F
+0072 C000 FFE1 00491         MOVFF   r0x02, FSR0L
+0076 C000 FFE2 00492         MOVFF   r0x03, FSR0H
+007A 0E00      00493         MOVLW   0x00
+007C 6EE6      00494         MOVWF   POSTINC0
+007E 0E00      00495         MOVLW   0x00
+0080 6EE7      00496         MOVWF   INDF0
+               00497         .line   71; midi.c      for(i=0; i<sizeof(midi_pitch_bender); ++i) {
+0082 2A00      00498         INCF    r0x01, F
+0084 2A00      00499         INCF    r0x01, F
+0086 2A00      00500         INCF    r0x00, F
+0088 D000      00501         BRA     _00112_DS_
+008A           00502 _00116_DS_:
+008A CFEC F000 00503         MOVFF   PREINC1, r0x03
+008E CFEC F000 00504         MOVFF   PREINC1, r0x02
+0092 CFEC F000 00505         MOVFF   PREINC1, r0x01
+0096 CFEC F000 00506         MOVFF   PREINC1, r0x00
+009A 0012      00507         RETURN  
+               00508 
+               00509 
+               00510 
+               00511 ; Statistics:
+               00512 ; code size:      474 (0x01da) bytes ( 0.36%)
+               00513 ;                 237 (0x00ed) words
+               00514 ; udata size:     177 (0x00b1) bytes ( 4.61%)
+               00515 ; access size:      8 (0x0008) bytes
+               00516 
+               00517 
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FSR0H                             00000FE2
+FSR0L                             00000FE1
+FSR1L                             00000FE9
+FSR2L                             00000FD9
+INDF0                             00000FE7
+PLUSW2                            00000FDB
+POSTDEC1                          00000FED
+POSTINC0                          00000FE6
+PREINC1                           00000FEC
+PRODH                             00000FF4
+STATUS                            00000FD8
+WREG                              00000FE8
+_00107_DS_                        00000014
+_00108_DS_                        0000003A
+_00111_DS_                        0000005C
+_00112_DS_                        00000060
+_00116_DS_                        0000008A
+_00121_DS_                        00000076
+_00122_DS_                        00000078
+_00124_DS_                        000000C6
+_00129_DS_                        000000E4
+_00131_DS_                        00000118
+_00148_DS_                        00000058
+_00152_DS_                        00000066
+_00154_DS_                        0000006E
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_BAUDCON                          00000000
+_BAUDCONbits                      00000000
+_BSR                              00000000
+_BSRbits                          00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_EEADR                            00000000
+_EECON1                           00000000
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EEDATA                           00000000
+_FSR0H                            00000000
+_FSR0Hbits                        00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1Hbits                        00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2Hbits                        00000000
+_FSR2L                            00000000
+_HLVDCON                          00000000
+_HLVDCONbits                      00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_MIDI_Evnt                        00000000
+_MIDI_Init                        00000000
+_MIOS_BOX_CFG0                    00000000
+_MIOS_BOX_CFG1                    00000000
+_MIOS_BOX_STAT                    00000000
+_MIOS_ENC_PIN_TABLE               00000000
+_MIOS_MPROC_EVENT_TABLE           00000000
+_MIOS_PARAMETER1                  00000000
+_MIOS_PARAMETER2                  00000000
+_MIOS_PARAMETER3                  00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATHbits                       00000000
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PCLATU                           00000000
+_PCLATUbits                       00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PWM1CON                          00000000
+_PWM1CONbits                      00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCSTA                            00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRGH                           00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TBLPTRUbits                      00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TOSUbits                         00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TXREG                            00000000
+_TXSTA                            00000000
+_TXSTAbits                        00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F4620                         00000001
+_all_param                        00000000
+_app_flags                        00000000
+_bank                             00000000
+_eg0                              00000000
+_eg0_value                        00000000
+_eg1                              00000000
+_eg1_value                        00000000
+_eg2                              00000000
+_eg2_value                        00000000
+_eg3                              00000000
+_eg3_value                        00000000
+gpasm-0.13.6 beta               _output/midi__mios-gpasm-tmp.asm7-10-2008  15:16:02          PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_lfo0_value                       00000000
+_lfo1_value                       00000000
+_lfo2_value                       00000000
+_load_last                        00000000
+_looper                           00000000
+_midi_cc_chn0                     00000000
+_midi_note                        00000000
+_midi_pitch_bender                00000000
+_mios_enc_pin_table               00000000
+_mios_mproc_event_table           00000000
+_new_note                         00000000
+_preset                           00000000
+_update_led                       00000000
+_update_preset_led                00000000
+r0x00                             00000010
+r0x01                             00000011
+r0x02                             00000012
+r0x03                             00000013
+r0x04                             00000014
+r0x05                             00000015
+r0x06                             00000016
+r0x07                             00000017
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

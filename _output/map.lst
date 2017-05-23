@@ -1,0 +1,1520 @@
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.8.0 #5082 (Mar  9 2008) (MINGW32)
+               00004 ; This file was generated Thu Jul 10 15:16:06 2008
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008 
+               00009         .ident "SDCC version 2.8.0 #5082 [pic16 port]"
+               00010         .file   "map.c"
+               00011         list    p=18f4620
+               00012 
+               00013         radix dec
+               00014 
+               00015 ;--------------------------------------------------------
+               00016 ; public variables in this module
+               00017 ;--------------------------------------------------------
+               00018         global _MAP_Init
+               00019         global _MAP_Tick
+               00020         global _all_param
+               00021         global _sinewave
+               00022         global _squarewave
+               00023 
+               00024 ;--------------------------------------------------------
+               00025 ; extern variables in this module
+               00026 ;--------------------------------------------------------
+               00027         extern _MIOS_BOX_CFG0
+               00028         extern _MIOS_BOX_CFG1
+               00029         extern _MIOS_BOX_STAT
+               00030         extern _MIOS_PARAMETER1
+               00031         extern _MIOS_PARAMETER2
+               00032         extern _MIOS_PARAMETER3
+               00033         extern _PORTAbits
+               00034         extern _PORTBbits
+               00035         extern _PORTCbits
+               00036         extern _PORTDbits
+               00037         extern _PORTEbits
+               00038         extern _LATAbits
+               00039         extern _LATBbits
+               00040         extern _LATCbits
+               00041         extern _LATDbits
+               00042         extern _LATEbits
+               00043         extern _TRISAbits
+               00044         extern _TRISBbits
+               00045         extern _TRISCbits
+               00046         extern _TRISDbits
+               00047         extern _TRISEbits
+               00048         extern _OSCTUNEbits
+               00049         extern _PIE1bits
+               00050         extern _PIR1bits
+               00051         extern _IPR1bits
+               00052         extern _PIE2bits
+               00053         extern _PIR2bits
+               00054         extern _IPR2bits
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _EECON1bits
+               00056         extern _RCSTAbits
+               00057         extern _TXSTAbits
+               00058         extern _T3CONbits
+               00059         extern _CMCONbits
+               00060         extern _CVRCONbits
+               00061         extern _ECCP1ASbits
+               00062         extern _PWM1CONbits
+               00063         extern _BAUDCONbits
+               00064         extern _CCP2CONbits
+               00065         extern _CCP1CONbits
+               00066         extern _ADCON2bits
+               00067         extern _ADCON1bits
+               00068         extern _ADCON0bits
+               00069         extern _SSPCON2bits
+               00070         extern _SSPCON1bits
+               00071         extern _SSPSTATbits
+               00072         extern _T2CONbits
+               00073         extern _T1CONbits
+               00074         extern _RCONbits
+               00075         extern _WDTCONbits
+               00076         extern _HLVDCONbits
+               00077         extern _OSCCONbits
+               00078         extern _T0CONbits
+               00079         extern _STATUSbits
+               00080         extern _FSR2Hbits
+               00081         extern _BSRbits
+               00082         extern _FSR1Hbits
+               00083         extern _FSR0Hbits
+               00084         extern _INTCON3bits
+               00085         extern _INTCON2bits
+               00086         extern _INTCONbits
+               00087         extern _TBLPTRUbits
+               00088         extern _PCLATHbits
+               00089         extern _PCLATUbits
+               00090         extern _STKPTRbits
+               00091         extern _TOSUbits
+               00092         extern _bank
+               00093         extern _preset
+               00094         extern _looper
+               00095         extern _app_flags
+               00096         extern _midi_note
+               00097         extern _midi_cc_chn0
+               00098         extern _midi_pitch_bender
+               00099         extern _new_note
+               00100         extern _lfo0_value
+               00101         extern _lfo1_value
+               00102         extern _lfo2_value
+               00103         extern _eg0
+               00104         extern _eg1
+               00105         extern _eg2
+               00106         extern _eg3
+               00107         extern _eg0_value
+               00108         extern _eg1_value
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _eg2_value
+               00110         extern _eg3_value
+               00111         extern _load_last
+               00112         extern _update_led
+               00113         extern _update_preset_led
+               00114         extern _PORTA
+               00115         extern _PORTB
+               00116         extern _PORTC
+               00117         extern _PORTD
+               00118         extern _PORTE
+               00119         extern _LATA
+               00120         extern _LATB
+               00121         extern _LATC
+               00122         extern _LATD
+               00123         extern _LATE
+               00124         extern _TRISA
+               00125         extern _TRISB
+               00126         extern _TRISC
+               00127         extern _TRISD
+               00128         extern _TRISE
+               00129         extern _OSCTUNE
+               00130         extern _PIE1
+               00131         extern _PIR1
+               00132         extern _IPR1
+               00133         extern _PIE2
+               00134         extern _PIR2
+               00135         extern _IPR2
+               00136         extern _EECON1
+               00137         extern _EECON2
+               00138         extern _EEDATA
+               00139         extern _EEADR
+               00140         extern _RCSTA
+               00141         extern _TXSTA
+               00142         extern _TXREG
+               00143         extern _RCREG
+               00144         extern _SPBRG
+               00145         extern _SPBRGH
+               00146         extern _T3CON
+               00147         extern _TMR3L
+               00148         extern _TMR3H
+               00149         extern _CMCON
+               00150         extern _CVRCON
+               00151         extern _ECCP1AS
+               00152         extern _PWM1CON
+               00153         extern _BAUDCON
+               00154         extern _CCP2CON
+               00155         extern _CCPR2L
+               00156         extern _CCPR2H
+               00157         extern _CCP1CON
+               00158         extern _CCPR1L
+               00159         extern _CCPR1H
+               00160         extern _ADCON2
+               00161         extern _ADCON1
+               00162         extern _ADCON0
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _ADRESL
+               00164         extern _ADRESH
+               00165         extern _SSPCON2
+               00166         extern _SSPCON1
+               00167         extern _SSPSTAT
+               00168         extern _SSPADD
+               00169         extern _SSPBUF
+               00170         extern _T2CON
+               00171         extern _PR2
+               00172         extern _TMR2
+               00173         extern _T1CON
+               00174         extern _TMR1L
+               00175         extern _TMR1H
+               00176         extern _RCON
+               00177         extern _WDTCON
+               00178         extern _HLVDCON
+               00179         extern _OSCCON
+               00180         extern _T0CON
+               00181         extern _TMR0L
+               00182         extern _TMR0H
+               00183         extern _STATUS
+               00184         extern _FSR2L
+               00185         extern _FSR2H
+               00186         extern _PLUSW2
+               00187         extern _PREINC2
+               00188         extern _POSTDEC2
+               00189         extern _POSTINC2
+               00190         extern _INDF2
+               00191         extern _BSR
+               00192         extern _FSR1L
+               00193         extern _FSR1H
+               00194         extern _PLUSW1
+               00195         extern _PREINC1
+               00196         extern _POSTDEC1
+               00197         extern _POSTINC1
+               00198         extern _INDF1
+               00199         extern _WREG
+               00200         extern _FSR0L
+               00201         extern _FSR0H
+               00202         extern _PLUSW0
+               00203         extern _PREINC0
+               00204         extern _POSTDEC0
+               00205         extern _POSTINC0
+               00206         extern _INDF0
+               00207         extern _INTCON3
+               00208         extern _INTCON2
+               00209         extern _INTCON
+               00210         extern _PRODL
+               00211         extern _PRODH
+               00212         extern _TABLAT
+               00213         extern _TBLPTRL
+               00214         extern _TBLPTRH
+               00215         extern _TBLPTRU
+               00216         extern _PCL
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _PCLATH
+               00218         extern _PCLATU
+               00219         extern _STKPTR
+               00220         extern _TOSL
+               00221         extern _TOSH
+               00222         extern _TOSU
+               00223         extern _AOUT_Pin16bitSet
+               00224         extern _AOUT_DigitalPinsSet
+               00225         extern _AOUT_Update
+               00226         extern _mios_enc_pin_table
+               00227         extern _mios_mproc_event_table
+               00228         extern _MIOS_MPROC_EVENT_TABLE
+               00229         extern _MIOS_ENC_PIN_TABLE
+               00230         extern _lfo_add_table
+               00231         extern _lfo_add_table_bpm
+               00232 ;--------------------------------------------------------
+               00233 ;       Equates to used internal registers
+               00234 ;--------------------------------------------------------
+  00000FE8     00235 WREG    equ     0xfe8
+  00000FF6     00236 TBLPTRL equ     0xff6
+  00000FF7     00237 TBLPTRH equ     0xff7
+  00000FF8     00238 TBLPTRU equ     0xff8
+  00000FF5     00239 TABLAT  equ     0xff5
+  00000FE1     00240 FSR0L equ 0xfe1 ;; normaly 0xfe9, changed by mios-gpasm
+  00000FE2     00241 FSR0H equ 0xfe2 ;; normaly 0xfea, changed by mios-gpasm
+  00000FE9     00242 FSR1L equ 0xfe9 ;; normaly 0xfe1, changed by mios-gpasm
+  00000FE7     00243 INDF0 equ 0xfe7 ;; normaly 0xfef, changed by mios-gpasm
+  00000FED     00244 POSTDEC1 equ 0xfed ;; normaly 0xfe5, changed by mios-gpasm
+  00000FEC     00245 PREINC1 equ 0xfec ;; normaly 0xfe4, changed by mios-gpasm
+  00000FF4     00246 PRODH   equ     0xff4
+               00247 
+               00248 
+               00249 ; Internal registers
+               00250 .registers udata_ovr 0x0010 ;; normaly 0x0000, changed by mios-gpasm
+               00251 r0x00   res     1
+               00252 r0x01   res     1
+               00253 r0x02   res     1
+               00254 r0x03   res     1
+               00255 
+               00256 
+               00257 gpr14   udata
+               00258 _all_param      res     64
+               00259 
+               00260 udata_map_0     udata
+               00261 _MAP_Tick_gates_1_1     res     1
+               00262 
+               00263 ;--------------------------------------------------------
+               00264 ; global & static initialisations
+               00265 ;--------------------------------------------------------
+               00266 ; I code from now on!
+               00267 ; ; Starting pCode block
+               00268 S_map__MAP_Tick code
+0000           00269 _MAP_Tick:
+               00270         .line   132; map.c      void MAP_Tick(void) __wparam
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0000 C000 FFED 00271         MOVFF   r0x00, POSTDEC1
+0004 C000 FFED 00272         MOVFF   r0x01, POSTDEC1
+0008 C000 FFED 00273         MOVFF   r0x02, POSTDEC1
+000C C000 FFED 00274         MOVFF   r0x03, POSTDEC1
+               00275         .line   141; map.c      gates.ALL = 0;
+0010 0E00      00276         MOVLW   0x00
+0012 0000      00277         BANKSEL _MAP_Tick_gates_1_1
+0014 6F00      00278         MOVWF   _MAP_Tick_gates_1_1, B
+0016 0000      00279         BANKSEL _all_param
+               00280         .line   147; map.c      switch( all_param.router_flags_lfo1.lfo1_waveform )
+0018 5100      00281         MOVF    _all_param, W, B
+001A 0B0F      00282         ANDLW   0x0f
+001C 6E00      00283         MOVWF   r0x00
+001E C000 F000 00284         MOVFF   r0x00, r0x01
+0022 5000      00285         MOVF    r0x01, W
+0024 0A01      00286         XORLW   0x01
+0026 E000      00287         BZ      _00109_DS_
+0028 C000 F000 00288         MOVFF   r0x00, r0x01
+002C 5000      00289         MOVF    r0x01, W
+002E 0A02      00290         XORLW   0x02
+0030 E000      00291         BZ      _00110_DS_
+0032 5000      00292         MOVF    r0x00, W
+0034 0A04      00293         XORLW   0x04
+0036 E000      00294         BZ      _00111_DS_
+0038 D000      00295         BRA     _00112_DS_
+003A           00296 _00109_DS_:
+003A 0000      00297         BANKSEL (_lfo0_value + 1)
+               00298         .line   151; map.c      AOUT_Pin16bitSet(0, lfo0_value);
+003C 5100      00299         MOVF    (_lfo0_value + 1), W, B
+003E 6EED      00300         MOVWF   POSTDEC1
+               00301 ; removed redundant BANKSEL
+0040 5100      00302         MOVF    _lfo0_value, W, B
+0042 6EED      00303         MOVWF   POSTDEC1
+0044 0E00      00304         MOVLW   0x00
+0046 EC00 F000 00305         CALL    _AOUT_Pin16bitSet
+004A 0E02      00306         MOVLW   0x02
+004C 26E9      00307         ADDWF   FSR1L, F
+               00308         .line   152; map.c      break;
+004E D000      00309         BRA     _00112_DS_
+0050           00310 _00110_DS_:
+0050 0000      00311         BANKSEL (_lfo0_value + 1)
+               00312         .line   155; map.c      AOUT_Pin16bitSet(0, CONV_8BIT_TO_16BIT(sinewave[CONV_16BIT_TO_8BIT(lfo0_value)]));
+0052 5100      00313         MOVF    (_lfo0_value + 1), W, B
+0054 6E00      00314         MOVWF   r0x00
+0056 6A00      00315         CLRF    r0x01
+0058 6A00      00316         CLRF    r0x02
+005A 0E00      00317         MOVLW   LOW(_sinewave)
+005C 2600      00318         ADDWF   r0x00, F
+005E 0E00      00319         MOVLW   HIGH(_sinewave)
+0060 2200      00320         ADDWFC  r0x01, F
+0062 0E00      00321         MOVLW   UPPER(_sinewave)
+0064 2200      00322         ADDWFC  r0x02, F
+0066 C000 FFF6 00323         MOVFF   r0x00, TBLPTRL
+006A C000 FFF7 00324         MOVFF   r0x01, TBLPTRH
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+006E C000 FFF8 00325         MOVFF   r0x02, TBLPTRU
+0072 0009      00326         TBLRD*+ 
+0074 CFF5 F000 00327         MOVFF   TABLAT, r0x00
+0078 6A00      00328         CLRF    r0x01
+007A 5000      00329         MOVF    r0x00, W
+007C 6E00      00330         MOVWF   r0x03
+007E 6A00      00331         CLRF    r0x02
+0080 5000      00332         MOVF    r0x03, W
+0082 6EED      00333         MOVWF   POSTDEC1
+0084 5000      00334         MOVF    r0x02, W
+0086 6EED      00335         MOVWF   POSTDEC1
+0088 0E00      00336         MOVLW   0x00
+008A EC00 F000 00337         CALL    _AOUT_Pin16bitSet
+008E 0E02      00338         MOVLW   0x02
+0090 26E9      00339         ADDWF   FSR1L, F
+               00340         .line   157; map.c      break;
+0092 D000      00341         BRA     _00112_DS_
+0094           00342 _00111_DS_:
+0094 0000      00343         BANKSEL (_lfo0_value + 1)
+               00344         .line   160; map.c      AOUT_Pin16bitSet(0, CONV_8BIT_TO_16BIT(squarewave[CONV_16BIT_TO_8BIT(lfo0_value)]));
+0096 5100      00345         MOVF    (_lfo0_value + 1), W, B
+0098 6E00      00346         MOVWF   r0x00
+009A 6A00      00347         CLRF    r0x01
+009C 6A00      00348         CLRF    r0x02
+009E 0E00      00349         MOVLW   LOW(_squarewave)
+00A0 2600      00350         ADDWF   r0x00, F
+00A2 0E00      00351         MOVLW   HIGH(_squarewave)
+00A4 2200      00352         ADDWFC  r0x01, F
+00A6 0E00      00353         MOVLW   UPPER(_squarewave)
+00A8 2200      00354         ADDWFC  r0x02, F
+00AA C000 FFF6 00355         MOVFF   r0x00, TBLPTRL
+00AE C000 FFF7 00356         MOVFF   r0x01, TBLPTRH
+00B2 C000 FFF8 00357         MOVFF   r0x02, TBLPTRU
+00B6 0009      00358         TBLRD*+ 
+00B8 CFF5 F000 00359         MOVFF   TABLAT, r0x00
+00BC 6A00      00360         CLRF    r0x01
+00BE 5000      00361         MOVF    r0x00, W
+00C0 6E00      00362         MOVWF   r0x03
+00C2 6A00      00363         CLRF    r0x02
+00C4 5000      00364         MOVF    r0x03, W
+00C6 6EED      00365         MOVWF   POSTDEC1
+00C8 5000      00366         MOVF    r0x02, W
+00CA 6EED      00367         MOVWF   POSTDEC1
+00CC 0E00      00368         MOVLW   0x00
+00CE EC00 F000 00369         CALL    _AOUT_Pin16bitSet
+00D2 0E02      00370         MOVLW   0x02
+00D4 26E9      00371         ADDWF   FSR1L, F
+00D6           00372 _00112_DS_:
+00D6 0000      00373         BANKSEL _all_param
+               00374         .line   165; map.c      if( all_param.router_flags_lfo1.lfo1_from_lfo2 ) {
+00D8 A900      00375         BTFSS   _all_param, 4, B
+00DA D000      00376         BRA     _00114_DS_
+00DC 0000      00377         BANKSEL (_lfo1_value + 1)
+               00378         .line   166; map.c      all_param.lfo0_rate = CONV_16BIT_TO_8BIT(lfo1_value);}
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00DE 5100      00379         MOVF    (_lfo1_value + 1), W, B
+00E0 6E00      00380         MOVWF   r0x00
+00E2 6A00      00381         CLRF    r0x01
+00E4 5000      00382         MOVF    r0x00, W
+00E6 0000      00383         BANKSEL (_all_param + 32)
+00E8 6F00      00384         MOVWF   (_all_param + 32), B
+00EA           00385 _00114_DS_:
+00EA 0000      00386         BANKSEL (_all_param + 1)
+               00387         .line   172; map.c      switch( all_param.router_flags_lfo2.lfo2_waveform )
+00EC 5100      00388         MOVF    (_all_param + 1), W, B
+00EE 0B0F      00389         ANDLW   0x0f
+00F0 6E00      00390         MOVWF   r0x00
+00F2 C000 F000 00391         MOVFF   r0x00, r0x01
+00F6 5000      00392         MOVF    r0x01, W
+00F8 0A01      00393         XORLW   0x01
+00FA E000      00394         BZ      _00115_DS_
+00FC C000 F000 00395         MOVFF   r0x00, r0x01
+0100 5000      00396         MOVF    r0x01, W
+0102 0A02      00397         XORLW   0x02
+0104 E000      00398         BZ      _00116_DS_
+0106 5000      00399         MOVF    r0x00, W
+0108 0A04      00400         XORLW   0x04
+010A E000      00401         BZ      _00117_DS_
+010C D000      00402         BRA     _00118_DS_
+010E           00403 _00115_DS_:
+010E 0000      00404         BANKSEL (_lfo1_value + 1)
+               00405         .line   175; map.c      AOUT_Pin16bitSet(1, lfo1_value);
+0110 5100      00406         MOVF    (_lfo1_value + 1), W, B
+0112 6EED      00407         MOVWF   POSTDEC1
+               00408 ; removed redundant BANKSEL
+0114 5100      00409         MOVF    _lfo1_value, W, B
+0116 6EED      00410         MOVWF   POSTDEC1
+0118 0E01      00411         MOVLW   0x01
+011A EC00 F000 00412         CALL    _AOUT_Pin16bitSet
+011E 0E02      00413         MOVLW   0x02
+0120 26E9      00414         ADDWF   FSR1L, F
+               00415         .line   176; map.c      break;
+0122 D000      00416         BRA     _00118_DS_
+0124           00417 _00116_DS_:
+0124 0000      00418         BANKSEL (_lfo1_value + 1)
+               00419         .line   179; map.c      AOUT_Pin16bitSet(1, CONV_8BIT_TO_16BIT(sinewave[CONV_16BIT_TO_8BIT(lfo1_value)]));
+0126 5100      00420         MOVF    (_lfo1_value + 1), W, B
+0128 6E00      00421         MOVWF   r0x00
+012A 6A00      00422         CLRF    r0x01
+012C 6A00      00423         CLRF    r0x02
+012E 0E00      00424         MOVLW   LOW(_sinewave)
+0130 2600      00425         ADDWF   r0x00, F
+0132 0E00      00426         MOVLW   HIGH(_sinewave)
+0134 2200      00427         ADDWFC  r0x01, F
+0136 0E00      00428         MOVLW   UPPER(_sinewave)
+0138 2200      00429         ADDWFC  r0x02, F
+013A C000 FFF6 00430         MOVFF   r0x00, TBLPTRL
+013E C000 FFF7 00431         MOVFF   r0x01, TBLPTRH
+0142 C000 FFF8 00432         MOVFF   r0x02, TBLPTRU
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0146 0009      00433         TBLRD*+ 
+0148 CFF5 F000 00434         MOVFF   TABLAT, r0x00
+014C 6A00      00435         CLRF    r0x01
+014E 5000      00436         MOVF    r0x00, W
+0150 6E00      00437         MOVWF   r0x03
+0152 6A00      00438         CLRF    r0x02
+0154 5000      00439         MOVF    r0x03, W
+0156 6EED      00440         MOVWF   POSTDEC1
+0158 5000      00441         MOVF    r0x02, W
+015A 6EED      00442         MOVWF   POSTDEC1
+015C 0E01      00443         MOVLW   0x01
+015E EC00 F000 00444         CALL    _AOUT_Pin16bitSet
+0162 0E02      00445         MOVLW   0x02
+0164 26E9      00446         ADDWF   FSR1L, F
+               00447         .line   180; map.c      break;
+0166 D000      00448         BRA     _00118_DS_
+0168           00449 _00117_DS_:
+0168 0000      00450         BANKSEL (_lfo1_value + 1)
+               00451         .line   183; map.c      AOUT_Pin16bitSet(1, CONV_8BIT_TO_16BIT(squarewave[CONV_16BIT_TO_8BIT(lfo1_value)]));
+016A 5100      00452         MOVF    (_lfo1_value + 1), W, B
+016C 6E00      00453         MOVWF   r0x00
+016E 6A00      00454         CLRF    r0x01
+0170 6A00      00455         CLRF    r0x02
+0172 0E00      00456         MOVLW   LOW(_squarewave)
+0174 2600      00457         ADDWF   r0x00, F
+0176 0E00      00458         MOVLW   HIGH(_squarewave)
+0178 2200      00459         ADDWFC  r0x01, F
+017A 0E00      00460         MOVLW   UPPER(_squarewave)
+017C 2200      00461         ADDWFC  r0x02, F
+017E C000 FFF6 00462         MOVFF   r0x00, TBLPTRL
+0182 C000 FFF7 00463         MOVFF   r0x01, TBLPTRH
+0186 C000 FFF8 00464         MOVFF   r0x02, TBLPTRU
+018A 0009      00465         TBLRD*+ 
+018C CFF5 F000 00466         MOVFF   TABLAT, r0x00
+0190 6A00      00467         CLRF    r0x01
+0192 5000      00468         MOVF    r0x00, W
+0194 6E00      00469         MOVWF   r0x03
+0196 6A00      00470         CLRF    r0x02
+0198 5000      00471         MOVF    r0x03, W
+019A 6EED      00472         MOVWF   POSTDEC1
+019C 5000      00473         MOVF    r0x02, W
+019E 6EED      00474         MOVWF   POSTDEC1
+01A0 0E01      00475         MOVLW   0x01
+01A2 EC00 F000 00476         CALL    _AOUT_Pin16bitSet
+01A6 0E02      00477         MOVLW   0x02
+01A8 26E9      00478         ADDWF   FSR1L, F
+01AA           00479 _00118_DS_:
+01AA 0000      00480         BANKSEL (_all_param + 1)
+               00481         .line   188; map.c      if( all_param.router_flags_lfo2.lfo2_from_lfo3 ) {
+01AC A900      00482         BTFSS   (_all_param + 1), 4, B
+01AE D000      00483         BRA     _00120_DS_
+01B0 0000      00484         BANKSEL (_lfo2_value + 1)
+               00485         .line   189; map.c      all_param.lfo1_rate = CONV_16BIT_TO_8BIT(lfo2_value);}
+01B2 5100      00486         MOVF    (_lfo2_value + 1), W, B
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01B4 6E00      00487         MOVWF   r0x00
+01B6 6A00      00488         CLRF    r0x01
+01B8 5000      00489         MOVF    r0x00, W
+01BA 0000      00490         BANKSEL (_all_param + 33)
+01BC 6F00      00491         MOVWF   (_all_param + 33), B
+01BE           00492 _00120_DS_:
+01BE 0000      00493         BANKSEL (_all_param + 2)
+               00494         .line   195; map.c      switch( all_param.router_flags_lfo3.lfo3_waveform )
+01C0 5100      00495         MOVF    (_all_param + 2), W, B
+01C2 0B07      00496         ANDLW   0x07
+01C4 6E00      00497         MOVWF   r0x00
+01C6 C000 F000 00498         MOVFF   r0x00, r0x01
+01CA 5000      00499         MOVF    r0x01, W
+01CC 0A01      00500         XORLW   0x01
+01CE E000      00501         BZ      _00121_DS_
+01D0 C000 F000 00502         MOVFF   r0x00, r0x01
+01D4 5000      00503         MOVF    r0x01, W
+01D6 0A02      00504         XORLW   0x02
+01D8 E000      00505         BZ      _00122_DS_
+01DA 5000      00506         MOVF    r0x00, W
+01DC 0A04      00507         XORLW   0x04
+01DE E000      00508         BZ      _00123_DS_
+01E0 D000      00509         BRA     _00124_DS_
+01E2           00510 _00121_DS_:
+01E2 0000      00511         BANKSEL (_lfo2_value + 1)
+               00512         .line   198; map.c      AOUT_Pin16bitSet(2, lfo2_value);
+01E4 5100      00513         MOVF    (_lfo2_value + 1), W, B
+01E6 6EED      00514         MOVWF   POSTDEC1
+               00515 ; removed redundant BANKSEL
+01E8 5100      00516         MOVF    _lfo2_value, W, B
+01EA 6EED      00517         MOVWF   POSTDEC1
+01EC 0E02      00518         MOVLW   0x02
+01EE EC00 F000 00519         CALL    _AOUT_Pin16bitSet
+01F2 0E02      00520         MOVLW   0x02
+01F4 26E9      00521         ADDWF   FSR1L, F
+               00522         .line   199; map.c      break;
+01F6 D000      00523         BRA     _00124_DS_
+01F8           00524 _00122_DS_:
+01F8 0000      00525         BANKSEL (_lfo2_value + 1)
+               00526         .line   202; map.c      AOUT_Pin16bitSet(2, CONV_8BIT_TO_16BIT(sinewave[CONV_16BIT_TO_8BIT(lfo2_value)]));
+01FA 5100      00527         MOVF    (_lfo2_value + 1), W, B
+01FC 6E00      00528         MOVWF   r0x00
+01FE 6A00      00529         CLRF    r0x01
+0200 6A00      00530         CLRF    r0x02
+0202 0E00      00531         MOVLW   LOW(_sinewave)
+0204 2600      00532         ADDWF   r0x00, F
+0206 0E00      00533         MOVLW   HIGH(_sinewave)
+0208 2200      00534         ADDWFC  r0x01, F
+020A 0E00      00535         MOVLW   UPPER(_sinewave)
+020C 2200      00536         ADDWFC  r0x02, F
+020E C000 FFF6 00537         MOVFF   r0x00, TBLPTRL
+0212 C000 FFF7 00538         MOVFF   r0x01, TBLPTRH
+0216 C000 FFF8 00539         MOVFF   r0x02, TBLPTRU
+021A 0009      00540         TBLRD*+ 
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+021C CFF5 F000 00541         MOVFF   TABLAT, r0x00
+0220 6A00      00542         CLRF    r0x01
+0222 5000      00543         MOVF    r0x00, W
+0224 6E00      00544         MOVWF   r0x03
+0226 6A00      00545         CLRF    r0x02
+0228 5000      00546         MOVF    r0x03, W
+022A 6EED      00547         MOVWF   POSTDEC1
+022C 5000      00548         MOVF    r0x02, W
+022E 6EED      00549         MOVWF   POSTDEC1
+0230 0E02      00550         MOVLW   0x02
+0232 EC00 F000 00551         CALL    _AOUT_Pin16bitSet
+0236 0E02      00552         MOVLW   0x02
+0238 26E9      00553         ADDWF   FSR1L, F
+               00554         .line   203; map.c      break;
+023A D000      00555         BRA     _00124_DS_
+023C           00556 _00123_DS_:
+023C 0000      00557         BANKSEL (_lfo2_value + 1)
+               00558         .line   206; map.c      AOUT_Pin16bitSet(2, CONV_8BIT_TO_16BIT(squarewave[CONV_16BIT_TO_8BIT(lfo2_value)]));
+023E 5100      00559         MOVF    (_lfo2_value + 1), W, B
+0240 6E00      00560         MOVWF   r0x00
+0242 6A00      00561         CLRF    r0x01
+0244 6A00      00562         CLRF    r0x02
+0246 0E00      00563         MOVLW   LOW(_squarewave)
+0248 2600      00564         ADDWF   r0x00, F
+024A 0E00      00565         MOVLW   HIGH(_squarewave)
+024C 2200      00566         ADDWFC  r0x01, F
+024E 0E00      00567         MOVLW   UPPER(_squarewave)
+0250 2200      00568         ADDWFC  r0x02, F
+0252 C000 FFF6 00569         MOVFF   r0x00, TBLPTRL
+0256 C000 FFF7 00570         MOVFF   r0x01, TBLPTRH
+025A C000 FFF8 00571         MOVFF   r0x02, TBLPTRU
+025E 0009      00572         TBLRD*+ 
+0260 CFF5 F000 00573         MOVFF   TABLAT, r0x00
+0264 6A00      00574         CLRF    r0x01
+0266 5000      00575         MOVF    r0x00, W
+0268 6E00      00576         MOVWF   r0x03
+026A 6A00      00577         CLRF    r0x02
+026C 5000      00578         MOVF    r0x03, W
+026E 6EED      00579         MOVWF   POSTDEC1
+0270 5000      00580         MOVF    r0x02, W
+0272 6EED      00581         MOVWF   POSTDEC1
+0274 0E02      00582         MOVLW   0x02
+0276 EC00 F000 00583         CALL    _AOUT_Pin16bitSet
+027A 0E02      00584         MOVLW   0x02
+027C 26E9      00585         ADDWF   FSR1L, F
+027E           00586 _00124_DS_:
+027E 0000      00587         BANKSEL (_eg0_value + 1)
+               00588         .line   213; map.c      AOUT_Pin16bitSet(3, eg0_value);
+0280 5100      00589         MOVF    (_eg0_value + 1), W, B
+0282 6EED      00590         MOVWF   POSTDEC1
+               00591 ; removed redundant BANKSEL
+0284 5100      00592         MOVF    _eg0_value, W, B
+0286 6EED      00593         MOVWF   POSTDEC1
+0288 0E03      00594         MOVLW   0x03
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+028A EC00 F000 00595         CALL    _AOUT_Pin16bitSet
+028E 0E02      00596         MOVLW   0x02
+0290 26E9      00597         ADDWF   FSR1L, F
+0292 0000      00598         BANKSEL (_all_param + 7)
+               00599         .line   214; map.c      if (!all_param.router_flags_eg_audio_trig.eg1_audio_trig) {
+0294 B100      00600         BTFSC   (_all_param + 7), 0, B
+0296 D000      00601         BRA     _00126_DS_
+               00602         .line   215; map.c      value_8bit = all_param.eg_channel[0];
+0298 C000 F000 00603         MOVFF   (_all_param + 12), r0x00
+               00604         .line   216; map.c      eg0.GATE = midi_note[value_8bit].GATE;  }// EG triggered with MIDI note at Channel #eg_channel[0];
+029C 0E00      00605         MOVLW   LOW(_midi_note)
+029E 2400      00606         ADDWF   r0x00, W
+02A0 6E00      00607         MOVWF   r0x01
+02A2 6A00      00608         CLRF    r0x02
+02A4 0E00      00609         MOVLW   HIGH(_midi_note)
+02A6 2200      00610         ADDWFC  r0x02, F
+02A8 6AE8      00611         CLRF    WREG
+02AA C000 FFE1 00612         MOVFF   r0x01, FSR0L
+02AE C000 FFE2 00613         MOVFF   r0x02, FSR0H
+02B2 BEE7      00614         BTFSC   INDF0, 7
+02B4 2AE8      00615         INCF    WREG, F
+02B6 6E00      00616         MOVWF   r0x01
+02B8 5000      00617         MOVF    r0x01, W
+02BA 0B01      00618         ANDLW   0x01
+02BC 6EF4      00619         MOVWF   PRODH
+02BE 0000      00620         BANKSEL _eg0
+02C0 5100      00621         MOVF    _eg0, W, B
+02C2 0BFE      00622         ANDLW   0xfe
+02C4 10F4      00623         IORWF   PRODH, W
+               00624 ; removed redundant BANKSEL
+02C6 6F00      00625         MOVWF   _eg0, B
+02C8 D000      00626         BRA     _00127_DS_
+02CA           00627 _00126_DS_:
+               00628         .line   218; map.c      eg0.GATE = all_param.router_flags_eg_audio_trig.eg1_audio_trig_on; }
+02CA 6A00      00629         CLRF    r0x01
+02CC 0000      00630         BANKSEL (_all_param + 7)
+02CE B900      00631         BTFSC   (_all_param + 7), 4, B
+02D0 2A00      00632         INCF    r0x01, F
+02D2 5000      00633         MOVF    r0x01, W
+02D4 0B01      00634         ANDLW   0x01
+02D6 6EF4      00635         MOVWF   PRODH
+02D8 0000      00636         BANKSEL _eg0
+02DA 5100      00637         MOVF    _eg0, W, B
+02DC 0BFE      00638         ANDLW   0xfe
+02DE 10F4      00639         IORWF   PRODH, W
+               00640 ; removed redundant BANKSEL
+02E0 6F00      00641         MOVWF   _eg0, B
+02E2           00642 _00127_DS_:
+02E2 0000      00643         BANKSEL (_all_param + 5)
+               00644         .line   221; map.c      if (all_param.router_flags_eg_link.eg1_link_eg2) {
+02E4 A100      00645         BTFSS   (_all_param + 5), 0, B
+02E6 D000      00646         BRA     _00136_DS_
+02E8 0000      00647         BANKSEL (_eg0_value + 1)
+               00648         .line   222; map.c      AOUT_Pin16bitSet(4, eg0_value);
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+02EA 5100      00649         MOVF    (_eg0_value + 1), W, B
+02EC 6EED      00650         MOVWF   POSTDEC1
+               00651 ; removed redundant BANKSEL
+02EE 5100      00652         MOVF    _eg0_value, W, B
+02F0 6EED      00653         MOVWF   POSTDEC1
+02F2 0E04      00654         MOVLW   0x04
+02F4 EC00 F000 00655         CALL    _AOUT_Pin16bitSet
+02F8 0E02      00656         MOVLW   0x02
+02FA 26E9      00657         ADDWF   FSR1L, F
+02FC 0000      00658         BANKSEL (_all_param + 7)
+               00659         .line   223; map.c      if (!all_param.router_flags_eg_audio_trig.eg1_audio_trig || !all_param.router_flags_eg_audio_trig.eg2_audio_trig) {
+02FE A100      00660         BTFSS   (_all_param + 7), 0, B
+0300 D000      00661         BRA     _00128_DS_
+               00662 ; removed redundant BANKSEL
+0302 B300      00663         BTFSC   (_all_param + 7), 1, B
+0304 D000      00664         BRA     _00129_DS_
+0306           00665 _00128_DS_:
+               00666         .line   224; map.c      value_8bit = all_param.eg_channel[0];
+0306 C000 F000 00667         MOVFF   (_all_param + 12), r0x00
+               00668         .line   225; map.c      eg1.GATE = midi_note[value_8bit].GATE; } // EG triggered with MIDI note at Channel #eg_channel[0];
+030A 0E00      00669         MOVLW   LOW(_midi_note)
+030C 2400      00670         ADDWF   r0x00, W
+030E 6E00      00671         MOVWF   r0x01
+0310 6A00      00672         CLRF    r0x02
+0312 0E00      00673         MOVLW   HIGH(_midi_note)
+0314 2200      00674         ADDWFC  r0x02, F
+0316 6AE8      00675         CLRF    WREG
+0318 C000 FFE1 00676         MOVFF   r0x01, FSR0L
+031C C000 FFE2 00677         MOVFF   r0x02, FSR0H
+0320 BEE7      00678         BTFSC   INDF0, 7
+0322 2AE8      00679         INCF    WREG, F
+0324 6E00      00680         MOVWF   r0x01
+0326 5000      00681         MOVF    r0x01, W
+0328 0B01      00682         ANDLW   0x01
+032A 6EF4      00683         MOVWF   PRODH
+032C 0000      00684         BANKSEL _eg1
+032E 5100      00685         MOVF    _eg1, W, B
+0330 0BFE      00686         ANDLW   0xfe
+0332 10F4      00687         IORWF   PRODH, W
+               00688 ; removed redundant BANKSEL
+0334 6F00      00689         MOVWF   _eg1, B
+0336 D000      00690         BRA     _00137_DS_
+0338           00691 _00129_DS_:
+               00692         .line   227; map.c      eg1.GATE = all_param.router_flags_eg_audio_trig.eg1_audio_trig_on; }}
+0338 6A00      00693         CLRF    r0x01
+033A 0000      00694         BANKSEL (_all_param + 7)
+033C B900      00695         BTFSC   (_all_param + 7), 4, B
+033E 2A00      00696         INCF    r0x01, F
+0340 5000      00697         MOVF    r0x01, W
+0342 0B01      00698         ANDLW   0x01
+0344 6EF4      00699         MOVWF   PRODH
+0346 0000      00700         BANKSEL _eg1
+0348 5100      00701         MOVF    _eg1, W, B
+034A 0BFE      00702         ANDLW   0xfe
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+034C 10F4      00703         IORWF   PRODH, W
+               00704 ; removed redundant BANKSEL
+034E 6F00      00705         MOVWF   _eg1, B
+0350 D000      00706         BRA     _00137_DS_
+0352           00707 _00136_DS_:
+0352 0000      00708         BANKSEL (_eg1_value + 1)
+               00709         .line   229; map.c      AOUT_Pin16bitSet(4, eg1_value);
+0354 5100      00710         MOVF    (_eg1_value + 1), W, B
+0356 6EED      00711         MOVWF   POSTDEC1
+               00712 ; removed redundant BANKSEL
+0358 5100      00713         MOVF    _eg1_value, W, B
+035A 6EED      00714         MOVWF   POSTDEC1
+035C 0E04      00715         MOVLW   0x04
+035E EC00 F000 00716         CALL    _AOUT_Pin16bitSet
+0362 0E02      00717         MOVLW   0x02
+0364 26E9      00718         ADDWF   FSR1L, F
+0366 0000      00719         BANKSEL (_all_param + 7)
+               00720         .line   230; map.c      if (!all_param.router_flags_eg_audio_trig.eg2_audio_trig) { 
+0368 B300      00721         BTFSC   (_all_param + 7), 1, B
+036A D000      00722         BRA     _00133_DS_
+               00723         .line   231; map.c      value_8bit = all_param.eg_channel[1];
+036C C000 F000 00724         MOVFF   (_all_param + 13), r0x00
+               00725         .line   232; map.c      eg1.GATE = midi_note[value_8bit].GATE; } // EG triggered with MIDI note at Channel #eg_channel[1];
+0370 0E00      00726         MOVLW   LOW(_midi_note)
+0372 2400      00727         ADDWF   r0x00, W
+0374 6E00      00728         MOVWF   r0x01
+0376 6A00      00729         CLRF    r0x02
+0378 0E00      00730         MOVLW   HIGH(_midi_note)
+037A 2200      00731         ADDWFC  r0x02, F
+037C 6AE8      00732         CLRF    WREG
+037E C000 FFE1 00733         MOVFF   r0x01, FSR0L
+0382 C000 FFE2 00734         MOVFF   r0x02, FSR0H
+0386 BEE7      00735         BTFSC   INDF0, 7
+0388 2AE8      00736         INCF    WREG, F
+038A 6E00      00737         MOVWF   r0x01
+038C 5000      00738         MOVF    r0x01, W
+038E 0B01      00739         ANDLW   0x01
+0390 6EF4      00740         MOVWF   PRODH
+0392 0000      00741         BANKSEL _eg1
+0394 5100      00742         MOVF    _eg1, W, B
+0396 0BFE      00743         ANDLW   0xfe
+0398 10F4      00744         IORWF   PRODH, W
+               00745 ; removed redundant BANKSEL
+039A 6F00      00746         MOVWF   _eg1, B
+039C D000      00747         BRA     _00137_DS_
+039E           00748 _00133_DS_:
+               00749         .line   234; map.c      eg1.GATE = all_param.router_flags_eg_audio_trig.eg1_audio_trig_on; }}
+039E 6A00      00750         CLRF    r0x01
+03A0 0000      00751         BANKSEL (_all_param + 7)
+03A2 B900      00752         BTFSC   (_all_param + 7), 4, B
+03A4 2A00      00753         INCF    r0x01, F
+03A6 5000      00754         MOVF    r0x01, W
+03A8 0B01      00755         ANDLW   0x01
+03AA 6EF4      00756         MOVWF   PRODH
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+03AC 0000      00757         BANKSEL _eg1
+03AE 5100      00758         MOVF    _eg1, W, B
+03B0 0BFE      00759         ANDLW   0xfe
+03B2 10F4      00760         IORWF   PRODH, W
+               00761 ; removed redundant BANKSEL
+03B4 6F00      00762         MOVWF   _eg1, B
+03B6           00763 _00137_DS_:
+03B6 0000      00764         BANKSEL (_eg2_value + 1)
+               00765         .line   237; map.c      AOUT_Pin16bitSet(5, eg2_value);
+03B8 5100      00766         MOVF    (_eg2_value + 1), W, B
+03BA 6EED      00767         MOVWF   POSTDEC1
+               00768 ; removed redundant BANKSEL
+03BC 5100      00769         MOVF    _eg2_value, W, B
+03BE 6EED      00770         MOVWF   POSTDEC1
+03C0 0E05      00771         MOVLW   0x05
+03C2 EC00 F000 00772         CALL    _AOUT_Pin16bitSet
+03C6 0E02      00773         MOVLW   0x02
+03C8 26E9      00774         ADDWF   FSR1L, F
+03CA 0000      00775         BANKSEL (_all_param + 7)
+               00776         .line   238; map.c      if (!all_param.router_flags_eg_audio_trig.eg3_audio_trig) {
+03CC B500      00777         BTFSC   (_all_param + 7), 2, B
+03CE D000      00778         BRA     _00139_DS_
+               00779         .line   239; map.c      value_8bit = all_param.eg_channel[2];
+03D0 C000 F000 00780         MOVFF   (_all_param + 14), r0x00
+               00781         .line   240; map.c      eg2.GATE = midi_note[value_8bit].GATE; }// EG triggered with MIDI note at Channel #eg_channel[2];
+03D4 0E00      00782         MOVLW   LOW(_midi_note)
+03D6 2400      00783         ADDWF   r0x00, W
+03D8 6E00      00784         MOVWF   r0x01
+03DA 6A00      00785         CLRF    r0x02
+03DC 0E00      00786         MOVLW   HIGH(_midi_note)
+03DE 2200      00787         ADDWFC  r0x02, F
+03E0 6AE8      00788         CLRF    WREG
+03E2 C000 FFE1 00789         MOVFF   r0x01, FSR0L
+03E6 C000 FFE2 00790         MOVFF   r0x02, FSR0H
+03EA BEE7      00791         BTFSC   INDF0, 7
+03EC 2AE8      00792         INCF    WREG, F
+03EE 6E00      00793         MOVWF   r0x01
+03F0 5000      00794         MOVF    r0x01, W
+03F2 0B01      00795         ANDLW   0x01
+03F4 6EF4      00796         MOVWF   PRODH
+03F6 0000      00797         BANKSEL _eg2
+03F8 5100      00798         MOVF    _eg2, W, B
+03FA 0BFE      00799         ANDLW   0xfe
+03FC 10F4      00800         IORWF   PRODH, W
+               00801 ; removed redundant BANKSEL
+03FE 6F00      00802         MOVWF   _eg2, B
+0400 D000      00803         BRA     _00140_DS_
+0402           00804 _00139_DS_:
+               00805         .line   242; map.c      eg2.GATE = all_param.router_flags_eg_audio_trig.eg3_audio_trig_on; }
+0402 6A00      00806         CLRF    r0x01
+0404 0000      00807         BANKSEL (_all_param + 7)
+0406 BD00      00808         BTFSC   (_all_param + 7), 6, B
+0408 2A00      00809         INCF    r0x01, F
+040A 5000      00810         MOVF    r0x01, W
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+040C 0B01      00811         ANDLW   0x01
+040E 6EF4      00812         MOVWF   PRODH
+0410 0000      00813         BANKSEL _eg2
+0412 5100      00814         MOVF    _eg2, W, B
+0414 0BFE      00815         ANDLW   0xfe
+0416 10F4      00816         IORWF   PRODH, W
+               00817 ; removed redundant BANKSEL
+0418 6F00      00818         MOVWF   _eg2, B
+041A           00819 _00140_DS_:
+041A 0000      00820         BANKSEL (_all_param + 5)
+               00821         .line   246; map.c      if (all_param.router_flags_eg_link.eg3_link_eg4) {
+041C A300      00822         BTFSS   (_all_param + 5), 1, B
+041E D000      00823         BRA     _00149_DS_
+0420 0000      00824         BANKSEL (_eg2_value + 1)
+               00825         .line   247; map.c      AOUT_Pin16bitSet(6, eg2_value);
+0422 5100      00826         MOVF    (_eg2_value + 1), W, B
+0424 6EED      00827         MOVWF   POSTDEC1
+               00828 ; removed redundant BANKSEL
+0426 5100      00829         MOVF    _eg2_value, W, B
+0428 6EED      00830         MOVWF   POSTDEC1
+042A 0E06      00831         MOVLW   0x06
+042C EC00 F000 00832         CALL    _AOUT_Pin16bitSet
+0430 0E02      00833         MOVLW   0x02
+0432 26E9      00834         ADDWF   FSR1L, F
+0434 0000      00835         BANKSEL (_all_param + 7)
+               00836         .line   248; map.c      if (!all_param.router_flags_eg_audio_trig.eg3_audio_trig || !all_param.router_flags_eg_audio_trig.eg4_audio_trig) {
+0436 A500      00837         BTFSS   (_all_param + 7), 2, B
+0438 D000      00838         BRA     _00141_DS_
+               00839 ; removed redundant BANKSEL
+043A B700      00840         BTFSC   (_all_param + 7), 3, B
+043C D000      00841         BRA     _00142_DS_
+043E           00842 _00141_DS_:
+               00843         .line   249; map.c      value_8bit = all_param.eg_channel[2];
+043E C000 F000 00844         MOVFF   (_all_param + 14), r0x00
+               00845         .line   250; map.c      eg3.GATE = midi_note[value_8bit].GATE; }  // EG triggered with MIDI note at Channel #eg_channel[2];
+0442 0E00      00846         MOVLW   LOW(_midi_note)
+0444 2400      00847         ADDWF   r0x00, W
+0446 6E00      00848         MOVWF   r0x01
+0448 6A00      00849         CLRF    r0x02
+044A 0E00      00850         MOVLW   HIGH(_midi_note)
+044C 2200      00851         ADDWFC  r0x02, F
+044E 6AE8      00852         CLRF    WREG
+0450 C000 FFE1 00853         MOVFF   r0x01, FSR0L
+0454 C000 FFE2 00854         MOVFF   r0x02, FSR0H
+0458 BEE7      00855         BTFSC   INDF0, 7
+045A 2AE8      00856         INCF    WREG, F
+045C 6E00      00857         MOVWF   r0x01
+045E 5000      00858         MOVF    r0x01, W
+0460 0B01      00859         ANDLW   0x01
+0462 6EF4      00860         MOVWF   PRODH
+0464 0000      00861         BANKSEL _eg3
+0466 5100      00862         MOVF    _eg3, W, B
+0468 0BFE      00863         ANDLW   0xfe
+046A 10F4      00864         IORWF   PRODH, W
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00865 ; removed redundant BANKSEL
+046C 6F00      00866         MOVWF   _eg3, B
+046E D000      00867         BRA     _00150_DS_
+0470           00868 _00142_DS_:
+               00869         .line   252; map.c      eg3.GATE = all_param.router_flags_eg_audio_trig.eg3_audio_trig_on; }}
+0470 6A00      00870         CLRF    r0x01
+0472 0000      00871         BANKSEL (_all_param + 7)
+0474 BD00      00872         BTFSC   (_all_param + 7), 6, B
+0476 2A00      00873         INCF    r0x01, F
+0478 5000      00874         MOVF    r0x01, W
+047A 0B01      00875         ANDLW   0x01
+047C 6EF4      00876         MOVWF   PRODH
+047E 0000      00877         BANKSEL _eg3
+0480 5100      00878         MOVF    _eg3, W, B
+0482 0BFE      00879         ANDLW   0xfe
+0484 10F4      00880         IORWF   PRODH, W
+               00881 ; removed redundant BANKSEL
+0486 6F00      00882         MOVWF   _eg3, B
+0488 D000      00883         BRA     _00150_DS_
+048A           00884 _00149_DS_:
+048A 0000      00885         BANKSEL (_eg3_value + 1)
+               00886         .line   254; map.c      AOUT_Pin16bitSet(6, eg3_value);
+048C 5100      00887         MOVF    (_eg3_value + 1), W, B
+048E 6EED      00888         MOVWF   POSTDEC1
+               00889 ; removed redundant BANKSEL
+0490 5100      00890         MOVF    _eg3_value, W, B
+0492 6EED      00891         MOVWF   POSTDEC1
+0494 0E06      00892         MOVLW   0x06
+0496 EC00 F000 00893         CALL    _AOUT_Pin16bitSet
+049A 0E02      00894         MOVLW   0x02
+049C 26E9      00895         ADDWF   FSR1L, F
+049E 0000      00896         BANKSEL (_all_param + 7)
+               00897         .line   255; map.c      if (!all_param.router_flags_eg_audio_trig.eg4_audio_trig ) {
+04A0 B700      00898         BTFSC   (_all_param + 7), 3, B
+04A2 D000      00899         BRA     _00146_DS_
+               00900         .line   256; map.c      value_8bit = all_param.eg_channel[3];
+04A4 C000 F000 00901         MOVFF   (_all_param + 15), r0x00
+               00902         .line   257; map.c      eg3.GATE = midi_note[value_8bit].GATE; } // EG triggered with MIDI note at Channel #eg_channel[3];
+04A8 6A00      00903         CLRF    r0x01
+04AA 0E00      00904         MOVLW   LOW(_midi_note)
+04AC 2600      00905         ADDWF   r0x00, F
+04AE 0E00      00906         MOVLW   HIGH(_midi_note)
+04B0 2200      00907         ADDWFC  r0x01, F
+04B2 6AE8      00908         CLRF    WREG
+04B4 C000 FFE1 00909         MOVFF   r0x00, FSR0L
+04B8 C000 FFE2 00910         MOVFF   r0x01, FSR0H
+04BC BEE7      00911         BTFSC   INDF0, 7
+04BE 2AE8      00912         INCF    WREG, F
+04C0 6E00      00913         MOVWF   r0x00
+04C2 5000      00914         MOVF    r0x00, W
+04C4 0B01      00915         ANDLW   0x01
+04C6 6EF4      00916         MOVWF   PRODH
+04C8 0000      00917         BANKSEL _eg3
+04CA 5100      00918         MOVF    _eg3, W, B
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+04CC 0BFE      00919         ANDLW   0xfe
+04CE 10F4      00920         IORWF   PRODH, W
+               00921 ; removed redundant BANKSEL
+04D0 6F00      00922         MOVWF   _eg3, B
+04D2 D000      00923         BRA     _00150_DS_
+04D4           00924 _00146_DS_:
+               00925         .line   259; map.c      eg2.GATE = all_param.router_flags_eg_audio_trig.eg4_audio_trig_on; }  }
+04D4 6A00      00926         CLRF    r0x00
+04D6 0000      00927         BANKSEL (_all_param + 7)
+04D8 BF00      00928         BTFSC   (_all_param + 7), 7, B
+04DA 2A00      00929         INCF    r0x00, F
+04DC 5000      00930         MOVF    r0x00, W
+04DE 0B01      00931         ANDLW   0x01
+04E0 6EF4      00932         MOVWF   PRODH
+04E2 0000      00933         BANKSEL _eg2
+04E4 5100      00934         MOVF    _eg2, W, B
+04E6 0BFE      00935         ANDLW   0xfe
+04E8 10F4      00936         IORWF   PRODH, W
+               00937 ; removed redundant BANKSEL
+04EA 6F00      00938         MOVWF   _eg2, B
+04EC           00939 _00150_DS_:
+               00940         .line   263; map.c      AOUT_Update();
+04EC EC00 F000 00941         CALL    _AOUT_Update
+04F0 0000      00942         BANKSEL _MAP_Tick_gates_1_1
+               00943         .line   265; map.c      AOUT_DigitalPinsSet(gates.ALL);
+04F2 5100      00944         MOVF    _MAP_Tick_gates_1_1, W, B
+04F4 0BFF      00945         ANDLW   0xff
+04F6 6E00      00946         MOVWF   r0x00
+04F8 5000      00947         MOVF    r0x00, W
+04FA EC00 F000 00948         CALL    _AOUT_DigitalPinsSet
+04FE CFEC F000 00949         MOVFF   PREINC1, r0x03
+0502 CFEC F000 00950         MOVFF   PREINC1, r0x02
+0506 CFEC F000 00951         MOVFF   PREINC1, r0x01
+050A CFEC F000 00952         MOVFF   PREINC1, r0x00
+050E 0012      00953         RETURN  
+               00954 
+               00955 ; ; Starting pCode block
+               00956 S_map__MAP_Init code
+0000           00957 _MAP_Init:
+               00958         .line   125; map.c      }
+0000 0012      00959         RETURN  
+               00960 
+               00961 ; ; Starting pCode block for Ival
+               00962         code
+0000           00963 _sinewave:
+0000 8380 8986 00964         DB      0x80, 0x83, 0x86, 0x89, 0x8c, 0x8f, 0x92, 0x95, 0x98, 0x9c, 0x9f, 0xa2
+0004 8F8C 9592
+0008 9C98 A29F
+000C A8A5 AEAB 00965         DB      0xa5, 0xa8, 0xab, 0xae, 0xb0, 0xb3, 0xb6, 0xb9, 0xbc, 0xbf, 0xc1, 0xc4
+0010 B3B0 B9B6
+0014 BFBC C4C1
+0018 C9C7 CECC 00966         DB      0xc7, 0xc9, 0xcc, 0xce, 0xd1, 0xd3, 0xd5, 0xd8, 0xda, 0xdc, 0xde, 0xe0
+001C D3D1 D8D5
+0020 DCDA E0DE
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0024 E4E2 E8E6 00967         DB      0xe2, 0xe4, 0xe6, 0xe8, 0xea, 0xec, 0xed, 0xef, 0xf0, 0xf2, 0xf3, 0xf5
+0028 ECEA EFED
+002C F2F0 F5F3
+0030 F7F6 F9F8 00968         DB      0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfc, 0xfd, 0xfe, 0xfe, 0xff
+0034 FBFA FCFC
+0038 FEFD FFFE
+003C FFFF FFFF 00969         DB      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xfe
+0040 FFFF FFFF
+0044 FFFF FEFE
+0048 FCFD FBFC 00970         DB      0xfd, 0xfc, 0xfc, 0xfb, 0xfa, 0xf9, 0xf8, 0xf7, 0xf6, 0xf5, 0xf3, 0xf2
+004C F9FA F7F8
+0050 F5F6 F2F3
+0054 EFF0 ECED 00971         DB      0xf0, 0xef, 0xed, 0xec, 0xea, 0xe8, 0xe6, 0xe4, 0xe2, 0xe0, 0xde, 0xdc
+0058 E8EA E4E6
+005C E0E2 DCDE
+0060 D8DA D3D5 00972         DB      0xda, 0xd8, 0xd5, 0xd3, 0xd1, 0xce, 0xcc, 0xc9, 0xc7, 0xc4, 0xc1, 0xbf
+0064 CED1 C9CC
+0068 C4C7 BFC1
+006C B9BC B3B6 00973         DB      0xbc, 0xb9, 0xb6, 0xb3, 0xb0, 0xae, 0xab, 0xa8, 0xa5, 0xa2, 0x9f, 0x9c
+0070 AEB0 A8AB
+0074 A2A5 9C9F
+0078 9598 8F92 00974         DB      0x98, 0x95, 0x92, 0x8f, 0x8c, 0x89, 0x86, 0x83, 0x80, 0x7d, 0x7a, 0x77
+007C 898C 8386
+0080 7D80 777A
+0084 7174 6B6E 00975         DB      0x74, 0x71, 0x6e, 0x6b, 0x68, 0x64, 0x61, 0x5e, 0x5b, 0x58, 0x55, 0x52
+0088 6468 5E61
+008C 585B 5255
+0090 4D50 474A 00976         DB      0x50, 0x4d, 0x4a, 0x47, 0x44, 0x41, 0x3f, 0x3c, 0x39, 0x37, 0x34, 0x32
+0094 4144 3C3F
+0098 3739 3234
+009C 2D2F 282B 00977         DB      0x2f, 0x2d, 0x2b, 0x28, 0x26, 0x24, 0x22, 0x20, 0x1e, 0x1c, 0x1a, 0x18
+00A0 2426 2022
+00A4 1C1E 181A
+00A8 1416 1113 00978         DB      0x16, 0x14, 0x13, 0x11, 0x10, 0x0e, 0x0d, 0x0b, 0x0a, 0x09, 0x08, 0x07
+00AC 0E10 0B0D
+00B0 090A 0708
+00B4 0506 0404 00979         DB      0x06, 0x05, 0x04, 0x04, 0x03, 0x02, 0x02, 0x01, 0x01, 0x01, 0x01, 0x01
+00B8 0203 0102
+00BC 0101 0101
+00C0 0101 0101 00980         DB      0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02, 0x03, 0x04, 0x04, 0x05
+00C4 0101 0202
+00C8 0403 0504
+00CC 0706 0908 00981         DB      0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0d, 0x0e, 0x10, 0x11, 0x13, 0x14
+00D0 0B0A 0E0D
+00D4 1110 1413
+00D8 1816 1C1A 00982         DB      0x16, 0x18, 0x1a, 0x1c, 0x1e, 0x20, 0x22, 0x24, 0x26, 0x28, 0x2b, 0x2d
+00DC 201E 2422
+00E0 2826 2D2B
+00E4 322F 3734 00983         DB      0x2f, 0x32, 0x34, 0x37, 0x39, 0x3c, 0x3f, 0x41, 0x44, 0x47, 0x4a, 0x4d
+00E8 3C39 413F
+00EC 4744 4D4A
+00F0 5250 5855 00984         DB      0x50, 0x52, 0x55, 0x58, 0x5b, 0x5e, 0x61, 0x64, 0x68, 0x6b, 0x6e, 0x71
+00F4 5E5B 6461
+00F8 6B68 716E
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00FC 7774 7D7A 00985         DB      0x74, 0x77, 0x7a, 0x7d
+               00986 ; ; Starting pCode block for Ival
+0100           00987 _squarewave:
+0100 FBFA FDFC 00988         DB      0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+0104 FFFE FFFF
+0108 FFFF FFFF
+010C FFFF FFFF 00989         DB      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+0110 FFFF FFFF
+0114 FFFF FFFF
+0118 FFFF FFFF 00990         DB      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+011C FFFF FFFF
+0120 FFFF FFFF
+0124 FFFF FFFF 00991         DB      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+0128 FFFF FFFF
+012C FFFF FFFF
+0130 FFFF FFFF 00992         DB      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+0134 FFFF FFFF
+0138 FFFF FFFF
+013C FFFF FFFF 00993         DB      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+0140 FFFF FFFF
+0144 FFFF FFFF
+0148 FFFF FFFF 00994         DB      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+014C FFFF FFFF
+0150 FFFF FFFF
+0154 FFFF FFFF 00995         DB      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+0158 FFFF FFFF
+015C FFFF FFFF
+0160 FFFF FFFF 00996         DB      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+0164 FFFF FFFF
+0168 FFFF FFFF
+016C FFFF FFFF 00997         DB      0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+0170 FFFF FFFF
+0174 FFFF FFFF
+0178 FFFF FEFF 00998         DB      0xff, 0xff, 0xff, 0xfe, 0xfd, 0xfc, 0xfb, 0xfa, 0x06, 0x05, 0x04, 0x03
+017C FCFD FAFB
+0180 0506 0304
+0184 0102 0101 00999         DB      0x02, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
+0188 0101 0101
+018C 0101 0101
+0190 0101 0101 01000         DB      0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
+0194 0101 0101
+0198 0101 0101
+019C 0101 0101 01001         DB      0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
+01A0 0101 0101
+01A4 0101 0101
+01A8 0101 0101 01002         DB      0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
+01AC 0101 0101
+01B0 0101 0101
+01B4 0101 0101 01003         DB      0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
+01B8 0101 0101
+01BC 0101 0101
+01C0 0101 0101 01004         DB      0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
+01C4 0101 0101
+01C8 0101 0101
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01CC 0101 0101 01005         DB      0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
+01D0 0101 0101
+01D4 0101 0101
+01D8 0101 0101 01006         DB      0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
+01DC 0101 0101
+01E0 0101 0101
+01E4 0101 0101 01007         DB      0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
+01E8 0101 0101
+01EC 0101 0101
+01F0 0101 0101 01008         DB      0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02
+01F4 0101 0101
+01F8 0101 0201
+01FC 0403 0605 01009         DB      0x03, 0x04, 0x05, 0x06
+               01010 
+               01011 
+               01012 ; Statistics:
+               01013 ; code size:     1388 (0x056c) bytes ( 1.06%)
+               01014 ;                 694 (0x02b6) words
+               01015 ; udata size:      65 (0x0041) bytes ( 1.69%)
+               01016 ; access size:      4 (0x0004) bytes
+               01017 
+               01018 
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 22
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FSR0H                             00000FE2
+FSR0L                             00000FE1
+FSR1L                             00000FE9
+INDF0                             00000FE7
+POSTDEC1                          00000FED
+PREINC1                           00000FEC
+PRODH                             00000FF4
+TABLAT                            00000FF5
+TBLPTRH                           00000FF7
+TBLPTRL                           00000FF6
+TBLPTRU                           00000FF8
+WREG                              00000FE8
+_00109_DS_                        0000003A
+_00110_DS_                        00000050
+_00111_DS_                        00000094
+_00112_DS_                        000000D6
+_00114_DS_                        000000EA
+_00115_DS_                        0000010E
+_00116_DS_                        00000124
+_00117_DS_                        00000168
+_00118_DS_                        000001AA
+_00120_DS_                        000001BE
+_00121_DS_                        000001E2
+_00122_DS_                        000001F8
+_00123_DS_                        0000023C
+_00124_DS_                        0000027E
+_00126_DS_                        000002CA
+_00127_DS_                        000002E2
+_00128_DS_                        00000306
+_00129_DS_                        00000338
+_00133_DS_                        0000039E
+_00136_DS_                        00000352
+_00137_DS_                        000003B6
+_00139_DS_                        00000402
+_00140_DS_                        0000041A
+_00141_DS_                        0000043E
+_00142_DS_                        00000470
+_00146_DS_                        000004D4
+_00149_DS_                        0000048A
+_00150_DS_                        000004EC
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_AOUT_DigitalPinsSet              00000000
+_AOUT_Pin16bitSet                 00000000
+_AOUT_Update                      00000000
+_BAUDCON                          00000000
+_BAUDCONbits                      00000000
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_BSR                              00000000
+_BSRbits                          00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_EEADR                            00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EEDATA                           00000000
+_FSR0H                            00000000
+_FSR0Hbits                        00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1Hbits                        00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2Hbits                        00000000
+_FSR2L                            00000000
+_HLVDCON                          00000000
+_HLVDCONbits                      00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_LATEbits                         00000000
+_MAP_Init                         00000000
+_MAP_Tick                         00000000
+_MAP_Tick_gates_1_1               00000000
+_MIOS_BOX_CFG0                    00000000
+_MIOS_BOX_CFG1                    00000000
+_MIOS_BOX_STAT                    00000000
+_MIOS_ENC_PIN_TABLE               00000000
+_MIOS_MPROC_EVENT_TABLE           00000000
+_MIOS_PARAMETER1                  00000000
+_MIOS_PARAMETER2                  00000000
+_MIOS_PARAMETER3                  00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATHbits                       00000000
+_PCLATU                           00000000
+_PCLATUbits                       00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PRODH                            00000000
+_PRODL                            00000000
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PWM1CON                          00000000
+_PWM1CONbits                      00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCSTA                            00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRGH                           00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TBLPTRUbits                      00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TOSUbits                         00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+gpasm-0.13.6 beta               _output/map__mios-gpasm-tmp.asm7-10-2008  15:16:07          PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_TRISEbits                        00000000
+_TXREG                            00000000
+_TXSTA                            00000000
+_TXSTAbits                        00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F4620                         00000001
+_all_param                        00000000
+_app_flags                        00000000
+_bank                             00000000
+_eg0                              00000000
+_eg0_value                        00000000
+_eg1                              00000000
+_eg1_value                        00000000
+_eg2                              00000000
+_eg2_value                        00000000
+_eg3                              00000000
+_eg3_value                        00000000
+_lfo0_value                       00000000
+_lfo1_value                       00000000
+_lfo2_value                       00000000
+_lfo_add_table                    00000000
+_lfo_add_table_bpm                00000000
+_load_last                        00000000
+_looper                           00000000
+_midi_cc_chn0                     00000000
+_midi_note                        00000000
+_midi_pitch_bender                00000000
+_mios_enc_pin_table               00000000
+_mios_mproc_event_table           00000000
+_new_note                         00000000
+_preset                           00000000
+_sinewave                         00000000
+_squarewave                       00000100
+_update_led                       00000000
+_update_preset_led                00000000
+r0x00                             00000010
+r0x01                             00000011
+r0x02                             00000012
+r0x03                             00000013
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

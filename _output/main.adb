@@ -1,0 +1,14 @@
+M:main
+S:Fmain$_str_0$0$0({41}DA41,SC:S),D,0,0
+S:Fmain$_str_1$0$0({32}DA32,SC:S),D,0,0
+S:Fmain$_str_2$0$0({5}DA5,SC:S),D,0,0
+S:Fmain$_str_3$0$0({5}DA5,SC:S),D,0,0
+S:Fmain$_str_4$0$0({5}DA5,SC:S),D,0,0
+S:Fmain$_str_5$0$0({5}DA5,SC:S),D,0,0
+S:Fmain$_str_6$0$0({5}DA5,SC:S),D,0,0
+S:Fmain$_str_7$0$0({5}DA5,SC:S),D,0,0
+S:Fmain$_str_8$0$0({5}DA5,SC:S),D,0,0
+S:Fmain$_str_9$0$0({4}DA4,SC:S),D,0,0
+S:Fmain$_str_10$0$0({4}DA4,SC:S),D,0,0
+S:Fmain$_str_11$0$0({4}DA4,SC:S),D,0,0
+S:Fmain$_str_12$0$0({5}DA5,SC:S),D,0,0

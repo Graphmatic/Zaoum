@@ -1,0 +1,2166 @@
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.8.0 #5082 (Mar  9 2008) (MINGW32)
+               00004 ; This file was generated Thu Jul 10 15:16:05 2008
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008 
+               00009         .ident "SDCC version 2.8.0 #5082 [pic16 port]"
+               00010         .file   "eg.c"
+               00011         list    p=18f4620
+               00012 
+               00013         radix dec
+               00014 
+               00015 ;--------------------------------------------------------
+               00016 ; public variables in this module
+               00017 ;--------------------------------------------------------
+               00018         global _EG_Init
+               00019         global _EG_Tick
+               00020         global _eg0
+               00021         global _eg1
+               00022         global _eg2
+               00023         global _eg3
+               00024         global _eg0_value
+               00025         global _eg1_value
+               00026         global _eg2_value
+               00027         global _eg3_value
+               00028         global _eg0_int
+               00029         global _eg1_int
+               00030         global _eg2_int
+               00031         global _eg3_int
+               00032         global _eg_add_table
+               00033 
+               00034 ;--------------------------------------------------------
+               00035 ; extern variables in this module
+               00036 ;--------------------------------------------------------
+               00037         extern _MIOS_BOX_CFG0
+               00038         extern _MIOS_BOX_CFG1
+               00039         extern _MIOS_BOX_STAT
+               00040         extern _MIOS_PARAMETER1
+               00041         extern _MIOS_PARAMETER2
+               00042         extern _MIOS_PARAMETER3
+               00043         extern _PORTAbits
+               00044         extern _PORTBbits
+               00045         extern _PORTCbits
+               00046         extern _PORTDbits
+               00047         extern _PORTEbits
+               00048         extern _LATAbits
+               00049         extern _LATBbits
+               00050         extern _LATCbits
+               00051         extern _LATDbits
+               00052         extern _LATEbits
+               00053         extern _TRISAbits
+               00054         extern _TRISBbits
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _TRISCbits
+               00056         extern _TRISDbits
+               00057         extern _TRISEbits
+               00058         extern _OSCTUNEbits
+               00059         extern _PIE1bits
+               00060         extern _PIR1bits
+               00061         extern _IPR1bits
+               00062         extern _PIE2bits
+               00063         extern _PIR2bits
+               00064         extern _IPR2bits
+               00065         extern _EECON1bits
+               00066         extern _RCSTAbits
+               00067         extern _TXSTAbits
+               00068         extern _T3CONbits
+               00069         extern _CMCONbits
+               00070         extern _CVRCONbits
+               00071         extern _ECCP1ASbits
+               00072         extern _PWM1CONbits
+               00073         extern _BAUDCONbits
+               00074         extern _CCP2CONbits
+               00075         extern _CCP1CONbits
+               00076         extern _ADCON2bits
+               00077         extern _ADCON1bits
+               00078         extern _ADCON0bits
+               00079         extern _SSPCON2bits
+               00080         extern _SSPCON1bits
+               00081         extern _SSPSTATbits
+               00082         extern _T2CONbits
+               00083         extern _T1CONbits
+               00084         extern _RCONbits
+               00085         extern _WDTCONbits
+               00086         extern _HLVDCONbits
+               00087         extern _OSCCONbits
+               00088         extern _T0CONbits
+               00089         extern _STATUSbits
+               00090         extern _FSR2Hbits
+               00091         extern _BSRbits
+               00092         extern _FSR1Hbits
+               00093         extern _FSR0Hbits
+               00094         extern _INTCON3bits
+               00095         extern _INTCON2bits
+               00096         extern _INTCONbits
+               00097         extern _TBLPTRUbits
+               00098         extern _PCLATHbits
+               00099         extern _PCLATUbits
+               00100         extern _STKPTRbits
+               00101         extern _TOSUbits
+               00102         extern _bank
+               00103         extern _preset
+               00104         extern _looper
+               00105         extern _app_flags
+               00106         extern _load_last
+               00107         extern _update_led
+               00108         extern _update_preset_led
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _midi_note
+               00110         extern _midi_cc_chn0
+               00111         extern _midi_pitch_bender
+               00112         extern _new_note
+               00113         extern _lfo1_value
+               00114         extern _lfo2_value
+               00115         extern _all_param
+               00116         extern _lfo0_value
+               00117         extern _PORTA
+               00118         extern _PORTB
+               00119         extern _PORTC
+               00120         extern _PORTD
+               00121         extern _PORTE
+               00122         extern _LATA
+               00123         extern _LATB
+               00124         extern _LATC
+               00125         extern _LATD
+               00126         extern _LATE
+               00127         extern _TRISA
+               00128         extern _TRISB
+               00129         extern _TRISC
+               00130         extern _TRISD
+               00131         extern _TRISE
+               00132         extern _OSCTUNE
+               00133         extern _PIE1
+               00134         extern _PIR1
+               00135         extern _IPR1
+               00136         extern _PIE2
+               00137         extern _PIR2
+               00138         extern _IPR2
+               00139         extern _EECON1
+               00140         extern _EECON2
+               00141         extern _EEDATA
+               00142         extern _EEADR
+               00143         extern _RCSTA
+               00144         extern _TXSTA
+               00145         extern _TXREG
+               00146         extern _RCREG
+               00147         extern _SPBRG
+               00148         extern _SPBRGH
+               00149         extern _T3CON
+               00150         extern _TMR3L
+               00151         extern _TMR3H
+               00152         extern _CMCON
+               00153         extern _CVRCON
+               00154         extern _ECCP1AS
+               00155         extern _PWM1CON
+               00156         extern _BAUDCON
+               00157         extern _CCP2CON
+               00158         extern _CCPR2L
+               00159         extern _CCPR2H
+               00160         extern _CCP1CON
+               00161         extern _CCPR1L
+               00162         extern _CCPR1H
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _ADCON2
+               00164         extern _ADCON1
+               00165         extern _ADCON0
+               00166         extern _ADRESL
+               00167         extern _ADRESH
+               00168         extern _SSPCON2
+               00169         extern _SSPCON1
+               00170         extern _SSPSTAT
+               00171         extern _SSPADD
+               00172         extern _SSPBUF
+               00173         extern _T2CON
+               00174         extern _PR2
+               00175         extern _TMR2
+               00176         extern _T1CON
+               00177         extern _TMR1L
+               00178         extern _TMR1H
+               00179         extern _RCON
+               00180         extern _WDTCON
+               00181         extern _HLVDCON
+               00182         extern _OSCCON
+               00183         extern _T0CON
+               00184         extern _TMR0L
+               00185         extern _TMR0H
+               00186         extern _STATUS
+               00187         extern _FSR2L
+               00188         extern _FSR2H
+               00189         extern _PLUSW2
+               00190         extern _PREINC2
+               00191         extern _POSTDEC2
+               00192         extern _POSTINC2
+               00193         extern _INDF2
+               00194         extern _BSR
+               00195         extern _FSR1L
+               00196         extern _FSR1H
+               00197         extern _PLUSW1
+               00198         extern _PREINC1
+               00199         extern _POSTDEC1
+               00200         extern _POSTINC1
+               00201         extern _INDF1
+               00202         extern _WREG
+               00203         extern _FSR0L
+               00204         extern _FSR0H
+               00205         extern _PLUSW0
+               00206         extern _PREINC0
+               00207         extern _POSTDEC0
+               00208         extern _POSTINC0
+               00209         extern _INDF0
+               00210         extern _INTCON3
+               00211         extern _INTCON2
+               00212         extern _INTCON
+               00213         extern _PRODL
+               00214         extern _PRODH
+               00215         extern _TABLAT
+               00216         extern _TBLPTRL
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _TBLPTRH
+               00218         extern _TBLPTRU
+               00219         extern _PCL
+               00220         extern _PCLATH
+               00221         extern _PCLATU
+               00222         extern _STKPTR
+               00223         extern _TOSL
+               00224         extern _TOSH
+               00225         extern _TOSU
+               00226         extern _mios_enc_pin_table
+               00227         extern _mios_mproc_event_table
+               00228         extern _MIOS_MPROC_EVENT_TABLE
+               00229         extern _MIOS_ENC_PIN_TABLE
+               00230 ;--------------------------------------------------------
+               00231 ;       Equates to used internal registers
+               00232 ;--------------------------------------------------------
+  00000FD8     00233 STATUS  equ     0xfd8
+  00000FF9     00234 PCL     equ     0xff9
+  00000FFA     00235 PCLATH  equ     0xffa
+  00000FFB     00236 PCLATU  equ     0xffb
+  00000FE8     00237 WREG    equ     0xfe8
+  00000FF6     00238 TBLPTRL equ     0xff6
+  00000FF7     00239 TBLPTRH equ     0xff7
+  00000FF8     00240 TBLPTRU equ     0xff8
+  00000FF5     00241 TABLAT  equ     0xff5
+  00000FED     00242 POSTDEC1 equ 0xfed ;; normaly 0xfe5, changed by mios-gpasm
+  00000FEC     00243 PREINC1 equ 0xfec ;; normaly 0xfe4, changed by mios-gpasm
+  00000FF4     00244 PRODH   equ     0xff4
+               00245 
+               00246 
+               00247 ; Internal registers
+               00248 .registers udata_ovr 0x0010 ;; normaly 0x0000, changed by mios-gpasm
+               00249 r0x00   res     1
+               00250 r0x01   res     1
+               00251 r0x02   res     1
+               00252 r0x03   res     1
+               00253 r0x04   res     1
+               00254 r0x05   res     1
+               00255 r0x06   res     1
+               00256 r0x07   res     1
+               00257 r0x08   res     1
+               00258 
+               00259 
+               00260 gpr14   udata
+               00261 
+               00262 udata_eg_0      udata
+               00263 _eg0_value      res     2
+               00264 
+               00265 udata_eg_1      udata
+               00266 _eg1_value      res     2
+               00267 
+               00268 udata_eg_2      udata
+               00269 _eg2_value      res     2
+               00270 
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271 udata_eg_3      udata
+               00272 _eg3_value      res     2
+               00273 
+               00274 udata_eg_4      udata
+               00275 _eg0    res     1
+               00276 
+               00277 udata_eg_5      udata
+               00278 _eg0_int        res     1
+               00279 
+               00280 udata_eg_6      udata
+               00281 _eg1    res     1
+               00282 
+               00283 udata_eg_7      udata
+               00284 _eg1_int        res     1
+               00285 
+               00286 udata_eg_8      udata
+               00287 _eg2    res     1
+               00288 
+               00289 udata_eg_9      udata
+               00290 _eg2_int        res     1
+               00291 
+               00292 udata_eg_10     udata
+               00293 _eg3    res     1
+               00294 
+               00295 udata_eg_11     udata
+               00296 _eg3_int        res     1
+               00297 
+               00298 udata_eg_12     udata
+               00299 iTemp154        res     1
+               00300 
+               00301 udata_eg_13     udata
+               00302 iTemp174        res     1
+               00303 
+               00304 udata_eg_14     udata
+               00305 iTemp182        res     1
+               00306 
+               00307 udata_eg_15     udata
+               00308 iTemp200        res     1
+               00309 
+               00310 udata_eg_16     udata
+               00311 iTemp258        res     1
+               00312 
+               00313 udata_eg_17     udata
+               00314 iTemp278        res     1
+               00315 
+               00316 udata_eg_18     udata
+               00317 iTemp286        res     1
+               00318 
+               00319 udata_eg_19     udata
+               00320 iTemp304        res     1
+               00321 
+               00322 udata_eg_20     udata
+               00323 iTemp366        res     1
+               00324 
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00325 udata_eg_21     udata
+               00326 iTemp386        res     1
+               00327 
+               00328 udata_eg_22     udata
+               00329 iTemp394        res     1
+               00330 
+               00331 udata_eg_23     udata
+               00332 iTemp412        res     1
+               00333 
+               00334 ;--------------------------------------------------------
+               00335 ; global & static initialisations
+               00336 ;--------------------------------------------------------
+               00337 ; I code from now on!
+               00338 ; ; Starting pCode block
+               00339 S_eg__EG_Tick   code
+0000           00340 _EG_Tick:
+               00341         .line   81; eg.c        {
+0000 C000 FFED 00342         MOVFF   r0x00, POSTDEC1
+0004 C000 FFED 00343         MOVFF   r0x01, POSTDEC1
+0008 C000 FFED 00344         MOVFF   r0x02, POSTDEC1
+000C C000 FFED 00345         MOVFF   r0x03, POSTDEC1
+0010 C000 FFED 00346         MOVFF   r0x04, POSTDEC1
+0014 C000 FFED 00347         MOVFF   r0x05, POSTDEC1
+0018 C000 FFED 00348         MOVFF   r0x06, POSTDEC1
+               00349         .line   98; eg.c        eg0_int.LAST_GATE = 1;
+001C 6A00      00350         CLRF    r0x00
+001E 0000      00351         BANKSEL _eg0
+0020 B100      00352         BTFSC   _eg0, 0, B
+0022 2A00      00353         INCF    r0x00, F
+0024 5000      00354         MOVF    r0x00, W
+0026 0A01      00355         XORLW   0x01
+0028 E100      00356         BNZ     _00113_DS_
+002A           00357 _00254_DS_:
+002A 0000      00358         BANKSEL _eg0_int
+002C B900      00359         BTFSC   _eg0_int, 4, B
+002E D000      00360         BRA     _00113_DS_
+               00361 ; removed redundant BANKSEL
+               00362         .line   99; eg.c        eg0_int.STATE = ATTACK;
+0030 8900      00363         BSF     _eg0_int, 4, B
+               00364         .line   100; eg.c       } else if( (eg0.GATE == 0) && (eg0_int.LAST_GATE == 1) ) { // falling edge
+0032 5100      00365         MOVF    _eg0_int, W, B
+0034 0BF0      00366         ANDLW   0xf0
+0036 0901      00367         IORLW   0x01
+               00368 ; removed redundant BANKSEL
+0038 6F00      00369         MOVWF   _eg0_int, B
+003A D000      00370         BRA     _00114_DS_
+003C           00371 _00113_DS_:
+003C 0000      00372         BANKSEL _eg0
+               00373         .line   101; eg.c       eg0_int.LAST_GATE = 0;
+003E B100      00374         BTFSC   _eg0, 0, B
+0040 D000      00375         BRA     _00114_DS_
+0042 6A00      00376         CLRF    r0x00
+0044 0000      00377         BANKSEL _eg0_int
+0046 B900      00378         BTFSC   _eg0_int, 4, B
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0048 2A00      00379         INCF    r0x00, F
+004A 5000      00380         MOVF    r0x00, W
+004C 0A01      00381         XORLW   0x01
+004E E100      00382         BNZ     _00114_DS_
+0050           00383 _00256_DS_:
+0050 0000      00384         BANKSEL _eg0_int
+               00385         .line   102; eg.c       eg0_int.STATE = RELEASE;
+0052 9900      00386         BCF     _eg0_int, 4, B
+               00387         .line   103; eg.c       }
+0054 5100      00388         MOVF    _eg0_int, W, B
+0056 0BF0      00389         ANDLW   0xf0
+0058 0904      00390         IORLW   0x04
+               00391 ; removed redundant BANKSEL
+005A 6F00      00392         MOVWF   _eg0_int, B
+005C           00393 _00114_DS_:
+               00394         .line   105; eg.c       
+005C 6A00      00395         CLRF    r0x00
+005E 0000      00396         BANKSEL _eg0
+0060 B100      00397         BTFSC   _eg0, 0, B
+0062 2A00      00398         INCF    r0x00, F
+0064 5000      00399         MOVF    r0x00, W
+0066 0B01      00400         ANDLW   0x01
+0068 38E8      00401         SWAPF   WREG, W
+006A 6EF4      00402         MOVWF   PRODH
+006C 0000      00403         BANKSEL _eg0_int
+006E 5100      00404         MOVF    _eg0_int, W, B
+0070 0BEF      00405         ANDLW   0xef
+0072 10F4      00406         IORWF   PRODH, W
+               00407 ; removed redundant BANKSEL
+0074 6F00      00408         MOVWF   _eg0_int, B
+               00409         .line   107; eg.c       
+0076 90D8      00410         BCF     STATUS, 0
+0078 0000      00411         BANKSEL (_eg0_value + 1)
+007A 3100      00412         RRCF    (_eg0_value + 1), W, B
+007C 6E00      00413         MOVWF   r0x01
+               00414 ; removed redundant BANKSEL
+007E 3100      00415         RRCF    _eg0_value, W, B
+0080 6E00      00416         MOVWF   r0x00
+0082 0000      00417         BANKSEL _eg0_int
+               00418         .line   109; eg.c       case IDLE:
+0084 5100      00419         MOVF    _eg0_int, W, B
+0086 0B0F      00420         ANDLW   0x0f
+0088 6E00      00421         MOVWF   r0x02
+008A C000 F000 00422         MOVFF   r0x02, r0x03
+008E 5000      00423         MOVF    r0x03, W
+0090 0F80      00424         ADDLW   0x80
+0092 0F7B      00425         ADDLW   0x7b
+0094 B0D8      00426         BTFSC   STATUS, 0
+0096 D000      00427         BRA     _00132_DS_
+0098 C000 FFED 00428         MOVFF   r0x07, POSTDEC1
+009C C000 FFED 00429         MOVFF   r0x08, POSTDEC1
+00A0 6A00      00430         CLRF    r0x08
+00A2 3400      00431         RLCF    r0x02, W
+00A4 3600      00432         RLCF    r0x08, F
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00A6 34E8      00433         RLCF    WREG, W
+00A8 3600      00434         RLCF    r0x08, F
+00AA 0BFC      00435         ANDLW   0xfc
+00AC 6E00      00436         MOVWF   r0x07
+00AE 0E00      00437         MOVLW   UPPER(_00258_DS_)
+00B0 6EFB      00438         MOVWF   PCLATU
+00B2 0E00      00439         MOVLW   HIGH(_00258_DS_)
+00B4 6EFA      00440         MOVWF   PCLATH
+00B6 0E00      00441         MOVLW   LOW(_00258_DS_)
+00B8 2600      00442         ADDWF   r0x07, F
+00BA 5000      00443         MOVF    r0x08, W
+00BC 22FA      00444         ADDWFC  PCLATH, F
+00BE B0D8      00445         BTFSC   STATUS, 0
+00C0 2AFB      00446         INCF    PCLATU, F
+00C2 5000      00447         MOVF    r0x07, W
+00C4 CFEC F000 00448         MOVFF   PREINC1, r0x08
+00C8 CFEC F000 00449         MOVFF   PREINC1, r0x07
+00CC 6EF9      00450         MOVWF   PCL
+00CE           00451 _00258_DS_:
+00CE EF00 F000 00452         GOTO    _00116_DS_
+00D2 EF00 F000 00453         GOTO    _00117_DS_
+00D6 EF00 F000 00454         GOTO    _00122_DS_
+00DA EF00 F000 00455         GOTO    _00128_DS_
+00DE EF00 F000 00456         GOTO    _00129_DS_
+00E2           00457 _00116_DS_:
+               00458         .line   111; eg.c       break;
+00E2 6A00      00459         CLRF    r0x00
+00E4 6A00      00460         CLRF    r0x01
+               00461         .line   112; eg.c       
+00E6 D000      00462         BRA     _00132_DS_
+00E8           00463 _00117_DS_:
+00E8 0000      00464         BANKSEL (_all_param + 3)
+               00465         .line   115; eg.c       all_param.attack[0] = lfo0_value ;}
+00EA A100      00466         BTFSS   (_all_param + 3), 0, B
+00EC D000      00467         BRA     _00119_DS_
+00EE 0000      00468         BANKSEL _lfo0_value
+               00469         .line   116; eg.c       if( (eg_value += eg_add_table[all_param.attack[0]]) & 0x8000 ) {
+00F0 5100      00470         MOVF    _lfo0_value, W, B
+00F2 6E00      00471         MOVWF   r0x02
+00F4 5000      00472         MOVF    r0x02, W
+00F6 0000      00473         BANKSEL (_all_param + 16)
+00F8 6F00      00474         MOVWF   (_all_param + 16), B
+               00475 ; ;multiply lit val:0x02 by variable (_all_param + 16) and store in r0x02
+               00476 ; ;Unrolled 8 X 8 multiplication
+               00477 ; ;FIXME: the function does not support result==WREG
+00FA           00478 _00119_DS_:
+               00479         .line   117; eg.c       eg_value = 0x7fff;
+00FA 6A00      00480         CLRF    r0x03
+00FC 90D8      00481         BCF     STATUS, 0
+00FE 0000      00482         BANKSEL (_all_param + 16)
+0100 3500      00483         RLCF    (_all_param + 16), W, B
+0102 6E00      00484         MOVWF   r0x02
+0104 3600      00485         RLCF    r0x03, F
+0106 6A00      00486         CLRF    r0x04
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0108 0E00      00487         MOVLW   LOW(_eg_add_table)
+010A 2600      00488         ADDWF   r0x02, F
+010C 0E00      00489         MOVLW   HIGH(_eg_add_table)
+010E 2200      00490         ADDWFC  r0x03, F
+0110 0E00      00491         MOVLW   UPPER(_eg_add_table)
+0112 2200      00492         ADDWFC  r0x04, F
+0114 C000 FFF6 00493         MOVFF   r0x02, TBLPTRL
+0118 C000 FFF7 00494         MOVFF   r0x03, TBLPTRH
+011C C000 FFF8 00495         MOVFF   r0x04, TBLPTRU
+0120 0009      00496         TBLRD*+ 
+0122 CFF5 F000 00497         MOVFF   TABLAT, r0x02
+0126 0009      00498         TBLRD*+ 
+0128 CFF5 F000 00499         MOVFF   TABLAT, r0x03
+012C 5000      00500         MOVF    r0x00, W
+012E 2600      00501         ADDWF   r0x02, F
+0130 5000      00502         MOVF    r0x01, W
+0132 2200      00503         ADDWFC  r0x03, F
+0134 C000 F000 00504         MOVFF   r0x02, r0x00
+0138 C000 F000 00505         MOVFF   r0x03, r0x01
+013C AE00      00506         BTFSS   r0x03, 7
+013E D000      00507         BRA     _00132_DS_
+               00508         .line   118; eg.c       eg0_int.STATE = DECAY; }
+0140 0EFF      00509         MOVLW   0xff
+0142 6E00      00510         MOVWF   r0x00
+0144 0E7F      00511         MOVLW   0x7f
+0146 6E00      00512         MOVWF   r0x01
+0148 0000      00513         BANKSEL _eg0_int
+               00514         .line   119; eg.c       
+014A 5100      00515         MOVF    _eg0_int, W, B
+014C 0BF0      00516         ANDLW   0xf0
+014E 0902      00517         IORLW   0x02
+               00518 ; removed redundant BANKSEL
+0150 6F00      00519         MOVWF   _eg0_int, B
+               00520         .line   121; eg.c       
+0152 D000      00521         BRA     _00132_DS_
+0154           00522 _00122_DS_:
+0154 0000      00523         BANKSEL (_all_param + 4)
+               00524         .line   124; eg.c       all_param.decay[0] = lfo0_value;}
+0156 A100      00525         BTFSS   (_all_param + 4), 0, B
+0158 D000      00526         BRA     _00124_DS_
+015A 0000      00527         BANKSEL _lfo0_value
+               00528         .line   125; eg.c       lvl = (all_param.sustain[0] << 7);
+015C 5100      00529         MOVF    _lfo0_value, W, B
+015E 6E00      00530         MOVWF   r0x02
+0160 5000      00531         MOVF    r0x02, W
+0162 0000      00532         BANKSEL (_all_param + 20)
+0164 6F00      00533         MOVWF   (_all_param + 20), B
+0166           00534 _00124_DS_:
+               00535         .line   126; eg.c       
+0166 C000 F000 00536         MOVFF   (_all_param + 24), r0x02
+016A 6A00      00537         CLRF    r0x03
+016C 3000      00538         RRCF    r0x03, W
+016E 3000      00539         RRCF    r0x02, W
+0170 6E00      00540         MOVWF   r0x05
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0172 6A00      00541         CLRF    r0x04
+0174 3200      00542         RRCF    r0x04, F
+               00543 ; ;multiply lit val:0x02 by variable (_all_param + 20) and store in r0x02
+               00544 ; ;Unrolled 8 X 8 multiplication
+               00545 ; ;FIXME: the function does not support result==WREG
+               00546         .line   128; eg.c       eg_value = lvl;
+0176 6A00      00547         CLRF    r0x03
+0178 90D8      00548         BCF     STATUS, 0
+017A 0000      00549         BANKSEL (_all_param + 20)
+017C 3500      00550         RLCF    (_all_param + 20), W, B
+017E 6E00      00551         MOVWF   r0x02
+0180 3600      00552         RLCF    r0x03, F
+0182 6A00      00553         CLRF    r0x06
+0184 0E00      00554         MOVLW   LOW(_eg_add_table)
+0186 2600      00555         ADDWF   r0x02, F
+0188 0E00      00556         MOVLW   HIGH(_eg_add_table)
+018A 2200      00557         ADDWFC  r0x03, F
+018C 0E00      00558         MOVLW   UPPER(_eg_add_table)
+018E 2200      00559         ADDWFC  r0x06, F
+0190 C000 FFF6 00560         MOVFF   r0x02, TBLPTRL
+0194 C000 FFF7 00561         MOVFF   r0x03, TBLPTRH
+0198 C000 FFF8 00562         MOVFF   r0x06, TBLPTRU
+019C 0009      00563         TBLRD*+ 
+019E CFF5 F000 00564         MOVFF   TABLAT, r0x02
+01A2 0009      00565         TBLRD*+ 
+01A4 CFF5 F000 00566         MOVFF   TABLAT, r0x03
+01A8 5000      00567         MOVF    r0x02, W
+01AA 5C00      00568         SUBWF   r0x00, W
+01AC 6E00      00569         MOVWF   r0x02
+01AE 5000      00570         MOVF    r0x03, W
+01B0 5800      00571         SUBWFB  r0x01, W
+01B2 6E00      00572         MOVWF   r0x03
+01B4 C000 F000 00573         MOVFF   r0x02, r0x00
+01B8 C000 F000 00574         MOVFF   r0x03, r0x01
+01BC 5000      00575         MOVF    r0x03, W
+01BE 5C00      00576         SUBWF   r0x05, W
+01C0 E100      00577         BNZ     _00260_DS_
+01C2 5000      00578         MOVF    r0x02, W
+01C4 5C00      00579         SUBWF   r0x04, W
+01C6           00580 _00260_DS_:
+01C6 E200      00581         BC      _00125_DS_
+01C8 AE00      00582         BTFSS   r0x01, 7
+01CA D000      00583         BRA     _00132_DS_
+01CC           00584 _00125_DS_:
+               00585         .line   129; eg.c       //        eg0_int.STATE = SUSTAIN;
+01CC C000 F000 00586         MOVFF   r0x04, r0x00
+01D0 C000 F000 00587         MOVFF   r0x05, r0x01
+               00588         .line   132; eg.c       
+01D4 D000      00589         BRA     _00132_DS_
+01D6           00590 _00128_DS_:
+               00591         .line   135; eg.c       break;
+01D6 C000 F000 00592         MOVFF   (_all_param + 28), r0x02
+01DA 6A00      00593         CLRF    r0x03
+01DC 3000      00594         RRCF    r0x03, W
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01DE 3000      00595         RRCF    r0x02, W
+01E0 6E00      00596         MOVWF   r0x01
+01E2 6A00      00597         CLRF    r0x00
+01E4 3200      00598         RRCF    r0x00, F
+               00599         .line   136; eg.c       
+01E6 D000      00600         BRA     _00132_DS_
+               00601 ; ;multiply lit val:0x02 by variable (_all_param + 28) and store in r0x02
+               00602 ; ;Unrolled 8 X 8 multiplication
+               00603 ; ;FIXME: the function does not support result==WREG
+01E8           00604 _00129_DS_:
+               00605         .line   139; eg.c       eg_value = 0;
+01E8 6A00      00606         CLRF    r0x03
+01EA 90D8      00607         BCF     STATUS, 0
+01EC 0000      00608         BANKSEL (_all_param + 28)
+01EE 3500      00609         RLCF    (_all_param + 28), W, B
+01F0 6E00      00610         MOVWF   r0x02
+01F2 3600      00611         RLCF    r0x03, F
+01F4 6A00      00612         CLRF    r0x04
+01F6 0E00      00613         MOVLW   LOW(_eg_add_table)
+01F8 2600      00614         ADDWF   r0x02, F
+01FA 0E00      00615         MOVLW   HIGH(_eg_add_table)
+01FC 2200      00616         ADDWFC  r0x03, F
+01FE 0E00      00617         MOVLW   UPPER(_eg_add_table)
+0200 2200      00618         ADDWFC  r0x04, F
+0202 C000 FFF6 00619         MOVFF   r0x02, TBLPTRL
+0206 C000 FFF7 00620         MOVFF   r0x03, TBLPTRH
+020A C000 FFF8 00621         MOVFF   r0x04, TBLPTRU
+020E 0009      00622         TBLRD*+ 
+0210 CFF5 F000 00623         MOVFF   TABLAT, r0x02
+0214 0009      00624         TBLRD*+ 
+0216 CFF5 F000 00625         MOVFF   TABLAT, r0x03
+021A 5000      00626         MOVF    r0x02, W
+021C 5C00      00627         SUBWF   r0x00, W
+021E 6E00      00628         MOVWF   r0x02
+0220 5000      00629         MOVF    r0x03, W
+0222 5800      00630         SUBWFB  r0x01, W
+0224 6E00      00631         MOVWF   r0x03
+0226 C000 F000 00632         MOVFF   r0x02, r0x00
+022A C000 F000 00633         MOVFF   r0x03, r0x01
+022E AE00      00634         BTFSS   r0x03, 7
+0230 D000      00635         BRA     _00132_DS_
+               00636         .line   140; eg.c       eg0_int.STATE = IDLE;
+0232 6A00      00637         CLRF    r0x00
+0234 6A00      00638         CLRF    r0x01
+0236 0000      00639         BANKSEL _eg0_int
+               00640         .line   141; eg.c       }
+0238 5100      00641         MOVF    _eg0_int, W, B
+023A 0BF0      00642         ANDLW   0xf0
+               00643 ; removed redundant BANKSEL
+023C 6F00      00644         MOVWF   _eg0_int, B
+023E           00645 _00132_DS_:
+               00646         .line   146; eg.c       
+023E 5000      00647         MOVF    r0x00, W
+0240 0000      00648         BANKSEL _eg0_value
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0242 6F00      00649         MOVWF   _eg0_value, B
+0244 2700      00650         ADDWF   _eg0_value, F, B
+0246 3400      00651         RLCF    r0x01, W
+               00652 ; removed redundant BANKSEL
+0248 6F00      00653         MOVWF   (_eg0_value + 1), B
+024A 0000      00654         BANKSEL (_all_param + 5)
+               00655         .line   150; eg.c       
+024C B100      00656         BTFSC   (_all_param + 5), 0, B
+024E D000      00657         BRA     _00158_DS_
+               00658         .line   152; eg.c       eg1_int.LAST_GATE = 1;
+0250 6A00      00659         CLRF    r0x00
+0252 0000      00660         BANKSEL _eg1
+0254 B100      00661         BTFSC   _eg1, 0, B
+0256 2A00      00662         INCF    r0x00, F
+0258 5000      00663         MOVF    r0x00, W
+025A 0A01      00664         XORLW   0x01
+025C E100      00665         BNZ     _00137_DS_
+025E           00666 _00264_DS_:
+025E 0000      00667         BANKSEL _eg1_int
+0260 B900      00668         BTFSC   _eg1_int, 4, B
+0262 D000      00669         BRA     _00137_DS_
+               00670 ; removed redundant BANKSEL
+               00671         .line   153; eg.c       eg1_int.STATE = ATTACK1;
+0264 8900      00672         BSF     _eg1_int, 4, B
+               00673         .line   154; eg.c       } else if( (eg1.GATE == 0) && (eg1_int.LAST_GATE == 1) ) { // falling edge
+0266 5100      00674         MOVF    _eg1_int, W, B
+0268 0BF0      00675         ANDLW   0xf0
+026A 0901      00676         IORLW   0x01
+               00677 ; removed redundant BANKSEL
+026C 6F00      00678         MOVWF   _eg1_int, B
+026E D000      00679         BRA     _00138_DS_
+0270           00680 _00137_DS_:
+0270 0000      00681         BANKSEL _eg1
+               00682         .line   155; eg.c       eg1_int.LAST_GATE = 0;
+0272 B100      00683         BTFSC   _eg1, 0, B
+0274 D000      00684         BRA     _00138_DS_
+0276 6A00      00685         CLRF    r0x00
+0278 0000      00686         BANKSEL _eg1_int
+027A B900      00687         BTFSC   _eg1_int, 4, B
+027C 2A00      00688         INCF    r0x00, F
+027E 5000      00689         MOVF    r0x00, W
+0280 0A01      00690         XORLW   0x01
+0282 E100      00691         BNZ     _00138_DS_
+0284           00692 _00266_DS_:
+0284 0000      00693         BANKSEL _eg1_int
+               00694         .line   156; eg.c       eg1_int.STATE = RELEASE1;
+0286 9900      00695         BCF     _eg1_int, 4, B
+               00696         .line   157; eg.c       }
+0288 5100      00697         MOVF    _eg1_int, W, B
+028A 0BF0      00698         ANDLW   0xf0
+028C 0904      00699         IORLW   0x04
+               00700 ; removed redundant BANKSEL
+028E 6F00      00701         MOVWF   _eg1_int, B
+0290           00702 _00138_DS_:
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00703         .line   159; eg.c       
+0290 6A00      00704         CLRF    r0x00
+0292 0000      00705         BANKSEL _eg1
+0294 B100      00706         BTFSC   _eg1, 0, B
+0296 2A00      00707         INCF    r0x00, F
+0298 5000      00708         MOVF    r0x00, W
+029A 0B01      00709         ANDLW   0x01
+029C 38E8      00710         SWAPF   WREG, W
+029E 6EF4      00711         MOVWF   PRODH
+02A0 0000      00712         BANKSEL _eg1_int
+02A2 5100      00713         MOVF    _eg1_int, W, B
+02A4 0BEF      00714         ANDLW   0xef
+02A6 10F4      00715         IORWF   PRODH, W
+               00716 ; removed redundant BANKSEL
+02A8 6F00      00717         MOVWF   _eg1_int, B
+               00718         .line   161; eg.c       
+02AA 90D8      00719         BCF     STATUS, 0
+02AC 0000      00720         BANKSEL (_eg1_value + 1)
+02AE 3100      00721         RRCF    (_eg1_value + 1), W, B
+02B0 6E00      00722         MOVWF   r0x01
+               00723 ; removed redundant BANKSEL
+02B2 3100      00724         RRCF    _eg1_value, W, B
+02B4 6E00      00725         MOVWF   r0x00
+02B6 0000      00726         BANKSEL _eg1_int
+               00727         .line   163; eg.c       case IDLE1:
+02B8 5100      00728         MOVF    _eg1_int, W, B
+02BA 0B0F      00729         ANDLW   0x0f
+02BC 6E00      00730         MOVWF   r0x02
+02BE C000 F000 00731         MOVFF   r0x02, r0x03
+02C2 5000      00732         MOVF    r0x03, W
+02C4 0F80      00733         ADDLW   0x80
+02C6 0F7B      00734         ADDLW   0x7b
+02C8 B0D8      00735         BTFSC   STATUS, 0
+02CA D000      00736         BRA     _00158_DS_
+02CC C000 FFED 00737         MOVFF   r0x07, POSTDEC1
+02D0 C000 FFED 00738         MOVFF   r0x08, POSTDEC1
+02D4 6A00      00739         CLRF    r0x08
+02D6 3400      00740         RLCF    r0x02, W
+02D8 3600      00741         RLCF    r0x08, F
+02DA 34E8      00742         RLCF    WREG, W
+02DC 3600      00743         RLCF    r0x08, F
+02DE 0BFC      00744         ANDLW   0xfc
+02E0 6E00      00745         MOVWF   r0x07
+02E2 0E00      00746         MOVLW   UPPER(_00268_DS_)
+02E4 6EFB      00747         MOVWF   PCLATU
+02E6 0E00      00748         MOVLW   HIGH(_00268_DS_)
+02E8 6EFA      00749         MOVWF   PCLATH
+02EA 0E00      00750         MOVLW   LOW(_00268_DS_)
+02EC 2600      00751         ADDWF   r0x07, F
+02EE 5000      00752         MOVF    r0x08, W
+02F0 22FA      00753         ADDWFC  PCLATH, F
+02F2 B0D8      00754         BTFSC   STATUS, 0
+02F4 2AFB      00755         INCF    PCLATU, F
+02F6 5000      00756         MOVF    r0x07, W
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+02F8 CFEC F000 00757         MOVFF   PREINC1, r0x08
+02FC CFEC F000 00758         MOVFF   PREINC1, r0x07
+0300 6EF9      00759         MOVWF   PCL
+0302           00760 _00268_DS_:
+0302 EF00 F000 00761         GOTO    _00140_DS_
+0306 EF00 F000 00762         GOTO    _00141_DS_
+030A EF00 F000 00763         GOTO    _00146_DS_
+030E EF00 F000 00764         GOTO    _00152_DS_
+0312 EF00 F000 00765         GOTO    _00153_DS_
+0316           00766 _00140_DS_:
+               00767         .line   166; eg.c       
+0316 D000      00768         BRA     _00158_DS_
+0318           00769 _00141_DS_:
+0318 0000      00770         BANKSEL (_all_param + 3)
+               00771         .line   169; eg.c       all_param.attack[1] = lfo0_value;}
+031A A300      00772         BTFSS   (_all_param + 3), 1, B
+031C D000      00773         BRA     _00143_DS_
+031E 0000      00774         BANKSEL _lfo0_value
+               00775         .line   170; eg.c       if( (eg1_value1 += eg_add_table[all_param.attack[1]]) & 0x8000 ) {
+0320 5100      00776         MOVF    _lfo0_value, W, B
+0322 6E00      00777         MOVWF   r0x02
+0324 5000      00778         MOVF    r0x02, W
+0326 0000      00779         BANKSEL (_all_param + 17)
+0328 6F00      00780         MOVWF   (_all_param + 17), B
+032A           00781 _00143_DS_:
+               00782         .line   171; eg.c       eg1_value1 = 0x7fff;
+032A C000 F000 00783         MOVFF   (_all_param + 17), (iTemp154 + 1)
+               00784 ; ;multiply lit val:0x02 by variable (iTemp154 + 1) and store in r0x02
+               00785 ; ;Unrolled 8 X 8 multiplication
+               00786 ; ;FIXME: the function does not support result==WREG
+032E 6A00      00787         CLRF    r0x03
+0330 90D8      00788         BCF     STATUS, 0
+0332 0000      00789         BANKSEL (iTemp154 + 1)
+0334 3500      00790         RLCF    (iTemp154 + 1), W, B
+0336 6E00      00791         MOVWF   r0x02
+0338 3600      00792         RLCF    r0x03, F
+033A 6A00      00793         CLRF    r0x04
+033C 0E00      00794         MOVLW   LOW(_eg_add_table)
+033E 2600      00795         ADDWF   r0x02, F
+0340 0E00      00796         MOVLW   HIGH(_eg_add_table)
+0342 2200      00797         ADDWFC  r0x03, F
+0344 0E00      00798         MOVLW   UPPER(_eg_add_table)
+0346 2200      00799         ADDWFC  r0x04, F
+0348 C000 FFF6 00800         MOVFF   r0x02, TBLPTRL
+034C C000 FFF7 00801         MOVFF   r0x03, TBLPTRH
+0350 C000 FFF8 00802         MOVFF   r0x04, TBLPTRU
+0354 0009      00803         TBLRD*+ 
+0356 CFF5 F000 00804         MOVFF   TABLAT, r0x02
+035A 0009      00805         TBLRD*+ 
+035C CFF5 F000 00806         MOVFF   TABLAT, r0x03
+0360 5000      00807         MOVF    r0x00, W
+0362 2600      00808         ADDWF   r0x02, F
+0364 5000      00809         MOVF    r0x01, W
+0366 2200      00810         ADDWFC  r0x03, F
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0368 AE00      00811         BTFSS   r0x03, 7
+036A D000      00812         BRA     _00158_DS_
+036C 0000      00813         BANKSEL _eg1_int
+               00814         .line   173; eg.c       }
+036E 5100      00815         MOVF    _eg1_int, W, B
+0370 0BF0      00816         ANDLW   0xf0
+0372 0902      00817         IORLW   0x02
+               00818 ; removed redundant BANKSEL
+0374 6F00      00819         MOVWF   _eg1_int, B
+               00820         .line   175; eg.c       
+0376 D000      00821         BRA     _00158_DS_
+0378           00822 _00146_DS_:
+0378 0000      00823         BANKSEL (_all_param + 4)
+               00824         .line   178; eg.c       all_param.decay[1] = lfo0_value;}
+037A A300      00825         BTFSS   (_all_param + 4), 1, B
+037C D000      00826         BRA     _00148_DS_
+037E 0000      00827         BANKSEL _lfo0_value
+               00828         .line   179; eg.c       lvl1 = (all_param.sustain[1] << 7);
+0380 5100      00829         MOVF    _lfo0_value, W, B
+0382 6E00      00830         MOVWF   r0x02
+0384 5000      00831         MOVF    r0x02, W
+0386 0000      00832         BANKSEL (_all_param + 21)
+0388 6F00      00833         MOVWF   (_all_param + 21), B
+038A           00834 _00148_DS_:
+               00835         .line   180; eg.c       
+038A C000 F000 00836         MOVFF   (_all_param + 25), (iTemp174 + 1)
+038E C000 F000 00837         MOVFF   (iTemp174 + 1), r0x02
+0392 6A00      00838         CLRF    r0x03
+0394 3000      00839         RRCF    r0x03, W
+0396 3000      00840         RRCF    r0x02, W
+0398 6E00      00841         MOVWF   r0x05
+039A 6A00      00842         CLRF    r0x04
+039C 3200      00843         RRCF    r0x04, F
+               00844         .line   182; eg.c       eg1_value1 = lvl1;
+039E C000 F000 00845         MOVFF   (_all_param + 21), (iTemp182 + 1)
+               00846 ; ;multiply lit val:0x02 by variable (iTemp182 + 1) and store in r0x02
+               00847 ; ;Unrolled 8 X 8 multiplication
+               00848 ; ;FIXME: the function does not support result==WREG
+03A2 6A00      00849         CLRF    r0x03
+03A4 90D8      00850         BCF     STATUS, 0
+03A6 0000      00851         BANKSEL (iTemp182 + 1)
+03A8 3500      00852         RLCF    (iTemp182 + 1), W, B
+03AA 6E00      00853         MOVWF   r0x02
+03AC 3600      00854         RLCF    r0x03, F
+03AE 6A00      00855         CLRF    r0x06
+03B0 0E00      00856         MOVLW   LOW(_eg_add_table)
+03B2 2600      00857         ADDWF   r0x02, F
+03B4 0E00      00858         MOVLW   HIGH(_eg_add_table)
+03B6 2200      00859         ADDWFC  r0x03, F
+03B8 0E00      00860         MOVLW   UPPER(_eg_add_table)
+03BA 2200      00861         ADDWFC  r0x06, F
+03BC C000 FFF6 00862         MOVFF   r0x02, TBLPTRL
+03C0 C000 FFF7 00863         MOVFF   r0x03, TBLPTRH
+03C4 C000 FFF8 00864         MOVFF   r0x06, TBLPTRU
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+03C8 0009      00865         TBLRD*+ 
+03CA CFF5 F000 00866         MOVFF   TABLAT, r0x02
+03CE 0009      00867         TBLRD*+ 
+03D0 CFF5 F000 00868         MOVFF   TABLAT, r0x03
+03D4 5000      00869         MOVF    r0x02, W
+03D6 5C00      00870         SUBWF   r0x00, W
+03D8 6E00      00871         MOVWF   r0x02
+03DA 5000      00872         MOVF    r0x03, W
+03DC 5800      00873         SUBWFB  r0x01, W
+03DE 6E00      00874         MOVWF   r0x03
+03E0 C000 F000 00875         MOVFF   r0x02, r0x00
+03E4 C000 F000 00876         MOVFF   r0x03, r0x01
+03E8 5000      00877         MOVF    r0x03, W
+03EA 5C00      00878         SUBWF   r0x05, W
+03EC E100      00879         BNZ     _00270_DS_
+03EE 5000      00880         MOVF    r0x02, W
+03F0 5C00      00881         SUBWF   r0x04, W
+03F2           00882 _00270_DS_:
+03F2 E200      00883         BC      _00158_DS_
+03F4 BE00      00884         BTFSC   r0x01, 7
+               00885         .line   186; eg.c       
+03F6 D000      00886         BRA     _00158_DS_
+               00887 ; ;;!!! pic16_aopOp:1070 called for a spillLocation -- assigning WREG instead --- CHECK
+03F8           00888 _00152_DS_:
+               00889         .line   189; eg.c       break;
+03F8 C000 FFE8 00890         MOVFF   (_all_param + 25), WREG
+               00891         .line   190; eg.c       
+03FC D000      00892         BRA     _00158_DS_
+03FE           00893 _00153_DS_:
+               00894         .line   193; eg.c       eg1_value1 = 0;
+03FE C000 F000 00895         MOVFF   (_all_param + 29), (iTemp200 + 1)
+               00896 ; ;multiply lit val:0x02 by variable (iTemp200 + 1) and store in r0x02
+               00897 ; ;Unrolled 8 X 8 multiplication
+               00898 ; ;FIXME: the function does not support result==WREG
+0402 6A00      00899         CLRF    r0x03
+0404 90D8      00900         BCF     STATUS, 0
+0406 0000      00901         BANKSEL (iTemp200 + 1)
+0408 3500      00902         RLCF    (iTemp200 + 1), W, B
+040A 6E00      00903         MOVWF   r0x02
+040C 3600      00904         RLCF    r0x03, F
+040E 6A00      00905         CLRF    r0x04
+0410 0E00      00906         MOVLW   LOW(_eg_add_table)
+0412 2600      00907         ADDWF   r0x02, F
+0414 0E00      00908         MOVLW   HIGH(_eg_add_table)
+0416 2200      00909         ADDWFC  r0x03, F
+0418 0E00      00910         MOVLW   UPPER(_eg_add_table)
+041A 2200      00911         ADDWFC  r0x04, F
+041C C000 FFF6 00912         MOVFF   r0x02, TBLPTRL
+0420 C000 FFF7 00913         MOVFF   r0x03, TBLPTRH
+0424 C000 FFF8 00914         MOVFF   r0x04, TBLPTRU
+0428 0009      00915         TBLRD*+ 
+042A CFF5 F000 00916         MOVFF   TABLAT, r0x02
+042E 0009      00917         TBLRD*+ 
+0430 CFF5 F000 00918         MOVFF   TABLAT, r0x03
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0434 5000      00919         MOVF    r0x02, W
+0436 5E00      00920         SUBWF   r0x00, F
+0438 5000      00921         MOVF    r0x03, W
+043A 5A00      00922         SUBWFB  r0x01, F
+043C AE00      00923         BTFSS   r0x01, 7
+043E D000      00924         BRA     _00158_DS_
+0440 0000      00925         BANKSEL _eg1_int
+               00926         .line   195; eg.c       }
+0442 5100      00927         MOVF    _eg1_int, W, B
+0444 0BF0      00928         ANDLW   0xf0
+               00929 ; removed redundant BANKSEL
+0446 6F00      00930         MOVWF   _eg1_int, B
+0448           00931 _00158_DS_:
+               00932         .line   206; eg.c       eg2_int.LAST_GATE = 1;
+0448 6A00      00933         CLRF    r0x00
+044A 0000      00934         BANKSEL _eg2
+044C B100      00935         BTFSC   _eg2, 0, B
+044E 2A00      00936         INCF    r0x00, F
+0450 5000      00937         MOVF    r0x00, W
+0452 0A01      00938         XORLW   0x01
+0454 E100      00939         BNZ     _00163_DS_
+0456           00940 _00275_DS_:
+0456 0000      00941         BANKSEL _eg2_int
+0458 B900      00942         BTFSC   _eg2_int, 4, B
+045A D000      00943         BRA     _00163_DS_
+               00944 ; removed redundant BANKSEL
+               00945         .line   207; eg.c       eg2_int.STATE = ATTACK2;
+045C 8900      00946         BSF     _eg2_int, 4, B
+               00947         .line   208; eg.c       } else if( (eg2.GATE == 0) && (eg2_int.LAST_GATE == 1) ) { // falling edge
+045E 5100      00948         MOVF    _eg2_int, W, B
+0460 0BF0      00949         ANDLW   0xf0
+0462 0901      00950         IORLW   0x01
+               00951 ; removed redundant BANKSEL
+0464 6F00      00952         MOVWF   _eg2_int, B
+0466 D000      00953         BRA     _00164_DS_
+0468           00954 _00163_DS_:
+0468 0000      00955         BANKSEL _eg2
+               00956         .line   209; eg.c       eg2_int.LAST_GATE = 0;
+046A B100      00957         BTFSC   _eg2, 0, B
+046C D000      00958         BRA     _00164_DS_
+046E 6A00      00959         CLRF    r0x00
+0470 0000      00960         BANKSEL _eg2_int
+0472 B900      00961         BTFSC   _eg2_int, 4, B
+0474 2A00      00962         INCF    r0x00, F
+0476 5000      00963         MOVF    r0x00, W
+0478 0A01      00964         XORLW   0x01
+047A E100      00965         BNZ     _00164_DS_
+047C           00966 _00277_DS_:
+047C 0000      00967         BANKSEL _eg2_int
+               00968         .line   210; eg.c       eg2_int.STATE = RELEASE2;
+047E 9900      00969         BCF     _eg2_int, 4, B
+               00970         .line   211; eg.c       }
+0480 5100      00971         MOVF    _eg2_int, W, B
+0482 0BF0      00972         ANDLW   0xf0
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0484 0904      00973         IORLW   0x04
+               00974 ; removed redundant BANKSEL
+0486 6F00      00975         MOVWF   _eg2_int, B
+0488           00976 _00164_DS_:
+               00977         .line   213; eg.c       
+0488 6A00      00978         CLRF    r0x00
+048A 0000      00979         BANKSEL _eg2
+048C B100      00980         BTFSC   _eg2, 0, B
+048E 2A00      00981         INCF    r0x00, F
+0490 5000      00982         MOVF    r0x00, W
+0492 0B01      00983         ANDLW   0x01
+0494 38E8      00984         SWAPF   WREG, W
+0496 6EF4      00985         MOVWF   PRODH
+0498 0000      00986         BANKSEL _eg2_int
+049A 5100      00987         MOVF    _eg2_int, W, B
+049C 0BEF      00988         ANDLW   0xef
+049E 10F4      00989         IORWF   PRODH, W
+               00990 ; removed redundant BANKSEL
+04A0 6F00      00991         MOVWF   _eg2_int, B
+               00992         .line   215; eg.c       
+04A2 90D8      00993         BCF     STATUS, 0
+04A4 0000      00994         BANKSEL (_eg2_value + 1)
+04A6 3100      00995         RRCF    (_eg2_value + 1), W, B
+04A8 6E00      00996         MOVWF   r0x01
+               00997 ; removed redundant BANKSEL
+04AA 3100      00998         RRCF    _eg2_value, W, B
+04AC 6E00      00999         MOVWF   r0x00
+04AE 0000      01000         BANKSEL _eg2_int
+               01001         .line   217; eg.c       case IDLE2:
+04B0 5100      01002         MOVF    _eg2_int, W, B
+04B2 0B0F      01003         ANDLW   0x0f
+04B4 6E00      01004         MOVWF   r0x02
+04B6 C000 F000 01005         MOVFF   r0x02, r0x03
+04BA 5000      01006         MOVF    r0x03, W
+04BC 0F80      01007         ADDLW   0x80
+04BE 0F7B      01008         ADDLW   0x7b
+04C0 B0D8      01009         BTFSC   STATUS, 0
+04C2 D000      01010         BRA     _00182_DS_
+04C4 C000 FFED 01011         MOVFF   r0x07, POSTDEC1
+04C8 C000 FFED 01012         MOVFF   r0x08, POSTDEC1
+04CC 6A00      01013         CLRF    r0x08
+04CE 3400      01014         RLCF    r0x02, W
+04D0 3600      01015         RLCF    r0x08, F
+04D2 34E8      01016         RLCF    WREG, W
+04D4 3600      01017         RLCF    r0x08, F
+04D6 0BFC      01018         ANDLW   0xfc
+04D8 6E00      01019         MOVWF   r0x07
+04DA 0E00      01020         MOVLW   UPPER(_00279_DS_)
+04DC 6EFB      01021         MOVWF   PCLATU
+04DE 0E00      01022         MOVLW   HIGH(_00279_DS_)
+04E0 6EFA      01023         MOVWF   PCLATH
+04E2 0E00      01024         MOVLW   LOW(_00279_DS_)
+04E4 2600      01025         ADDWF   r0x07, F
+04E6 5000      01026         MOVF    r0x08, W
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+04E8 22FA      01027         ADDWFC  PCLATH, F
+04EA B0D8      01028         BTFSC   STATUS, 0
+04EC 2AFB      01029         INCF    PCLATU, F
+04EE 5000      01030         MOVF    r0x07, W
+04F0 CFEC F000 01031         MOVFF   PREINC1, r0x08
+04F4 CFEC F000 01032         MOVFF   PREINC1, r0x07
+04F8 6EF9      01033         MOVWF   PCL
+04FA           01034 _00279_DS_:
+04FA EF00 F000 01035         GOTO    _00166_DS_
+04FE EF00 F000 01036         GOTO    _00167_DS_
+0502 EF00 F000 01037         GOTO    _00172_DS_
+0506 EF00 F000 01038         GOTO    _00178_DS_
+050A EF00 F000 01039         GOTO    _00179_DS_
+050E           01040 _00166_DS_:
+               01041         .line   220; eg.c       
+050E D000      01042         BRA     _00182_DS_
+0510           01043 _00167_DS_:
+0510 0000      01044         BANKSEL (_all_param + 3)
+               01045         .line   223; eg.c       all_param.attack[2] = lfo0_value;}
+0512 A500      01046         BTFSS   (_all_param + 3), 2, B
+0514 D000      01047         BRA     _00169_DS_
+0516 0000      01048         BANKSEL _lfo0_value
+               01049         .line   224; eg.c       if( (eg2_value2 += eg_add_table[all_param.attack[2]]) & 0x8000 ) {
+0518 5100      01050         MOVF    _lfo0_value, W, B
+051A 6E00      01051         MOVWF   r0x02
+051C 5000      01052         MOVF    r0x02, W
+051E 0000      01053         BANKSEL (_all_param + 18)
+0520 6F00      01054         MOVWF   (_all_param + 18), B
+0522           01055 _00169_DS_:
+               01056         .line   225; eg.c       eg2_value2 = 0x7fff;
+0522 C000 F000 01057         MOVFF   (_all_param + 18), (iTemp258 + 2)
+               01058 ; ;multiply lit val:0x02 by variable (iTemp258 + 2) and store in r0x02
+               01059 ; ;Unrolled 8 X 8 multiplication
+               01060 ; ;FIXME: the function does not support result==WREG
+0526 6A00      01061         CLRF    r0x03
+0528 90D8      01062         BCF     STATUS, 0
+052A 0000      01063         BANKSEL (iTemp258 + 2)
+052C 3500      01064         RLCF    (iTemp258 + 2), W, B
+052E 6E00      01065         MOVWF   r0x02
+0530 3600      01066         RLCF    r0x03, F
+0532 6A00      01067         CLRF    r0x04
+0534 0E00      01068         MOVLW   LOW(_eg_add_table)
+0536 2600      01069         ADDWF   r0x02, F
+0538 0E00      01070         MOVLW   HIGH(_eg_add_table)
+053A 2200      01071         ADDWFC  r0x03, F
+053C 0E00      01072         MOVLW   UPPER(_eg_add_table)
+053E 2200      01073         ADDWFC  r0x04, F
+0540 C000 FFF6 01074         MOVFF   r0x02, TBLPTRL
+0544 C000 FFF7 01075         MOVFF   r0x03, TBLPTRH
+0548 C000 FFF8 01076         MOVFF   r0x04, TBLPTRU
+054C 0009      01077         TBLRD*+ 
+054E CFF5 F000 01078         MOVFF   TABLAT, r0x02
+0552 0009      01079         TBLRD*+ 
+0554 CFF5 F000 01080         MOVFF   TABLAT, r0x03
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0558 5000      01081         MOVF    r0x00, W
+055A 2600      01082         ADDWF   r0x02, F
+055C 5000      01083         MOVF    r0x01, W
+055E 2200      01084         ADDWFC  r0x03, F
+0560 AE00      01085         BTFSS   r0x03, 7
+0562 D000      01086         BRA     _00182_DS_
+0564 0000      01087         BANKSEL _eg2_int
+               01088         .line   227; eg.c       }
+0566 5100      01089         MOVF    _eg2_int, W, B
+0568 0BF0      01090         ANDLW   0xf0
+056A 0902      01091         IORLW   0x02
+               01092 ; removed redundant BANKSEL
+056C 6F00      01093         MOVWF   _eg2_int, B
+               01094         .line   229; eg.c       
+056E D000      01095         BRA     _00182_DS_
+0570           01096 _00172_DS_:
+0570 0000      01097         BANKSEL (_all_param + 4)
+               01098         .line   232; eg.c       all_param.decay[2] = lfo0_value;}
+0572 A500      01099         BTFSS   (_all_param + 4), 2, B
+0574 D000      01100         BRA     _00174_DS_
+0576 0000      01101         BANKSEL _lfo0_value
+               01102         .line   233; eg.c       lvl2 = (all_param.sustain[2] << 7);
+0578 5100      01103         MOVF    _lfo0_value, W, B
+057A 6E00      01104         MOVWF   r0x02
+057C 5000      01105         MOVF    r0x02, W
+057E 0000      01106         BANKSEL (_all_param + 22)
+0580 6F00      01107         MOVWF   (_all_param + 22), B
+0582           01108 _00174_DS_:
+               01109         .line   234; eg.c       
+0582 C000 F000 01110         MOVFF   (_all_param + 26), (iTemp278 + 2)
+0586 C000 F000 01111         MOVFF   (iTemp278 + 2), r0x02
+058A 6A00      01112         CLRF    r0x03
+058C 3000      01113         RRCF    r0x03, W
+058E 3000      01114         RRCF    r0x02, W
+0590 6E00      01115         MOVWF   r0x05
+0592 6A00      01116         CLRF    r0x04
+0594 3200      01117         RRCF    r0x04, F
+               01118         .line   236; eg.c       eg2_value2 = lvl2;
+0596 C000 F000 01119         MOVFF   (_all_param + 22), (iTemp286 + 2)
+               01120 ; ;multiply lit val:0x02 by variable (iTemp286 + 2) and store in r0x02
+               01121 ; ;Unrolled 8 X 8 multiplication
+               01122 ; ;FIXME: the function does not support result==WREG
+059A 6A00      01123         CLRF    r0x03
+059C 90D8      01124         BCF     STATUS, 0
+059E 0000      01125         BANKSEL (iTemp286 + 2)
+05A0 3500      01126         RLCF    (iTemp286 + 2), W, B
+05A2 6E00      01127         MOVWF   r0x02
+05A4 3600      01128         RLCF    r0x03, F
+05A6 6A00      01129         CLRF    r0x06
+05A8 0E00      01130         MOVLW   LOW(_eg_add_table)
+05AA 2600      01131         ADDWF   r0x02, F
+05AC 0E00      01132         MOVLW   HIGH(_eg_add_table)
+05AE 2200      01133         ADDWFC  r0x03, F
+05B0 0E00      01134         MOVLW   UPPER(_eg_add_table)
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+05B2 2200      01135         ADDWFC  r0x06, F
+05B4 C000 FFF6 01136         MOVFF   r0x02, TBLPTRL
+05B8 C000 FFF7 01137         MOVFF   r0x03, TBLPTRH
+05BC C000 FFF8 01138         MOVFF   r0x06, TBLPTRU
+05C0 0009      01139         TBLRD*+ 
+05C2 CFF5 F000 01140         MOVFF   TABLAT, r0x02
+05C6 0009      01141         TBLRD*+ 
+05C8 CFF5 F000 01142         MOVFF   TABLAT, r0x03
+05CC 5000      01143         MOVF    r0x02, W
+05CE 5C00      01144         SUBWF   r0x00, W
+05D0 6E00      01145         MOVWF   r0x02
+05D2 5000      01146         MOVF    r0x03, W
+05D4 5800      01147         SUBWFB  r0x01, W
+05D6 6E00      01148         MOVWF   r0x03
+05D8 C000 F000 01149         MOVFF   r0x02, r0x00
+05DC C000 F000 01150         MOVFF   r0x03, r0x01
+05E0 5000      01151         MOVF    r0x03, W
+05E2 5C00      01152         SUBWF   r0x05, W
+05E4 E100      01153         BNZ     _00281_DS_
+05E6 5000      01154         MOVF    r0x02, W
+05E8 5C00      01155         SUBWF   r0x04, W
+05EA           01156 _00281_DS_:
+05EA E200      01157         BC      _00182_DS_
+05EC BE00      01158         BTFSC   r0x01, 7
+               01159         .line   240; eg.c       
+05EE D000      01160         BRA     _00182_DS_
+               01161 ; ;;!!! pic16_aopOp:1070 called for a spillLocation -- assigning WREG instead --- CHECK
+05F0           01162 _00178_DS_:
+               01163         .line   243; eg.c       break;
+05F0 C000 FFE8 01164         MOVFF   (_all_param + 26), WREG
+               01165         .line   244; eg.c       
+05F4 D000      01166         BRA     _00182_DS_
+05F6           01167 _00179_DS_:
+               01168         .line   247; eg.c       eg2_value2 = 0;
+05F6 C000 F000 01169         MOVFF   (_all_param + 30), (iTemp304 + 2)
+               01170 ; ;multiply lit val:0x02 by variable (iTemp304 + 2) and store in r0x02
+               01171 ; ;Unrolled 8 X 8 multiplication
+               01172 ; ;FIXME: the function does not support result==WREG
+05FA 6A00      01173         CLRF    r0x03
+05FC 90D8      01174         BCF     STATUS, 0
+05FE 0000      01175         BANKSEL (iTemp304 + 2)
+0600 3500      01176         RLCF    (iTemp304 + 2), W, B
+0602 6E00      01177         MOVWF   r0x02
+0604 3600      01178         RLCF    r0x03, F
+0606 6A00      01179         CLRF    r0x04
+0608 0E00      01180         MOVLW   LOW(_eg_add_table)
+060A 2600      01181         ADDWF   r0x02, F
+060C 0E00      01182         MOVLW   HIGH(_eg_add_table)
+060E 2200      01183         ADDWFC  r0x03, F
+0610 0E00      01184         MOVLW   UPPER(_eg_add_table)
+0612 2200      01185         ADDWFC  r0x04, F
+0614 C000 FFF6 01186         MOVFF   r0x02, TBLPTRL
+0618 C000 FFF7 01187         MOVFF   r0x03, TBLPTRH
+061C C000 FFF8 01188         MOVFF   r0x04, TBLPTRU
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0620 0009      01189         TBLRD*+ 
+0622 CFF5 F000 01190         MOVFF   TABLAT, r0x02
+0626 0009      01191         TBLRD*+ 
+0628 CFF5 F000 01192         MOVFF   TABLAT, r0x03
+062C 5000      01193         MOVF    r0x02, W
+062E 5E00      01194         SUBWF   r0x00, F
+0630 5000      01195         MOVF    r0x03, W
+0632 5A00      01196         SUBWFB  r0x01, F
+0634 AE00      01197         BTFSS   r0x01, 7
+0636 D000      01198         BRA     _00182_DS_
+0638 0000      01199         BANKSEL _eg2_int
+               01200         .line   249; eg.c       }
+063A 5100      01201         MOVF    _eg2_int, W, B
+063C 0BF0      01202         ANDLW   0xf0
+               01203 ; removed redundant BANKSEL
+063E 6F00      01204         MOVWF   _eg2_int, B
+0640           01205 _00182_DS_:
+0640 0000      01206         BANKSEL (_all_param + 5)
+               01207         .line   259; eg.c       
+0642 B300      01208         BTFSC   (_all_param + 5), 1, B
+0644 D000      01209         BRA     _00209_DS_
+               01210         .line   261; eg.c       eg3_int.LAST_GATE = 1;
+0646 6A00      01211         CLRF    r0x00
+0648 0000      01212         BANKSEL _eg3
+064A B100      01213         BTFSC   _eg3, 0, B
+064C 2A00      01214         INCF    r0x00, F
+064E 5000      01215         MOVF    r0x00, W
+0650 0A01      01216         XORLW   0x01
+0652 E100      01217         BNZ     _00187_DS_
+0654           01218 _00286_DS_:
+0654 0000      01219         BANKSEL _eg3_int
+0656 B900      01220         BTFSC   _eg3_int, 4, B
+0658 D000      01221         BRA     _00187_DS_
+               01222 ; removed redundant BANKSEL
+               01223         .line   262; eg.c       eg3_int.STATE = ATTACK3;
+065A 8900      01224         BSF     _eg3_int, 4, B
+               01225         .line   263; eg.c       } else if( (eg3.GATE == 0) && (eg3_int.LAST_GATE == 1) ) { // falling edge
+065C 5100      01226         MOVF    _eg3_int, W, B
+065E 0BF0      01227         ANDLW   0xf0
+0660 0901      01228         IORLW   0x01
+               01229 ; removed redundant BANKSEL
+0662 6F00      01230         MOVWF   _eg3_int, B
+0664 D000      01231         BRA     _00188_DS_
+0666           01232 _00187_DS_:
+0666 0000      01233         BANKSEL _eg3
+               01234         .line   264; eg.c       eg3_int.LAST_GATE = 0;
+0668 B100      01235         BTFSC   _eg3, 0, B
+066A D000      01236         BRA     _00188_DS_
+066C 6A00      01237         CLRF    r0x00
+066E 0000      01238         BANKSEL _eg3_int
+0670 B900      01239         BTFSC   _eg3_int, 4, B
+0672 2A00      01240         INCF    r0x00, F
+0674 5000      01241         MOVF    r0x00, W
+0676 0A01      01242         XORLW   0x01
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0678 E100      01243         BNZ     _00188_DS_
+067A           01244 _00288_DS_:
+067A 0000      01245         BANKSEL _eg3_int
+               01246         .line   265; eg.c       eg3_int.STATE = RELEASE3;
+067C 9900      01247         BCF     _eg3_int, 4, B
+               01248         .line   266; eg.c       }
+067E 5100      01249         MOVF    _eg3_int, W, B
+0680 0BF0      01250         ANDLW   0xf0
+0682 0904      01251         IORLW   0x04
+               01252 ; removed redundant BANKSEL
+0684 6F00      01253         MOVWF   _eg3_int, B
+0686           01254 _00188_DS_:
+               01255         .line   268; eg.c       
+0686 6A00      01256         CLRF    r0x00
+0688 0000      01257         BANKSEL _eg3
+068A B100      01258         BTFSC   _eg3, 0, B
+068C 2A00      01259         INCF    r0x00, F
+068E 5000      01260         MOVF    r0x00, W
+0690 0B01      01261         ANDLW   0x01
+0692 38E8      01262         SWAPF   WREG, W
+0694 6EF4      01263         MOVWF   PRODH
+0696 0000      01264         BANKSEL _eg3_int
+0698 5100      01265         MOVF    _eg3_int, W, B
+069A 0BEF      01266         ANDLW   0xef
+069C 10F4      01267         IORWF   PRODH, W
+               01268 ; removed redundant BANKSEL
+069E 6F00      01269         MOVWF   _eg3_int, B
+               01270         .line   270; eg.c       
+06A0 90D8      01271         BCF     STATUS, 0
+06A2 0000      01272         BANKSEL (_eg3_value + 1)
+06A4 3100      01273         RRCF    (_eg3_value + 1), W, B
+06A6 6E00      01274         MOVWF   r0x01
+               01275 ; removed redundant BANKSEL
+06A8 3100      01276         RRCF    _eg3_value, W, B
+06AA 6E00      01277         MOVWF   r0x00
+06AC 0000      01278         BANKSEL _eg3_int
+               01279         .line   272; eg.c       case IDLE3:
+06AE 5100      01280         MOVF    _eg3_int, W, B
+06B0 0B0F      01281         ANDLW   0x0f
+06B2 6E00      01282         MOVWF   r0x02
+06B4 C000 F000 01283         MOVFF   r0x02, r0x03
+06B8 5000      01284         MOVF    r0x03, W
+06BA 0F80      01285         ADDLW   0x80
+06BC 0F7B      01286         ADDLW   0x7b
+06BE B0D8      01287         BTFSC   STATUS, 0
+06C0 D000      01288         BRA     _00209_DS_
+06C2 C000 FFED 01289         MOVFF   r0x07, POSTDEC1
+06C6 C000 FFED 01290         MOVFF   r0x08, POSTDEC1
+06CA 6A00      01291         CLRF    r0x08
+06CC 3400      01292         RLCF    r0x02, W
+06CE 3600      01293         RLCF    r0x08, F
+06D0 34E8      01294         RLCF    WREG, W
+06D2 3600      01295         RLCF    r0x08, F
+06D4 0BFC      01296         ANDLW   0xfc
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+06D6 6E00      01297         MOVWF   r0x07
+06D8 0E00      01298         MOVLW   UPPER(_00290_DS_)
+06DA 6EFB      01299         MOVWF   PCLATU
+06DC 0E00      01300         MOVLW   HIGH(_00290_DS_)
+06DE 6EFA      01301         MOVWF   PCLATH
+06E0 0E00      01302         MOVLW   LOW(_00290_DS_)
+06E2 2600      01303         ADDWF   r0x07, F
+06E4 5000      01304         MOVF    r0x08, W
+06E6 22FA      01305         ADDWFC  PCLATH, F
+06E8 B0D8      01306         BTFSC   STATUS, 0
+06EA 2AFB      01307         INCF    PCLATU, F
+06EC 5000      01308         MOVF    r0x07, W
+06EE CFEC F000 01309         MOVFF   PREINC1, r0x08
+06F2 CFEC F000 01310         MOVFF   PREINC1, r0x07
+06F6 6EF9      01311         MOVWF   PCL
+06F8           01312 _00290_DS_:
+06F8 EF00 F000 01313         GOTO    _00190_DS_
+06FC EF00 F000 01314         GOTO    _00191_DS_
+0700 EF00 F000 01315         GOTO    _00196_DS_
+0704 EF00 F000 01316         GOTO    _00202_DS_
+0708 EF00 F000 01317         GOTO    _00203_DS_
+070C           01318 _00190_DS_:
+               01319         .line   275; eg.c       
+070C D000      01320         BRA     _00209_DS_
+070E           01321 _00191_DS_:
+070E 0000      01322         BANKSEL (_all_param + 3)
+               01323         .line   278; eg.c       all_param.attack[3] = lfo0_value;}
+0710 A700      01324         BTFSS   (_all_param + 3), 3, B
+0712 D000      01325         BRA     _00193_DS_
+0714 0000      01326         BANKSEL _lfo0_value
+               01327         .line   279; eg.c       
+0716 5100      01328         MOVF    _lfo0_value, W, B
+0718 6E00      01329         MOVWF   r0x02
+071A 5000      01330         MOVF    r0x02, W
+071C 0000      01331         BANKSEL (_all_param + 19)
+071E 6F00      01332         MOVWF   (_all_param + 19), B
+0720           01333 _00193_DS_:
+               01334         .line   281; eg.c       eg3_value3 = 0x7fff;
+0720 C000 F000 01335         MOVFF   (_all_param + 19), (iTemp366 + 3)
+               01336 ; ;multiply lit val:0x02 by variable (iTemp366 + 3) and store in r0x02
+               01337 ; ;Unrolled 8 X 8 multiplication
+               01338 ; ;FIXME: the function does not support result==WREG
+0724 6A00      01339         CLRF    r0x03
+0726 90D8      01340         BCF     STATUS, 0
+0728 0000      01341         BANKSEL (iTemp366 + 3)
+072A 3500      01342         RLCF    (iTemp366 + 3), W, B
+072C 6E00      01343         MOVWF   r0x02
+072E 3600      01344         RLCF    r0x03, F
+0730 6A00      01345         CLRF    r0x04
+0732 0E00      01346         MOVLW   LOW(_eg_add_table)
+0734 2600      01347         ADDWF   r0x02, F
+0736 0E00      01348         MOVLW   HIGH(_eg_add_table)
+0738 2200      01349         ADDWFC  r0x03, F
+073A 0E00      01350         MOVLW   UPPER(_eg_add_table)
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+073C 2200      01351         ADDWFC  r0x04, F
+073E C000 FFF6 01352         MOVFF   r0x02, TBLPTRL
+0742 C000 FFF7 01353         MOVFF   r0x03, TBLPTRH
+0746 C000 FFF8 01354         MOVFF   r0x04, TBLPTRU
+074A 0009      01355         TBLRD*+ 
+074C CFF5 F000 01356         MOVFF   TABLAT, r0x02
+0750 0009      01357         TBLRD*+ 
+0752 CFF5 F000 01358         MOVFF   TABLAT, r0x03
+0756 5000      01359         MOVF    r0x00, W
+0758 2600      01360         ADDWF   r0x02, F
+075A 5000      01361         MOVF    r0x01, W
+075C 2200      01362         ADDWFC  r0x03, F
+075E AE00      01363         BTFSS   r0x03, 7
+0760 D000      01364         BRA     _00209_DS_
+0762 0000      01365         BANKSEL _eg3_int
+               01366         .line   283; eg.c       }
+0764 5100      01367         MOVF    _eg3_int, W, B
+0766 0BF0      01368         ANDLW   0xf0
+0768 0902      01369         IORLW   0x02
+               01370 ; removed redundant BANKSEL
+076A 6F00      01371         MOVWF   _eg3_int, B
+               01372         .line   285; eg.c       
+076C D000      01373         BRA     _00209_DS_
+076E           01374 _00196_DS_:
+076E 0000      01375         BANKSEL (_all_param + 4)
+               01376         .line   288; eg.c       all_param.decay[3] = lfo0_value;}
+0770 A700      01377         BTFSS   (_all_param + 4), 3, B
+0772 D000      01378         BRA     _00198_DS_
+0774 0000      01379         BANKSEL _lfo0_value
+               01380         .line   289; eg.c       lvl3 = (all_param.sustain[3] << 7);
+0776 5100      01381         MOVF    _lfo0_value, W, B
+0778 6E00      01382         MOVWF   r0x02
+077A 5000      01383         MOVF    r0x02, W
+077C 0000      01384         BANKSEL (_all_param + 23)
+077E 6F00      01385         MOVWF   (_all_param + 23), B
+0780           01386 _00198_DS_:
+               01387         .line   290; eg.c       
+0780 C000 F000 01388         MOVFF   (_all_param + 27), (iTemp386 + 3)
+0784 C000 F000 01389         MOVFF   (iTemp386 + 3), r0x02
+0788 6A00      01390         CLRF    r0x03
+078A 3000      01391         RRCF    r0x03, W
+078C 3000      01392         RRCF    r0x02, W
+078E 6E00      01393         MOVWF   r0x05
+0790 6A00      01394         CLRF    r0x04
+0792 3200      01395         RRCF    r0x04, F
+               01396         .line   292; eg.c       eg3_value3 = lvl3;
+0794 C000 F000 01397         MOVFF   (_all_param + 23), (iTemp394 + 3)
+               01398 ; ;multiply lit val:0x02 by variable (iTemp394 + 3) and store in r0x02
+               01399 ; ;Unrolled 8 X 8 multiplication
+               01400 ; ;FIXME: the function does not support result==WREG
+0798 6A00      01401         CLRF    r0x03
+079A 90D8      01402         BCF     STATUS, 0
+079C 0000      01403         BANKSEL (iTemp394 + 3)
+079E 3500      01404         RLCF    (iTemp394 + 3), W, B
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 27
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+07A0 6E00      01405         MOVWF   r0x02
+07A2 3600      01406         RLCF    r0x03, F
+07A4 6A00      01407         CLRF    r0x06
+07A6 0E00      01408         MOVLW   LOW(_eg_add_table)
+07A8 2600      01409         ADDWF   r0x02, F
+07AA 0E00      01410         MOVLW   HIGH(_eg_add_table)
+07AC 2200      01411         ADDWFC  r0x03, F
+07AE 0E00      01412         MOVLW   UPPER(_eg_add_table)
+07B0 2200      01413         ADDWFC  r0x06, F
+07B2 C000 FFF6 01414         MOVFF   r0x02, TBLPTRL
+07B6 C000 FFF7 01415         MOVFF   r0x03, TBLPTRH
+07BA C000 FFF8 01416         MOVFF   r0x06, TBLPTRU
+07BE 0009      01417         TBLRD*+ 
+07C0 CFF5 F000 01418         MOVFF   TABLAT, r0x02
+07C4 0009      01419         TBLRD*+ 
+07C6 CFF5 F000 01420         MOVFF   TABLAT, r0x03
+07CA 5000      01421         MOVF    r0x02, W
+07CC 5C00      01422         SUBWF   r0x00, W
+07CE 6E00      01423         MOVWF   r0x02
+07D0 5000      01424         MOVF    r0x03, W
+07D2 5800      01425         SUBWFB  r0x01, W
+07D4 6E00      01426         MOVWF   r0x03
+07D6 C000 F000 01427         MOVFF   r0x02, r0x00
+07DA C000 F000 01428         MOVFF   r0x03, r0x01
+07DE 5000      01429         MOVF    r0x03, W
+07E0 5C00      01430         SUBWF   r0x05, W
+07E2 E100      01431         BNZ     _00292_DS_
+07E4 5000      01432         MOVF    r0x02, W
+07E6 5C00      01433         SUBWF   r0x04, W
+07E8           01434 _00292_DS_:
+07E8 E200      01435         BC      _00209_DS_
+07EA BE00      01436         BTFSC   r0x01, 7
+               01437         .line   296; eg.c       
+07EC D000      01438         BRA     _00209_DS_
+               01439 ; ;;!!! pic16_aopOp:1070 called for a spillLocation -- assigning WREG instead --- CHECK
+07EE           01440 _00202_DS_:
+               01441         .line   299; eg.c       break;
+07EE C000 FFE8 01442         MOVFF   (_all_param + 27), WREG
+               01443         .line   300; eg.c       
+07F2 D000      01444         BRA     _00209_DS_
+07F4           01445 _00203_DS_:
+               01446         .line   303; eg.c       eg3_value3 = 0;
+07F4 C000 F000 01447         MOVFF   (_all_param + 31), (iTemp412 + 3)
+               01448 ; ;multiply lit val:0x02 by variable (iTemp412 + 3) and store in r0x02
+               01449 ; ;Unrolled 8 X 8 multiplication
+               01450 ; ;FIXME: the function does not support result==WREG
+07F8 6A00      01451         CLRF    r0x03
+07FA 90D8      01452         BCF     STATUS, 0
+07FC 0000      01453         BANKSEL (iTemp412 + 3)
+07FE 3500      01454         RLCF    (iTemp412 + 3), W, B
+0800 6E00      01455         MOVWF   r0x02
+0802 3600      01456         RLCF    r0x03, F
+0804 6A00      01457         CLRF    r0x04
+0806 0E00      01458         MOVLW   LOW(_eg_add_table)
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 28
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0808 2600      01459         ADDWF   r0x02, F
+080A 0E00      01460         MOVLW   HIGH(_eg_add_table)
+080C 2200      01461         ADDWFC  r0x03, F
+080E 0E00      01462         MOVLW   UPPER(_eg_add_table)
+0810 2200      01463         ADDWFC  r0x04, F
+0812 C000 FFF6 01464         MOVFF   r0x02, TBLPTRL
+0816 C000 FFF7 01465         MOVFF   r0x03, TBLPTRH
+081A C000 FFF8 01466         MOVFF   r0x04, TBLPTRU
+081E 0009      01467         TBLRD*+ 
+0820 CFF5 F000 01468         MOVFF   TABLAT, r0x02
+0824 0009      01469         TBLRD*+ 
+0826 CFF5 F000 01470         MOVFF   TABLAT, r0x03
+082A 5000      01471         MOVF    r0x02, W
+082C 5E00      01472         SUBWF   r0x00, F
+082E 5000      01473         MOVF    r0x03, W
+0830 5A00      01474         SUBWFB  r0x01, F
+0832 AE00      01475         BTFSS   r0x01, 7
+0834 D000      01476         BRA     _00209_DS_
+0836 0000      01477         BANKSEL _eg3_int
+               01478         .line   305; eg.c       }
+0838 5100      01479         MOVF    _eg3_int, W, B
+083A 0BF0      01480         ANDLW   0xf0
+               01481 ; removed redundant BANKSEL
+083C 6F00      01482         MOVWF   _eg3_int, B
+083E           01483 _00209_DS_:
+               01484         .line   310; eg.c       }
+083E CFEC F000 01485         MOVFF   PREINC1, r0x06
+0842 CFEC F000 01486         MOVFF   PREINC1, r0x05
+0846 CFEC F000 01487         MOVFF   PREINC1, r0x04
+084A CFEC F000 01488         MOVFF   PREINC1, r0x03
+084E CFEC F000 01489         MOVFF   PREINC1, r0x02
+0852 CFEC F000 01490         MOVFF   PREINC1, r0x01
+0856 CFEC F000 01491         MOVFF   PREINC1, r0x00
+085A 0012      01492         RETURN  
+               01493 
+               01494 ; ; Starting pCode block
+               01495 S_eg__EG_Init   code
+0000           01496 _EG_Init:
+               01497         .line   75; eg.c        
+0000 0012      01498         RETURN  
+               01499 
+               01500 ; ; Starting pCode block for Ival
+               01501         code
+0000           01502 _eg_add_table:
+0000 0000 8000 01503         DB      0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80
+0004 8000 8000
+0008 8000 8000
+000C 8000 8000 01504         DB      0x00, 0x80, 0x00, 0x80, 0xef, 0x63, 0xf2, 0x4e, 0xef, 0x3f, 0xd4, 0x34
+0010 63EF 4EF2
+0014 3FEF 34D4
+0018 2C61 25CE 01505         DB      0x61, 0x2c, 0xce, 0x25, 0x96, 0x20, 0x61, 0x1c, 0xef, 0x18, 0x14, 0x16
+001C 2096 1C61
+0020 18EF 1614
+0024 13B0 11AA 01506         DB      0xb0, 0x13, 0xaa, 0x11, 0xef, 0x0f, 0x72, 0x0e, 0x28, 0x0d, 0x08, 0x0c
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 29
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0028 0FEF 0E72
+002C 0D28 0C08
+0030 0B0C 0A2D 01507         DB      0x0c, 0x0b, 0x2d, 0x0a, 0x67, 0x09, 0xb7, 0x08, 0x19, 0x08, 0x8b, 0x07
+0034 0967 08B7
+0038 0819 078B
+003C 070C 0698 01508         DB      0x0c, 0x07, 0x98, 0x06, 0x2f, 0x06, 0xd0, 0x05, 0x78, 0x05, 0x29, 0x05
+0040 062F 05D0
+0044 0578 0529
+0048 04DF 049C 01509         DB      0xdf, 0x04, 0x9c, 0x04, 0x5e, 0x04, 0x24, 0x04, 0xef, 0x03, 0xbe, 0x03
+004C 045E 0424
+0050 03EF 03BE
+0054 0390 0365 01510         DB      0x90, 0x03, 0x65, 0x03, 0x3e, 0x03, 0x18, 0x03, 0xf6, 0x02, 0xd5, 0x02
+0058 033E 0318
+005C 02F6 02D5
+0060 02B6 029A 01511         DB      0xb6, 0x02, 0x9a, 0x02, 0x7f, 0x02, 0x65, 0x02, 0x4d, 0x02, 0x37, 0x02
+0064 027F 0265
+0068 024D 0237
+006C 0221 020D 01512         DB      0x21, 0x02, 0x0d, 0x02, 0xfa, 0x01, 0xe8, 0x01, 0xd6, 0x01, 0xc6, 0x01
+0070 01FA 01E8
+0074 01D6 01C6
+0078 01B6 01A8 01513         DB      0xb6, 0x01, 0xa8, 0x01, 0x9a, 0x01, 0x8c, 0x01, 0x7f, 0x01, 0x73, 0x01
+007C 019A 018C
+0080 017F 0173
+0084 0167 015C 01514         DB      0x67, 0x01, 0x5c, 0x01, 0x52, 0x01, 0x48, 0x01, 0x3e, 0x01, 0x34, 0x01
+0088 0152 0148
+008C 013E 0134
+0090 012B 0123 01515         DB      0x2b, 0x01, 0x23, 0x01, 0x1b, 0x01, 0x13, 0x01, 0x0b, 0x01, 0x04, 0x01
+0094 011B 0113
+0098 010B 0104
+009C 00FD 00F6 01516         DB      0xfd, 0x00, 0xf6, 0x00, 0xef, 0x00, 0xe9, 0x00, 0xe3, 0x00, 0xdd, 0x00
+00A0 00EF 00E9
+00A4 00E3 00DD
+00A8 00D8 00D2 01517         DB      0xd8, 0x00, 0xd2, 0x00, 0xcd, 0x00, 0xc8, 0x00, 0xc3, 0x00, 0xbe, 0x00
+00AC 00CD 00C8
+00B0 00C3 00BE
+00B4 00BA 00B5 01518         DB      0xba, 0x00, 0xb5, 0x00, 0xb1, 0x00, 0xad, 0x00, 0xa9, 0x00, 0xa5, 0x00
+00B8 00B1 00AD
+00BC 00A9 00A5
+00C0 00A1 009E 01519         DB      0xa1, 0x00, 0x9e, 0x00, 0x9a, 0x00, 0x97, 0x00, 0x94, 0x00, 0x90, 0x00
+00C4 009A 0097
+00C8 0094 0090
+00CC 008D 008A 01520         DB      0x8d, 0x00, 0x8a, 0x00, 0x87, 0x00, 0x84, 0x00, 0x82, 0x00, 0x7f, 0x00
+00D0 0087 0084
+00D4 0082 007F
+00D8 007C 007A 01521         DB      0x7c, 0x00, 0x7a, 0x00, 0x77, 0x00, 0x75, 0x00, 0x72, 0x00, 0x70, 0x00
+00DC 0077 0075
+00E0 0072 0070
+00E4 006E 006C 01522         DB      0x6e, 0x00, 0x6c, 0x00, 0x6a, 0x00, 0x68, 0x00, 0x66, 0x00, 0x64, 0x00
+00E8 006A 0068
+00EC 0066 0064
+00F0 0062 0060 01523         DB      0x62, 0x00, 0x60, 0x00, 0x5e, 0x00, 0x5c, 0x00, 0x5b, 0x00, 0x59, 0x00
+00F4 005E 005C
+00F8 005B 0059
+00FC 0057 0056 01524         DB      0x57, 0x00, 0x56, 0x00, 0x54, 0x00, 0x52, 0x00, 0x51, 0x00, 0x50, 0x00
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 30
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0100 0054 0052
+0104 0051 0050
+0108 004E 004D 01525         DB      0x4e, 0x00, 0x4d, 0x00, 0x4b, 0x00, 0x4a, 0x00, 0x49, 0x00, 0x47, 0x00
+010C 004B 004A
+0110 0049 0047
+0114 0046 0045 01526         DB      0x46, 0x00, 0x45, 0x00, 0x44, 0x00, 0x43, 0x00, 0x41, 0x00, 0x40, 0x00
+0118 0044 0043
+011C 0041 0040
+0120 003F 003E 01527         DB      0x3f, 0x00, 0x3e, 0x00, 0x3d, 0x00, 0x3c, 0x00, 0x3b, 0x00, 0x3a, 0x00
+0124 003D 003C
+0128 003B 003A
+012C 0039 0038 01528         DB      0x39, 0x00, 0x38, 0x00, 0x37, 0x00, 0x36, 0x00, 0x35, 0x00, 0x35, 0x00
+0130 0037 0036
+0134 0035 0035
+0138 0034 0033 01529         DB      0x34, 0x00, 0x33, 0x00, 0x32, 0x00, 0x31, 0x00, 0x31, 0x00, 0x30, 0x00
+013C 0032 0031
+0140 0031 0030
+0144 002F 002E 01530         DB      0x2f, 0x00, 0x2e, 0x00, 0x2d, 0x00, 0x2d, 0x00, 0x2c, 0x00, 0x2b, 0x00
+0148 002D 002D
+014C 002C 002B
+0150 002B 002A 01531         DB      0x2b, 0x00, 0x2a, 0x00, 0x29, 0x00, 0x29, 0x00, 0x28, 0x00, 0x27, 0x00
+0154 0029 0029
+0158 0028 0027
+015C 0027 0026 01532         DB      0x27, 0x00, 0x26, 0x00, 0x26, 0x00, 0x25, 0x00, 0x25, 0x00, 0x24, 0x00
+0160 0026 0025
+0164 0025 0024
+0168 0023 0023 01533         DB      0x23, 0x00, 0x23, 0x00, 0x22, 0x00, 0x22, 0x00, 0x21, 0x00, 0x21, 0x00
+016C 0022 0022
+0170 0021 0021
+0174 0020 0020 01534         DB      0x20, 0x00, 0x20, 0x00, 0x1f, 0x00, 0x1f, 0x00, 0x1e, 0x00, 0x1e, 0x00
+0178 001F 001F
+017C 001E 001E
+0180 001E 001D 01535         DB      0x1e, 0x00, 0x1d, 0x00, 0x1d, 0x00, 0x1c, 0x00, 0x1c, 0x00, 0x1b, 0x00
+0184 001D 001C
+0188 001C 001B
+018C 001B 001B 01536         DB      0x1b, 0x00, 0x1b, 0x00, 0x1a, 0x00, 0x1a, 0x00, 0x19, 0x00, 0x19, 0x00
+0190 001A 001A
+0194 0019 0019
+0198 0019 0018 01537         DB      0x19, 0x00, 0x18, 0x00, 0x18, 0x00, 0x18, 0x00, 0x17, 0x00, 0x17, 0x00
+019C 0018 0018
+01A0 0017 0017
+01A4 0017 0016 01538         DB      0x17, 0x00, 0x16, 0x00, 0x16, 0x00, 0x16, 0x00, 0x15, 0x00, 0x15, 0x00
+01A8 0016 0016
+01AC 0015 0015
+01B0 0015 0014 01539         DB      0x15, 0x00, 0x14, 0x00, 0x14, 0x00, 0x14, 0x00, 0x14, 0x00, 0x13, 0x00
+01B4 0014 0014
+01B8 0014 0013
+01BC 0013 0013 01540         DB      0x13, 0x00, 0x13, 0x00, 0x12, 0x00, 0x12, 0x00, 0x12, 0x00, 0x12, 0x00
+01C0 0012 0012
+01C4 0012 0012
+01C8 0011 0011 01541         DB      0x11, 0x00, 0x11, 0x00, 0x11, 0x00, 0x11, 0x00, 0x10, 0x00, 0x10, 0x00
+01CC 0011 0011
+01D0 0010 0010
+01D4 0010 0010 01542         DB      0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x0f, 0x00, 0x0f, 0x00, 0x0f, 0x00
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 31
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+01D8 0010 000F
+01DC 000F 000F
+01E0 000F 000E 01543         DB      0x0f, 0x00, 0x0e, 0x00, 0x0e, 0x00, 0x0e, 0x00, 0x0e, 0x00, 0x0e, 0x00
+01E4 000E 000E
+01E8 000E 000E
+01EC 000D 000D 01544         DB      0x0d, 0x00, 0x0d, 0x00, 0x0d, 0x00, 0x0d, 0x00, 0x0d, 0x00, 0x0c, 0x00
+01F0 000D 000D
+01F4 000D 000C
+01F8 000C 000C 01545         DB      0x0c, 0x00, 0x0c, 0x00, 0x0c, 0x00, 0x0c, 0x00
+01FC 000C 000C
+               01546 
+               01547 
+               01548 ; Statistics:
+               01549 ; code size:     2230 (0x08b6) bytes ( 1.70%)
+               01550 ;                1115 (0x045b) words
+               01551 ; udata size:      28 (0x001c) bytes ( 0.73%)
+               01552 ; access size:      9 (0x0009) bytes
+               01553 
+               01554 
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 32
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PCL                               00000FF9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+POSTDEC1                          00000FED
+PREINC1                           00000FEC
+PRODH                             00000FF4
+STATUS                            00000FD8
+TABLAT                            00000FF5
+TBLPTRH                           00000FF7
+TBLPTRL                           00000FF6
+TBLPTRU                           00000FF8
+WREG                              00000FE8
+_00113_DS_                        0000003C
+_00114_DS_                        0000005C
+_00116_DS_                        000000E2
+_00117_DS_                        000000E8
+_00119_DS_                        000000FA
+_00122_DS_                        00000154
+_00124_DS_                        00000166
+_00125_DS_                        000001CC
+_00128_DS_                        000001D6
+_00129_DS_                        000001E8
+_00132_DS_                        0000023E
+_00137_DS_                        00000270
+_00138_DS_                        00000290
+_00140_DS_                        00000316
+_00141_DS_                        00000318
+_00143_DS_                        0000032A
+_00146_DS_                        00000378
+_00148_DS_                        0000038A
+_00152_DS_                        000003F8
+_00153_DS_                        000003FE
+_00158_DS_                        00000448
+_00163_DS_                        00000468
+_00164_DS_                        00000488
+_00166_DS_                        0000050E
+_00167_DS_                        00000510
+_00169_DS_                        00000522
+_00172_DS_                        00000570
+_00174_DS_                        00000582
+_00178_DS_                        000005F0
+_00179_DS_                        000005F6
+_00182_DS_                        00000640
+_00187_DS_                        00000666
+_00188_DS_                        00000686
+_00190_DS_                        0000070C
+_00191_DS_                        0000070E
+_00193_DS_                        00000720
+_00196_DS_                        0000076E
+_00198_DS_                        00000780
+_00202_DS_                        000007EE
+_00203_DS_                        000007F4
+_00209_DS_                        0000083E
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 33
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_00254_DS_                        0000002A
+_00256_DS_                        00000050
+_00258_DS_                        000000CE
+_00260_DS_                        000001C6
+_00264_DS_                        0000025E
+_00266_DS_                        00000284
+_00268_DS_                        00000302
+_00270_DS_                        000003F2
+_00275_DS_                        00000456
+_00277_DS_                        0000047C
+_00279_DS_                        000004FA
+_00281_DS_                        000005EA
+_00286_DS_                        00000654
+_00288_DS_                        0000067A
+_00290_DS_                        000006F8
+_00292_DS_                        000007E8
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_BAUDCON                          00000000
+_BAUDCONbits                      00000000
+_BSR                              00000000
+_BSRbits                          00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_EEADR                            00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EEDATA                           00000000
+_EG_Init                          00000000
+_EG_Tick                          00000000
+_FSR0H                            00000000
+_FSR0Hbits                        00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1Hbits                        00000000
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 34
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2Hbits                        00000000
+_FSR2L                            00000000
+_HLVDCON                          00000000
+_HLVDCONbits                      00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_MIOS_BOX_CFG0                    00000000
+_MIOS_BOX_CFG1                    00000000
+_MIOS_BOX_STAT                    00000000
+_MIOS_ENC_PIN_TABLE               00000000
+_MIOS_MPROC_EVENT_TABLE           00000000
+_MIOS_PARAMETER1                  00000000
+_MIOS_PARAMETER2                  00000000
+_MIOS_PARAMETER3                  00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATHbits                       00000000
+_PCLATU                           00000000
+_PCLATUbits                       00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 35
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PWM1CON                          00000000
+_PWM1CONbits                      00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCSTA                            00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRGH                           00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 36
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_TABLAT                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TBLPTRUbits                      00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TOSUbits                         00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TXREG                            00000000
+_TXSTA                            00000000
+_TXSTAbits                        00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F4620                         00000001
+_all_param                        00000000
+_app_flags                        00000000
+_bank                             00000000
+_eg0                              00000000
+_eg0_int                          00000000
+_eg0_value                        00000000
+_eg1                              00000000
+_eg1_int                          00000000
+_eg1_value                        00000000
+_eg2                              00000000
+_eg2_int                          00000000
+_eg2_value                        00000000
+_eg3                              00000000
+_eg3_int                          00000000
+_eg3_value                        00000000
+_eg_add_table                     00000000
+_lfo0_value                       00000000
+_lfo1_value                       00000000
+_lfo2_value                       00000000
+_load_last                        00000000
+_looper                           00000000
+gpasm-0.13.6 beta               _output/eg__mios-gpasm-tmp.asm7-10-2008  15:16:05          PAGE 37
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_midi_cc_chn0                     00000000
+_midi_note                        00000000
+_midi_pitch_bender                00000000
+_mios_enc_pin_table               00000000
+_mios_mproc_event_table           00000000
+_new_note                         00000000
+_preset                           00000000
+_update_led                       00000000
+_update_preset_led                00000000
+iTemp154                          00000000
+iTemp174                          00000000
+iTemp182                          00000000
+iTemp200                          00000000
+iTemp258                          00000000
+iTemp278                          00000000
+iTemp286                          00000000
+iTemp304                          00000000
+iTemp366                          00000000
+iTemp386                          00000000
+iTemp394                          00000000
+iTemp412                          00000000
+r0x00                             00000010
+r0x01                             00000011
+r0x02                             00000012
+r0x03                             00000013
+r0x04                             00000014
+r0x05                             00000015
+r0x06                             00000016
+r0x07                             00000017
+r0x08                             00000018
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

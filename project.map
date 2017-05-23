@@ -1,0 +1,1035 @@
+gplink-0.13.6 alpha
+Map File - Created 7-10-2008  15:16:09
+ 
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                .org_1800       code   0x003000    program   0x000080
+                .org_1840       code   0x003080    program   0x000200
+                .org_1940       code   0x003280    program   0x000080
+ S_main__DIN_NotifyToggle       code   0x003300    program   0x000e3c
+          S_lfo__LFO_Tick       code   0x00413c    program   0x000af8
+            S_eg__EG_Tick       code   0x004c34    program   0x00085c
+                    .code       code   0x005490    program   0x000800
+ S_main__ENC_NotifyChange       code   0x005c90    program   0x000656
+          S_map__MAP_Tick       code   0x0062e6    program   0x000510
+           S_lfo__LFO_bpm       code   0x0067f6    program   0x0001e8
+   S_main__DISPLAY_lfobpm       code   0x0069de    program   0x0001e6
+S_bankstick__BANKSTICK_preset_LEDs_Update       code   0x006bc4    program   0x000180
+S_bankstick__BANKSTICK_Init       code   0x006d44    program   0x00017a
+        S_midi__MIDI_Evnt       code   0x006ebe    program   0x00013e
+                     AOUT       code   0x006ffc    program   0x00013a
+S_bankstick__BANKSTICK_Dout_Update_2       code   0x007136    program   0x000122
+     S_main__DISPLAY_Tick       code   0x007258    program   0x000116
+        MIOS_WRAPPER_CODE       code   0x00736e    program   0x00010c
+             S_main__Init       code   0x00747a    program   0x0000ce
+S_bankstick__BANKSTICK_Dout_Update       code   0x007548    program   0x0000c8
+S_bankstick__BANKSTICK_SAVE_Evnt       code   0x007610    program   0x0000b2
+        S_midi__MIDI_Init       code   0x0076c2    program   0x00009c
+S_bankstick__BANKSTICK_LOAD_Evnt       code   0x00775e    program   0x00008e
+S_bankstick__BANKSTICK_Dout_Update_3       code   0x0077ec    program   0x000080
+             S_main__Tick       code   0x00786c    program   0x000068
+S_main__MPROC_NotifyReceivedEvnt       code   0x0078d4    program   0x000048
+     S_main__DISPLAY_Init       code   0x00791c    program   0x000046
+   .MIOS_LCD_PrintCString       code   0x007962    program   0x000044
+.MIOS_HLP_16bitAddSaturate       code   0x0079a6    program   0x000040
+          S_lfo__LFO_Init       code   0x0079e6    program   0x000020
+         .MIOS_FLASH_Read       code   0x007a06    program   0x00001a
+        .MIOS_FLASH_Write       code   0x007a20    program   0x00001a
+.MIOS_BANKSTICK_WritePage       code   0x007a3a    program   0x000016
+ .MIOS_BANKSTICK_ReadPage       code   0x007a50    program   0x000016
+.MIOS_LCD_PrintPreconfString       code   0x007a66    program   0x000014
+    .MIOS_LCD_YAddressSet       code   0x007a7a    program   0x000014
+.MIOS_CLCD_SpecialCharInit       code   0x007a8e    program   0x000014
+   .MIOS_LCD_PrintMessage       code   0x007aa2    program   0x000012
+    .MIOS_LCD_PrintString       code   0x007ab4    program   0x000012
+.MIOS_CLCD_SpecialCharsInit       code   0x007ac6    program   0x000012
+      .MIOS_GLCD_FontInit       code   0x007ad8    program   0x000012
+    .MIOS_EEPROM_ReadPage       code   0x007aea    program   0x000012
+   .MIOS_EEPROM_WritePage       code   0x007afc    program   0x000012
+       .MIOS_MF_FaderMove       code   0x007b0e    program   0x000010
+       .MIOS_ENC_SpeedSet       code   0x007b1e    program   0x000010
+        .MIOS_LCD_TypeSet       code   0x007b2e    program   0x000010
+    .MIOS_BANKSTICK_Write       code   0x007b3e    program   0x000010
+         .MIOS_TIMER_Init       code   0x007b4e    program   0x000010
+       .MIOS_TIMER_ReInit       code   0x007b5e    program   0x000010
+     .MIOS_BANKSTICK_Read       code   0x007b6e    program   0x00000e
+                  APP_LCD       code   0x007b7c    program   0x00000e
+ S_main__AIN_NotifyChange       code   0x007b8a    program   0x00000e
+S_main__MPROC_NotifyReceivedByte       code   0x007b98    program   0x00000e
+S_main__MPROC_NotifyFoundEvent       code   0x007ba6    program   0x00000e
+                   .cinit       code   0x007bb4    program   0x00000e
+        .MIOS_DOUT_PinSet       code   0x007bc2    program   0x00000c
+         .MIOS_DOUT_SRSet       code   0x007bce    program   0x00000c
+     .MIOS_ENC_Abs7bitAdd       code   0x007bda    program   0x00000c
+     .MIOS_ENC_Abs7bitSet       code   0x007be6    program   0x00000c
+       .MIOS_ENC_SpeedGet       code   0x007bf2    program   0x00000c
+      .MIOS_LCD_PrintBCD4       code   0x007bfe    program   0x00000c
+      .MIOS_LCD_PrintBCD5       code   0x007c0a    program   0x00000c
+    .MIOS_GLCD_GCursorSet       code   0x007c16    program   0x00000c
+       .MIOS_EEPROM_Write       code   0x007c22    program   0x00000c
+        .MIOS_HLP_Dec2BCD       code   0x007c2e    program   0x00000c
+         .MIOS_AIN_PinGet       code   0x007c3a    program   0x00000a
+            S_main__Timer       code   0x007c44    program   0x00000a
+        .MIOS_EEPROM_Read       code   0x007c4e    program   0x000006
+    .MIOS_LCD_YAddressGet       code   0x007c54    program   0x000004
+                 .idata_i       code   0x007c58    program   0x000004
+S_main__SR_Service_Finish       code   0x007c5c    program   0x000002
+S_main__SR_Service_Prepare       code   0x007c5e    program   0x000002
+S_main__MPROC_NotifyTimeout       code   0x007c60    program   0x000002
+            S_eg__EG_Init       code   0x007c62    program   0x000002
+          S_map__MAP_Init       code   0x007c64    program   0x000002
+                   .idata      idata   0x000f72       data   0x000004
+           MIOS_VARIABLES      udata   00000000       data   0x000010
+               .registers      udata   0x000010       data   0x000009
+             udata_midi_2      udata   0x000080       data   0x000080
+             udata_midi_1      udata   0x000700       data   0x000010
+              udata_lfo_2      udata   0x000710       data   0x000002
+              udata_lfo_3      udata   0x000712       data   0x000002
+              udata_lfo_8      udata   0x000714       data   0x000002
+              udata_lfo_9      udata   0x000716       data   0x000002
+               udata_eg_0      udata   0x000718       data   0x000002
+               udata_eg_1      udata   0x00071a       data   0x000002
+               udata_eg_2      udata   0x00071c       data   0x000002
+               udata_eg_3      udata   0x00071e       data   0x000002
+        udata_bankstick_3      udata   0x000720       data   0x000002
+        udata_bankstick_4      udata   0x000722       data   0x000002
+        udata_bankstick_5      udata   0x000724       data   0x000002
+        udata_bankstick_6      udata   0x000726       data   0x000002
+        udata_bankstick_7      udata   0x000728       data   0x000002
+        udata_bankstick_8      udata   0x00072a       data   0x000002
+        udata_bankstick_9      udata   0x00072c       data   0x000002
+             udata_main_2      udata   0x00072e       data   0x000001
+             udata_main_3      udata   0x00072f       data   0x000001
+             udata_main_4      udata   0x000730       data   0x000001
+             udata_main_5      udata   0x000731       data   0x000001
+             udata_main_6      udata   0x000732       data   0x000001
+             udata_main_9      udata   0x000733       data   0x000001
+            udata_main_10      udata   0x000734       data   0x000001
+            udata_main_11      udata   0x000735       data   0x000001
+             udata_midi_0      udata   0x000736       data   0x000001
+              udata_lfo_0      udata   0x000737       data   0x000001
+              udata_lfo_4      udata   0x000738       data   0x000001
+              udata_lfo_5      udata   0x000739       data   0x000001
+              udata_lfo_6      udata   0x00073a       data   0x000001
+              udata_lfo_7      udata   0x00073b       data   0x000001
+             udata_lfo_10      udata   0x00073c       data   0x000001
+               udata_eg_4      udata   0x00073d       data   0x000001
+               udata_eg_5      udata   0x00073e       data   0x000001
+               udata_eg_6      udata   0x00073f       data   0x000001
+               udata_eg_7      udata   0x000740       data   0x000001
+               udata_eg_8      udata   0x000741       data   0x000001
+               udata_eg_9      udata   0x000742       data   0x000001
+              udata_eg_10      udata   0x000743       data   0x000001
+              udata_eg_11      udata   0x000744       data   0x000001
+              udata_eg_12      udata   0x000745       data   0x000001
+              udata_eg_13      udata   0x000746       data   0x000001
+              udata_eg_14      udata   0x000747       data   0x000001
+              udata_eg_15      udata   0x000748       data   0x000001
+              udata_eg_16      udata   0x000749       data   0x000001
+              udata_eg_17      udata   0x00074a       data   0x000001
+              udata_eg_18      udata   0x00074b       data   0x000001
+              udata_eg_19      udata   0x00074c       data   0x000001
+              udata_eg_20      udata   0x00074d       data   0x000001
+              udata_eg_21      udata   0x00074e       data   0x000001
+              udata_eg_22      udata   0x00074f       data   0x000001
+              udata_eg_23      udata   0x000750       data   0x000001
+              udata_map_0      udata   0x000751       data   0x000001
+        udata_bankstick_0      udata   0x000752       data   0x000001
+        udata_bankstick_1      udata   0x000753       data   0x000001
+        udata_bankstick_2      udata   0x000754       data   0x000001
+                    gpr14      udata   0x000f00       data   0x000040
+             udata_midi_3      udata   0x000f40       data   0x000020
+                aout_vars      udata   0x000f60       data   0x000012
+             udata_main_0      udata   0x000f76       data   0x000002
+             udata_main_1      udata   0x000f78       data   0x000002
+             udata_main_7      udata   0x000f7a       data   0x000002
+             udata_main_8      udata   0x000f7c       data   0x000002
+              udata_lfo_1      udata   0x000f7e       data   0x000002
+ 
+                              Program Memory Usage
+                               Start         End
+                           ---------   ---------
+                            0x003000    0x00307f
+                            0x003080    0x00327f
+                            0x003280    0x0032ff
+                            0x00736e    0x007479
+                            0x007c3a    0x007c43
+                            0x007b0e    0x007b1d
+                            0x007bc2    0x007bcd
+                            0x007bce    0x007bd9
+                            0x007bda    0x007be5
+                            0x007be6    0x007bf1
+                            0x007bf2    0x007bfd
+                            0x007b1e    0x007b2d
+                            0x007bfe    0x007c09
+                            0x007c0a    0x007c15
+                            0x007aa2    0x007ab3
+                            0x007a66    0x007a79
+                            0x007ab4    0x007ac5
+                            0x007b2e    0x007b3d
+                            0x007c54    0x007c57
+                            0x007a7a    0x007a8d
+                            0x007a8e    0x007aa1
+                            0x007ac6    0x007ad7
+                            0x007ad8    0x007ae9
+                            0x007c16    0x007c21
+                            0x007c4e    0x007c53
+                            0x007c22    0x007c2d
+                            0x007aea    0x007afb
+                            0x007afc    0x007b0d
+                            0x007a06    0x007a1f
+                            0x007a20    0x007a39
+                            0x007b6e    0x007b7b
+                            0x007b3e    0x007b4d
+                            0x007a3a    0x007a4f
+                            0x007a50    0x007a65
+                            0x007b4e    0x007b5d
+                            0x007b5e    0x007b6d
+                            0x0079a6    0x0079e5
+                            0x007c2e    0x007c39
+                            0x007962    0x0079a5
+                            0x007b7c    0x007b89
+                            0x007c58    0x007c5b
+                            0x007b8a    0x007b97
+                            0x005c90    0x0062e5
+                            0x003300    0x00413b
+                            0x007c5c    0x007c5d
+                            0x007c5e    0x007c5f
+                            0x007b98    0x007ba5
+                            0x007c60    0x007c61
+                            0x007ba6    0x007bb3
+                            0x0078d4    0x00791b
+                            0x0069de    0x006bc3
+                            0x007258    0x00736d
+                            0x00791c    0x007961
+                            0x007c44    0x007c4d
+                            0x00786c    0x0078d3
+                            0x00747a    0x007547
+                            0x006ebe    0x006ffb
+                            0x0076c2    0x00775d
+                            0x0067f6    0x0069dd
+                            0x00413c    0x004c33
+                            0x0079e6    0x007a05
+                            0x005490    0x005c8f
+                            0x004c34    0x00548f
+                            0x007c62    0x007c63
+                            0x0062e6    0x0067f5
+                            0x007c64    0x007c65
+                            0x006ffc    0x007135
+                            0x006bc4    0x006d43
+                            0x0077ec    0x00786b
+                            0x007136    0x007257
+                            0x007548    0x00760f
+                            0x007610    0x0076c1
+                            0x00775e    0x0077eb
+                            0x006d44    0x006ebd
+                            0x007bb4    0x007bc1
+ 
+                            9779 program addresses used
+ 
+                              Symbols
+                     Name    Address   Location    Storage File
+                ---------  ---------  ---------  --------- ---------
+               _User_Init   0x003000    program     static C:\trunk/include/asm\user_vectors.inc
+               _USER_Tick   0x003004    program     static C:\trunk/include/asm\user_vectors.inc
+              _USER_Timer   0x003008    program     static C:\trunk/include/asm\user_vectors.inc
+ _USER_MPROC_DebugTrigger   0x00300c    program     static C:\trunk/include/asm\user_vectors.inc
+       _USER_DISPLAY_Init   0x003010    program     static C:\trunk/include/asm\user_vectors.inc
+       _USER_DISPLAY_Tick   0x003014    program     static C:\trunk/include/asm\user_vectors.inc
+ _USER_SR_Service_Prepare   0x003018    program     static C:\trunk/include/asm\user_vectors.inc
+  _USER_SR_Service_Finish   0x00301c    program     static C:\trunk/include/asm\user_vectors.inc
+   _USER_DIN_NotifyToggle   0x003020    program     static C:\trunk/include/asm\user_vectors.inc
+   _USER_ENC_NotifyChange   0x003024    program     static C:\trunk/include/asm\user_vectors.inc
+   _USER_AIN_NotifyChange   0x003028    program     static C:\trunk/include/asm\user_vectors.inc
+_USER_MPROC_NotifyReceivedByte   0x00302c    program     static C:\trunk/include/asm\user_vectors.inc
+_USER_MPROC_NotifyTimeout   0x003030    program     static C:\trunk/include/asm\user_vectors.inc
+_USER_MPROC_NotifyReceivedEvent   0x003034    program     static C:\trunk/include/asm\user_vectors.inc
+_USER_MPROC_NotifyFoundEvent   0x003038    program     static C:\trunk/include/asm\user_vectors.inc
+           _USER_LCD_Init   0x00303c    program     static C:\trunk/include/asm\user_vectors.inc
+          _USER_LCD_Clear   0x003040    program     static C:\trunk/include/asm\user_vectors.inc
+      _USER_LCD_CursorSet   0x003044    program     static C:\trunk/include/asm\user_vectors.inc
+      _USER_LCD_PrintChar   0x003048    program     static C:\trunk/include/asm\user_vectors.inc
+      _USER_MIDI_NotifyRx   0x00304c    program     static C:\trunk/include/asm\user_vectors.inc
+      _USER_MIDI_NotifyTx   0x003050    program     static C:\trunk/include/asm\user_vectors.inc
+           _USER_LCD_Data   0x003054    program     static C:\trunk/include/asm\user_vectors.inc
+            _USER_LCD_Cmd   0x003058    program     static C:\trunk/include/asm\user_vectors.inc
+_USER_LCD_SpecialCharInit   0x00305c    program     static C:\trunk/include/asm\user_vectors.inc
+         USER_RESERVED_25   0x003060    program     static C:\trunk/include/asm\user_vectors.inc
+         USER_RESERVED_26   0x003064    program     static C:\trunk/include/asm\user_vectors.inc
+         USER_RESERVED_27   0x003068    program     static C:\trunk/include/asm\user_vectors.inc
+         USER_RESERVED_28   0x00306c    program     static C:\trunk/include/asm\user_vectors.inc
+         USER_RESERVED_29   0x003070    program     static C:\trunk/include/asm\user_vectors.inc
+         USER_RESERVED_30   0x003074    program     static C:\trunk/include/asm\user_vectors.inc
+         USER_RESERVED_31   0x003078    program     static C:\trunk/include/asm\user_vectors.inc
+         USER_RESERVED_32   0x00307c    program     static C:\trunk/include/asm\user_vectors.inc
+  _MIOS_MPROC_EVENT_TABLE   0x003080    program     static C:\trunk/include/asm\mios_mt_table.inc
+   MIOS_MPROC_EVENT_TABLE   0x003080    program     static C:\trunk/include/asm\mios_mt_table.inc
+      _MIOS_ENC_PIN_TABLE   0x003280    program     static C:\trunk/include/asm\mios_enc_table.inc
+       MIOS_ENC_PIN_TABLE   0x003280    program     static C:\trunk/include/asm\mios_enc_table.inc
+           _MIOS_BOX_CFG0   00000000       data     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+           _MIOS_BOX_CFG1   0x000001       data     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+           _MIOS_BOX_STAT   0x000002       data     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_PARAMETER1   0x000003       data     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_PARAMETER2   0x000004       data     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_PARAMETER3   0x000005       data     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                    _TMP1   0x000006       data     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                    _TMP2   0x000007       data     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                    _TMP3   0x000008       data     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                    _TMP4   0x000009       data     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                    _TMP5   0x00000a       data     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                _IRQ_TMP1   0x00000b       data     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                _IRQ_TMP2   0x00000c       data     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                _IRQ_TMP3   0x00000d       data     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                _IRQ_TMP4   0x00000e       data     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                _IRQ_TMP5   0x00000f       data     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                USER_Init   0x00736e    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+                USER_Tick   0x00737a    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+               USER_Timer   0x007386    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  USER_MPROC_DebugTrigger   0x0073a4    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        USER_DISPLAY_Init   0x0073a6    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        USER_DISPLAY_Tick   0x0073b2    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+USER_MPROC_NotifyReceivedEvent   0x0073be    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+USER_MPROC_NotifyFoundEvent   0x0073d4    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+ USER_MPROC_NotifyTimeout   0x0073ee    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+USER_MPROC_NotifyReceivedByte   0x0073fa    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       USER_MIDI_NotifyTx   0x007406    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       USER_MIDI_NotifyRx   0x007408    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    USER_DIN_NotifyToggle   0x00740a    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    USER_ENC_NotifyChange   0x00741a    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  USER_SR_Service_Prepare   0x00742a    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   USER_SR_Service_Finish   0x007448    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    USER_AIN_NotifyChange   0x007466    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_MIDI_BeginStream   0x002c00    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_MIDI_DeviceIDAutoSet   0x002c04    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_MIDI_DeviceIDGet   0x002c08    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_MIDI_DeviceIDSet   0x002c0c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_MIDI_EndStream   0x002c10    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+          _MIOS_MIDI_Init   0x002c14    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_MIDI_InterfaceAutoSet   0x002c18    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_MIDI_InterfaceGet   0x002c1c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_MIDI_InterfaceSet   0x002c20    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_MIDI_MergerGet   0x002c24    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_MIDI_MergerSet   0x002c28    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_MIDI_RxBufferFree   0x002c2c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_MIDI_RxBufferGet   0x002c30    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_MIDI_RxBufferPut   0x002c34    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_MIDI_RxBufferUsed   0x002c38    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+ _MIOS_MIDI_TxBufferFlush   0x002c3c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_MIDI_TxBufferFree   0x002c40    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_MIDI_TxBufferGet   0x002c44    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_MIDI_TxBufferPut   0x002c48    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_MIDI_TxBufferUsed   0x002c4c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_MPROC_MergerDisable   0x002c50    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+ _MIOS_MPROC_MergerEnable   0x002c54    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_MPROC_MergerGet   0x002c58    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_AIN_DeadbandGet   0x002c5c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_AIN_DeadbandSet   0x002c60    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+          _MIOS_AIN_Muxed   0x002c64    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_AIN_NumberGet   0x002c68    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_AIN_NumberSet   0x002c6c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_AIN_Pin7bitGet   0x002c70    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_AIN_PinGet   0x007c3a    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_AIN_PinLSBGet   0x002c78    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_AIN_PinMSBGet   0x002c7c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_AIN_UnMuxed   0x002c80    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_MF_PWM_DutyCycleDownGet   0x002c84    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_MF_PWM_DutyCycleDownSet   0x002c88    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_MF_PWM_DutyCycleUpGet   0x002c8c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_MF_PWM_DutyCycleUpSet   0x002c90    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_MF_DeadbandGet   0x002c94    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_MF_DeadbandSet   0x002c98    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_MF_Disable   0x002c9c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+          _MIOS_MF_Enable   0x002ca0    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       _MIOS_MF_FaderMove   0x007b0e    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_MF_SuspendDisable   0x002ca8    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_MF_SuspendEnable   0x002cac    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_MF_SuspendGet   0x002cb0    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_MF_PWM_PeriodGet   0x002dfc    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_MF_PWM_PeriodSet   0x002e00    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_MF_TouchDetectionReset   0x002e2c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_DIN_PinGet   0x002cb4    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+          _MIOS_DIN_SRGet   0x002cb8    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_DOUT_PinGet   0x002cbc    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_DOUT_PinSet   0x007bc2    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       _MIOS_DOUT_PinSet0   0x002cc4    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       _MIOS_DOUT_PinSet1   0x002cc8    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_DOUT_SRGet   0x002ccc    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_DOUT_SRSet   0x007bce    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_ENC_Abs7bitAdd   0x007bda    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_ENC_Abs7bitGet   0x002cd8    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_ENC_Abs7bitSet   0x007be6    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_ENC_NumberGet   0x002ce0    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       _MIOS_ENC_SpeedGet   0x007bf2    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       _MIOS_ENC_SpeedSet   0x007b1e    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_SRIO_NumberGet   0x002cec    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_SRIO_NumberSet   0x002cf0    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_SRIO_TS_SensitivityGet   0x002cf4    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_SRIO_TS_SensitivitySet   0x002cf8    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_SRIO_UpdateFrqGet   0x002cfc    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_SRIO_UpdateFrqSet   0x002d00    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_SRIO_DebounceGet   0x002e28    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_SRIO_DebounceSet   0x002e24    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+          _MIOS_LCD_Clear   0x002d04    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+            _MIOS_LCD_Cmd   0x002d08    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_LCD_CursorGet   0x002d0c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_LCD_CursorSet   0x002d10    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+           _MIOS_LCD_Data   0x002d14    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+           _MIOS_LCD_Init   0x002d18    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_LCD_PrintBCD1   0x002d1c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_LCD_PrintBCD2   0x002d20    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_LCD_PrintBCD3   0x002d24    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_LCD_PrintBCD4   0x007bfe    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_LCD_PrintBCD5   0x007c0a    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_LCD_PrintChar   0x002d28    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_LCD_PrintHex1   0x002d2c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_LCD_PrintHex2   0x002d30    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_LCD_PrintMessage   0x007aa2    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_LCD_PrintPreconfString   0x007a66    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_LCD_PrintString   0x007ab4    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_LCD_TypeAutoSet   0x002d40    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_LCD_TypeGet   0x002d44    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_LCD_TypeSet   0x007b2e    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_LCD_YAddressGet   0x007c54    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_LCD_YAddressSet   0x007a7a    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_LCD_MessageStart   0x002df4    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_LCD_MessageStop   0x002df8    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_CLCD_SpecialCharInit   0x007a8e    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_CLCD_SpecialCharsInit   0x007ac6    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_GLCD_FontInit   0x007ad8    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_GLCD_GCursorGet   0x002d58    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_GLCD_GCursorSet   0x007c16    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_EEPROM_Read   0x007c4e    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       _MIOS_EEPROM_Write   0x007c22    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_EEPROM_ReadPage   0x007aea    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_EEPROM_WritePage   0x007afc    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_FLASH_Read   0x007a06    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_FLASH_Write   0x007a20    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+     _MIOS_BANKSTICK_Read   0x007b6e    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_BANKSTICK_Write   0x007b3e    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_BANKSTICK_CtrlSet   0x002ddc    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_BANKSTICK_CtrlGet   0x002de0    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_BANKSTICK_WritePage   0x007a3a    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+ _MIOS_BANKSTICK_ReadPage   0x007a50    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_TIMER_Init   0x007b4e    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_TIMER_Start   0x002d7c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_TIMER_Stop   0x002d80    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       _MIOS_TIMER_ReInit   0x007b5e    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+  _MIOS_HLP_GetBitANDMask   0x002d88    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_HLP_GetBitORMask   0x002d8c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_HLP_16bitAddSaturate   0x0079a6    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_HLP_Dec2BCD   0x007c2e    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+              _MIOS_Delay   0x002d9c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       _MIOS_GPCounterGet   0x002da0    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+              _MIOS_Reset   0x002da4    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       _MIOS_SystemResume   0x002da8    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+      _MIOS_SystemSuspend   0x002dac    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+         _MIOS_UserResume   0x002db0    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_UserSuspend   0x002db4    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_DIN_PinAutoRepeatEnable   0x002dbc    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_DIN_PinAutoRepeatDisable   0x002dc0    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_DIN_PinAutoRepeatGet   0x002dc4    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+ _MIOS_AIN_DynamicPrioSet   0x002dd0    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+ _MIOS_AIN_DynamicPrioGet   0x002dd4    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_AIN_LastPinsGet   0x002dd8    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+          _MIOS_IIC_Start   0x002e04    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+           _MIOS_IIC_Stop   0x002e08    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+       _MIOS_IIC_ByteSend   0x002e0c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+    _MIOS_IIC_ByteReceive   0x002e10    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_IIC_AckSend   0x002e14    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_IIC_NakSend   0x002e18    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_IIC_CtrlSet   0x002e1c    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+        _MIOS_IIC_CtrlGet   0x002e20    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+   _MIOS_LCD_PrintCString   0x007962    program     extern C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_LCD_PrintCString_Code   0x007972    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_LCD_PrintCStringLoop_Code   0x007974    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_LCD_PrintCString_Code_End   0x007980    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_LCD_PrintCString_RAM   0x007982    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_LCD_PrintCStringLoop_RAM   0x007992    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+_MIOS_LCD_PrintCString_RAM_End   0x00799c    program     static C:\trunk/modules/mios_wrapper/mios_wrapper.asm
+            USER_LCD_Init   0x007b7c    program     extern C:\trunk/modules/app_lcd/dummy\app_lcd.inc
+           USER_LCD_Clear   0x007b7e    program     extern C:\trunk/modules/app_lcd/dummy\app_lcd.inc
+       USER_LCD_CursorSet   0x007b80    program     extern C:\trunk/modules/app_lcd/dummy\app_lcd.inc
+       USER_LCD_PrintChar   0x007b82    program     extern C:\trunk/modules/app_lcd/dummy\app_lcd.inc
+            USER_LCD_Data   0x007b84    program     extern C:\trunk/modules/app_lcd/dummy\app_lcd.inc
+             USER_LCD_Cmd   0x007b86    program     extern C:\trunk/modules/app_lcd/dummy\app_lcd.inc
+ USER_LCD_SpecialCharInit   0x007b88    program     extern C:\trunk/modules/app_lcd/dummy\app_lcd.inc
+               _CursorBpm   0x000f72       data     extern main.c
+                    r0x00   0x000010       data     static main.c
+                    r0x01   0x000011       data     static main.c
+                    r0x02   0x000012       data     static main.c
+                    r0x03   0x000013       data     static main.c
+                    r0x04   0x000014       data     static main.c
+                    r0x05   0x000015       data     static main.c
+                    _bank   0x000f76       data     extern main.c
+                  _preset   0x000f78       data     extern main.c
+               _app_flags   0x00072e       data     extern main.c
+                _lcd_temp   0x00072f       data     extern main.c
+            _lfo_bpm_temp   0x000730       data     extern main.c
+_DISPLAY_lfobpm_lfo_bpm_temp_1_1   0x000731       data     static main.c
+           _eg_select_hlp   0x000732       data     extern main.c
+_ENC_NotifyChange_new_value_1_1   0x000f7a       data     static main.c
+               _jog_value   0x000f7c       data     extern main.c
+                 iTemp109   0x000733       data     static main.c
+                 iTemp124   0x000734       data     static main.c
+                 iTemp139   0x000735       data     static main.c
+        _AIN_NotifyChange   0x007b8a    program     extern main.c
+        _ENC_NotifyChange   0x005c90    program     extern main.c
+               _00664_DS_   0x005cf0    program     static main.c
+               _00572_DS_   0x005d10    program     static main.c
+               _00577_DS_   0x005d9e    program     static main.c
+               _00582_DS_   0x005e2c    program     static main.c
+               _00585_DS_   0x005ea6    program     static main.c
+               _00588_DS_   0x005f20    program     static main.c
+               _00605_DS_   0x005f72    program     static main.c
+               _00666_DS_   0x005fb4    program     static main.c
+               _00591_DS_   0x005fc4    program     static main.c
+               _00594_DS_   0x006010    program     static main.c
+               _00597_DS_   0x006060    program     static main.c
+               _00600_DS_   0x0060b0    program     static main.c
+               _00607_DS_   0x006100    program     static main.c
+               _00615_DS_   0x006156    program     static main.c
+               _00617_DS_   0x00619e    program     static main.c
+               _00625_DS_   0x0061f4    program     static main.c
+               _00627_DS_   0x00623c    program     static main.c
+               _00633_DS_   0x00628c    program     static main.c
+               _00636_DS_   0x0062d0    program     static main.c
+        _DIN_NotifyToggle   0x003300    program     extern main.c
+               _00507_DS_   0x00335c    program     static main.c
+               _00193_DS_   0x0033e4    program     static main.c
+               _00509_DS_   0x0033f8    program     static main.c
+               _00195_DS_   0x00341c    program     static main.c
+               _00511_DS_   0x00342a    program     static main.c
+               _00197_DS_   0x00344e    program     static main.c
+               _00513_DS_   0x00345c    program     static main.c
+               _00199_DS_   0x003480    program     static main.c
+               _00515_DS_   0x00348e    program     static main.c
+               _00204_DS_   0x0034b2    program     static main.c
+               _00378_DS_   0x0034ee    program     static main.c
+               _00207_DS_   0x0034fe    program     static main.c
+               _00380_DS_   0x00353c    program     static main.c
+               _00210_DS_   0x00354c    program     static main.c
+               _00382_DS_   0x00358a    program     static main.c
+               _00213_DS_   0x00359a    program     static main.c
+               _00520_DS_   0x0035ae    program     static main.c
+               _00215_DS_   0x0035d2    program     static main.c
+               _00522_DS_   0x0035e0    program     static main.c
+               _00217_DS_   0x003604    program     static main.c
+               _00524_DS_   0x003612    program     static main.c
+               _00219_DS_   0x003636    program     static main.c
+               _00526_DS_   0x003644    program     static main.c
+               _00224_DS_   0x003668    program     static main.c
+               _00384_DS_   0x0036a8    program     static main.c
+               _00227_DS_   0x0036b8    program     static main.c
+               _00386_DS_   0x0036fa    program     static main.c
+               _00230_DS_   0x00370a    program     static main.c
+               _00388_DS_   0x00374c    program     static main.c
+               _00233_DS_   0x00375c    program     static main.c
+               _00531_DS_   0x003772    program     static main.c
+               _00235_DS_   0x003796    program     static main.c
+               _00533_DS_   0x0037a4    program     static main.c
+               _00237_DS_   0x0037c8    program     static main.c
+               _00241_DS_   0x0037f2    program     static main.c
+               _00390_DS_   0x003834    program     static main.c
+               _00244_DS_   0x003844    program     static main.c
+               _00392_DS_   0x003886    program     static main.c
+               _00247_DS_   0x003896    program     static main.c
+               _00394_DS_   0x0038ca    program     static main.c
+               _00250_DS_   0x0038da    program     static main.c
+               _00396_DS_   0x00390e    program     static main.c
+               _00253_DS_   0x00391e    program     static main.c
+               _00255_DS_   0x003946    program     static main.c
+               _00398_DS_   0x00397c    program     static main.c
+               _00257_DS_   0x00398c    program     static main.c
+               _00400_DS_   0x0039c4    program     static main.c
+               _00261_DS_   0x0039d4    program     static main.c
+               _00402_DS_   0x003a08    program     static main.c
+               _00264_DS_   0x003a18    program     static main.c
+               _00404_DS_   0x003a56    program     static main.c
+               _00267_DS_   0x003a66    program     static main.c
+               _00406_DS_   0x003aa4    program     static main.c
+               _00270_DS_   0x003ab4    program     static main.c
+               _00408_DS_   0x003af2    program     static main.c
+               _00273_DS_   0x003b02    program     static main.c
+               _00410_DS_   0x003b36    program     static main.c
+               _00276_DS_   0x003b46    program     static main.c
+               _00412_DS_   0x003b84    program     static main.c
+               _00279_DS_   0x003b94    program     static main.c
+               _00414_DS_   0x003bd4    program     static main.c
+               _00282_DS_   0x003be4    program     static main.c
+               _00284_DS_   0x003c2a    program     static main.c
+               _00288_DS_   0x003c62    program     static main.c
+               _00290_DS_   0x003ca8    program     static main.c
+               _00294_DS_   0x003ce0    program     static main.c
+               _00297_DS_   0x003d0c    program     static main.c
+               _00299_DS_   0x003d24    program     static main.c
+               _00301_DS_   0x003d60    program     static main.c
+               _00302_DS_   0x003d6c    program     static main.c
+               _00304_DS_   0x003d8a    program     static main.c
+               _00305_DS_   0x003d96    program     static main.c
+               _00307_DS_   0x003db4    program     static main.c
+               _00308_DS_   0x003dc0    program     static main.c
+               _00310_DS_   0x003dde    program     static main.c
+               _00311_DS_   0x003dea    program     static main.c
+               _00313_DS_   0x003e08    program     static main.c
+               _00314_DS_   0x003e14    program     static main.c
+               _00316_DS_   0x003e32    program     static main.c
+               _00317_DS_   0x003e3e    program     static main.c
+               _00319_DS_   0x003e5c    program     static main.c
+               _00320_DS_   0x003e68    program     static main.c
+               _00326_DS_   0x003e82    program     static main.c
+               _00322_DS_   0x003e9c    program     static main.c
+               _00327_DS_   0x003ea8    program     static main.c
+               _00329_DS_   0x003ec6    program     static main.c
+               _00330_DS_   0x003ecc    program     static main.c
+               _00331_DS_   0x003ed4    program     static main.c
+               _00332_DS_   0x003edc    program     static main.c
+               _00336_DS_   0x003ee4    program     static main.c
+               _00338_DS_   0x003f14    program     static main.c
+               _00339_DS_   0x003f2e    program     static main.c
+               _00342_DS_   0x003f4a    program     static main.c
+               _00344_DS_   0x003f7a    program     static main.c
+               _00345_DS_   0x003f94    program     static main.c
+               _00348_DS_   0x003fb0    program     static main.c
+               _00350_DS_   0x003fe0    program     static main.c
+               _00351_DS_   0x003ffa    program     static main.c
+               _00354_DS_   0x004016    program     static main.c
+               _00356_DS_   0x004046    program     static main.c
+               _00357_DS_   0x004060    program     static main.c
+               _00360_DS_   0x00407c    program     static main.c
+               _00363_DS_   0x0040a6    program     static main.c
+               _00366_DS_   0x0040d0    program     static main.c
+               _00369_DS_   0x0040f8    program     static main.c
+               _00372_DS_   0x004120    program     static main.c
+               _00376_DS_   0x00412a    program     static main.c
+       _SR_Service_Finish   0x007c5c    program     extern main.c
+      _SR_Service_Prepare   0x007c5e    program     extern main.c
+_MPROC_NotifyReceivedByte   0x007b98    program     extern main.c
+     _MPROC_NotifyTimeout   0x007c60    program     extern main.c
+  _MPROC_NotifyFoundEvent   0x007ba6    program     extern main.c
+_MPROC_NotifyReceivedEvnt   0x0078d4    program     extern main.c
+          _DISPLAY_lfobpm   0x0069de    program     extern main.c
+               _00164_DS_   0x006a38    program     static main.c
+               _00148_DS_   0x006a68    program     static main.c
+               _00149_DS_   0x006a86    program     static main.c
+               _00150_DS_   0x006aa4    program     static main.c
+               _00151_DS_   0x006ac2    program     static main.c
+               _00152_DS_   0x006ae0    program     static main.c
+               _00153_DS_   0x006afe    program     static main.c
+               _00154_DS_   0x006b1c    program     static main.c
+               _00155_DS_   0x006b3a    program     static main.c
+               _00156_DS_   0x006b58    program     static main.c
+               _00157_DS_   0x006b76    program     static main.c
+               _00158_DS_   0x006b94    program     static main.c
+               _00160_DS_   0x006bb2    program     static main.c
+            _DISPLAY_Tick   0x007258    program     extern main.c
+               _00132_DS_   0x00726c    program     static main.c
+               _00144_DS_   0x007286    program     static main.c
+               _00133_DS_   0x007288    program     static main.c
+               _00134_DS_   0x00733c    program     static main.c
+               _00136_DS_   0x007360    program     static main.c
+            _DISPLAY_Init   0x00791c    program     extern main.c
+                   _Timer   0x007c44    program     extern main.c
+                    _Tick   0x00786c    program     extern main.c
+               _00110_DS_   0x00788c    program     static main.c
+               _00112_DS_   0x007896    program     static main.c
+               _00114_DS_   0x0078a0    program     static main.c
+               _00116_DS_   0x0078aa    program     static main.c
+               _00118_DS_   0x0078ca    program     static main.c
+                    _Init   0x00747a    program     extern main.c
+                  __str_0   0x0074c2    program     static main.c
+                  __str_1   0x0074ec    program     static main.c
+                  __str_2   0x00750c    program     static main.c
+                  __str_3   0x007512    program     static main.c
+                  __str_4   0x007518    program     static main.c
+                  __str_5   0x00751e    program     static main.c
+                  __str_6   0x007524    program     static main.c
+                  __str_7   0x00752a    program     static main.c
+                  __str_8   0x007530    program     static main.c
+                  __str_9   0x007536    program     static main.c
+                 __str_10   0x00753a    program     static main.c
+                 __str_11   0x00753e    program     static main.c
+                 __str_12   0x007542    program     static main.c
+                    r0x00   0x000010       data     static midi.c
+                    r0x01   0x000011       data     static midi.c
+                    r0x02   0x000012       data     static midi.c
+                    r0x03   0x000013       data     static midi.c
+                    r0x04   0x000014       data     static midi.c
+                    r0x05   0x000015       data     static midi.c
+                    r0x06   0x000016       data     static midi.c
+                    r0x07   0x000017       data     static midi.c
+                _new_note   0x000736       data     extern midi.c
+               _midi_note   0x000700       data     extern midi.c
+            _midi_cc_chn0   0x000080       data     extern midi.c
+       _midi_pitch_bender   0x000f40       data     extern midi.c
+               _MIDI_Evnt   0x006ebe    program     extern midi.c
+               _00148_DS_   0x006f16    program     static midi.c
+               _00152_DS_   0x006f24    program     static midi.c
+               _00154_DS_   0x006f2c    program     static midi.c
+               _00121_DS_   0x006f34    program     static midi.c
+               _00122_DS_   0x006f36    program     static midi.c
+               _00124_DS_   0x006f84    program     static midi.c
+               _00129_DS_   0x006fa2    program     static midi.c
+               _00131_DS_   0x006fd6    program     static midi.c
+               _MIDI_Init   0x0076c2    program     extern midi.c
+               _00107_DS_   0x0076d6    program     static midi.c
+               _00108_DS_   0x0076fc    program     static midi.c
+               _00111_DS_   0x00771e    program     static midi.c
+               _00112_DS_   0x007722    program     static midi.c
+               _00116_DS_   0x00774c    program     static midi.c
+                    r0x00   0x000010       data     static lfo.c
+                    r0x01   0x000011       data     static lfo.c
+                    r0x02   0x000012       data     static lfo.c
+                    r0x03   0x000013       data     static lfo.c
+                    r0x04   0x000014       data     static lfo.c
+                   _save3   0x000737       data     extern lfo.c
+              _lfo0_value   0x000f7e       data     extern lfo.c
+              _lfo1_value   0x000710       data     extern lfo.c
+              _lfo2_value   0x000712       data     extern lfo.c
+                _lfox_bpm   0x000738       data     extern lfo.c
+                   _save0   0x000739       data     extern lfo.c
+                   _save1   0x00073a       data     extern lfo.c
+                   _save2   0x00073b       data     extern lfo.c
+            _LFO_bpm_tmp2   0x000714       data     extern lfo.c
+ _LFO_bpm_LFO_bpm_tmp_1_1   0x000716       data     static lfo.c
+    _LFO_bpm_lfox_bpm_1_1   0x00073c       data     static lfo.c
+                 _LFO_bpm   0x0067f6    program     extern lfo.c
+               _00395_DS_   0x006884    program     static lfo.c
+               _00379_DS_   0x0068b0    program     static lfo.c
+               _00380_DS_   0x0068ce    program     static lfo.c
+               _00381_DS_   0x0068ec    program     static lfo.c
+               _00382_DS_   0x006906    program     static lfo.c
+               _00383_DS_   0x006926    program     static lfo.c
+               _00384_DS_   0x006940    program     static lfo.c
+               _00385_DS_   0x006954    program     static lfo.c
+               _00386_DS_   0x006966    program     static lfo.c
+               _00387_DS_   0x00697a    program     static lfo.c
+               _00388_DS_   0x006994    program     static lfo.c
+               _00389_DS_   0x0069b4    program     static lfo.c
+               _00391_DS_   0x0069cc    program     static lfo.c
+                _LFO_Tick   0x00413c    program     extern lfo.c
+               _00112_DS_   0x004160    program     static lfo.c
+               _00294_DS_   0x0041a4    program     static lfo.c
+               _00296_DS_   0x0041b0    program     static lfo.c
+               _00298_DS_   0x0041b8    program     static lfo.c
+               _00113_DS_   0x0041ba    program     static lfo.c
+               _00114_DS_   0x0041cc    program     static lfo.c
+               _00299_DS_   0x0041f6    program     static lfo.c
+               _00117_DS_   0x00420a    program     static lfo.c
+               _00300_DS_   0x004234    program     static lfo.c
+               _00120_DS_   0x004248    program     static lfo.c
+               _00301_DS_   0x004272    program     static lfo.c
+               _00123_DS_   0x004288    program     static lfo.c
+               _00302_DS_   0x0042b2    program     static lfo.c
+               _00142_DS_   0x0042c8    program     static lfo.c
+               _00308_DS_   0x0042ee    program     static lfo.c
+               _00310_DS_   0x0042fa    program     static lfo.c
+               _00312_DS_   0x004302    program     static lfo.c
+               _00127_DS_   0x004304    program     static lfo.c
+               _00128_DS_   0x004342    program     static lfo.c
+               _00313_DS_   0x004398    program     static lfo.c
+               _00131_DS_   0x0043ac    program     static lfo.c
+               _00314_DS_   0x004402    program     static lfo.c
+               _00134_DS_   0x004416    program     static lfo.c
+               _00315_DS_   0x00446c    program     static lfo.c
+               _00137_DS_   0x004482    program     static lfo.c
+               _00316_DS_   0x0044d8    program     static lfo.c
+               _00145_DS_   0x0044ea    program     static lfo.c
+               _00149_DS_   0x004502    program     static lfo.c
+               _00323_DS_   0x004546    program     static lfo.c
+               _00325_DS_   0x004552    program     static lfo.c
+               _00327_DS_   0x00455a    program     static lfo.c
+               _00150_DS_   0x00455c    program     static lfo.c
+               _00151_DS_   0x00456e    program     static lfo.c
+               _00328_DS_   0x004598    program     static lfo.c
+               _00154_DS_   0x0045ac    program     static lfo.c
+               _00329_DS_   0x0045d6    program     static lfo.c
+               _00157_DS_   0x0045ea    program     static lfo.c
+               _00330_DS_   0x004614    program     static lfo.c
+               _00160_DS_   0x004628    program     static lfo.c
+               _00331_DS_   0x004652    program     static lfo.c
+               _00179_DS_   0x004668    program     static lfo.c
+               _00337_DS_   0x00468e    program     static lfo.c
+               _00339_DS_   0x00469a    program     static lfo.c
+               _00341_DS_   0x0046a2    program     static lfo.c
+               _00164_DS_   0x0046a4    program     static lfo.c
+               _00165_DS_   0x0046e2    program     static lfo.c
+               _00342_DS_   0x004738    program     static lfo.c
+               _00168_DS_   0x00474c    program     static lfo.c
+               _00343_DS_   0x0047a2    program     static lfo.c
+               _00171_DS_   0x0047b6    program     static lfo.c
+               _00344_DS_   0x00480c    program     static lfo.c
+               _00174_DS_   0x004820    program     static lfo.c
+               _00345_DS_   0x004876    program     static lfo.c
+               _00182_DS_   0x004888    program     static lfo.c
+               _00186_DS_   0x0048a0    program     static lfo.c
+               _00352_DS_   0x0048e4    program     static lfo.c
+               _00354_DS_   0x0048f0    program     static lfo.c
+               _00356_DS_   0x0048f8    program     static lfo.c
+               _00187_DS_   0x0048fa    program     static lfo.c
+               _00188_DS_   0x00490c    program     static lfo.c
+               _00357_DS_   0x004936    program     static lfo.c
+               _00191_DS_   0x00494a    program     static lfo.c
+               _00358_DS_   0x004974    program     static lfo.c
+               _00194_DS_   0x004988    program     static lfo.c
+               _00359_DS_   0x0049b2    program     static lfo.c
+               _00197_DS_   0x0049c6    program     static lfo.c
+               _00360_DS_   0x0049f0    program     static lfo.c
+               _00216_DS_   0x004a06    program     static lfo.c
+               _00366_DS_   0x004a2c    program     static lfo.c
+               _00368_DS_   0x004a38    program     static lfo.c
+               _00370_DS_   0x004a40    program     static lfo.c
+               _00201_DS_   0x004a42    program     static lfo.c
+               _00202_DS_   0x004a80    program     static lfo.c
+               _00371_DS_   0x004ad6    program     static lfo.c
+               _00205_DS_   0x004aea    program     static lfo.c
+               _00372_DS_   0x004b40    program     static lfo.c
+               _00208_DS_   0x004b54    program     static lfo.c
+               _00373_DS_   0x004baa    program     static lfo.c
+               _00211_DS_   0x004bbe    program     static lfo.c
+               _00374_DS_   0x004c14    program     static lfo.c
+               _00220_DS_   0x004c26    program     static lfo.c
+                _LFO_Init   0x0079e6    program     extern lfo.c
+           _lfo_add_table   0x005490    program     extern lfo.c
+       _lfo_add_table_bpm   0x005690    program     extern lfo.c
+                    r0x00   0x000010       data     static eg.c
+                    r0x01   0x000011       data     static eg.c
+                    r0x02   0x000012       data     static eg.c
+                    r0x03   0x000013       data     static eg.c
+                    r0x04   0x000014       data     static eg.c
+                    r0x05   0x000015       data     static eg.c
+                    r0x06   0x000016       data     static eg.c
+                    r0x07   0x000017       data     static eg.c
+                    r0x08   0x000018       data     static eg.c
+               _eg0_value   0x000718       data     extern eg.c
+               _eg1_value   0x00071a       data     extern eg.c
+               _eg2_value   0x00071c       data     extern eg.c
+               _eg3_value   0x00071e       data     extern eg.c
+                     _eg0   0x00073d       data     extern eg.c
+                 _eg0_int   0x00073e       data     extern eg.c
+                     _eg1   0x00073f       data     extern eg.c
+                 _eg1_int   0x000740       data     extern eg.c
+                     _eg2   0x000741       data     extern eg.c
+                 _eg2_int   0x000742       data     extern eg.c
+                     _eg3   0x000743       data     extern eg.c
+                 _eg3_int   0x000744       data     extern eg.c
+                 iTemp154   0x000745       data     static eg.c
+                 iTemp174   0x000746       data     static eg.c
+                 iTemp182   0x000747       data     static eg.c
+                 iTemp200   0x000748       data     static eg.c
+                 iTemp258   0x000749       data     static eg.c
+                 iTemp278   0x00074a       data     static eg.c
+                 iTemp286   0x00074b       data     static eg.c
+                 iTemp304   0x00074c       data     static eg.c
+                 iTemp366   0x00074d       data     static eg.c
+                 iTemp386   0x00074e       data     static eg.c
+                 iTemp394   0x00074f       data     static eg.c
+                 iTemp412   0x000750       data     static eg.c
+                 _EG_Tick   0x004c34    program     extern eg.c
+               _00254_DS_   0x004c5e    program     static eg.c
+               _00113_DS_   0x004c70    program     static eg.c
+               _00256_DS_   0x004c84    program     static eg.c
+               _00114_DS_   0x004c90    program     static eg.c
+               _00258_DS_   0x004d02    program     static eg.c
+               _00116_DS_   0x004d16    program     static eg.c
+               _00117_DS_   0x004d1c    program     static eg.c
+               _00119_DS_   0x004d2e    program     static eg.c
+               _00122_DS_   0x004d88    program     static eg.c
+               _00124_DS_   0x004d9a    program     static eg.c
+               _00260_DS_   0x004dfa    program     static eg.c
+               _00125_DS_   0x004e00    program     static eg.c
+               _00128_DS_   0x004e0a    program     static eg.c
+               _00129_DS_   0x004e1c    program     static eg.c
+               _00132_DS_   0x004e72    program     static eg.c
+               _00264_DS_   0x004e92    program     static eg.c
+               _00137_DS_   0x004ea4    program     static eg.c
+               _00266_DS_   0x004eb8    program     static eg.c
+               _00138_DS_   0x004ec4    program     static eg.c
+               _00268_DS_   0x004f36    program     static eg.c
+               _00140_DS_   0x004f4a    program     static eg.c
+               _00141_DS_   0x004f4c    program     static eg.c
+               _00143_DS_   0x004f5e    program     static eg.c
+               _00146_DS_   0x004fac    program     static eg.c
+               _00148_DS_   0x004fbe    program     static eg.c
+               _00270_DS_   0x005026    program     static eg.c
+               _00152_DS_   0x00502c    program     static eg.c
+               _00153_DS_   0x005032    program     static eg.c
+               _00158_DS_   0x00507c    program     static eg.c
+               _00275_DS_   0x00508a    program     static eg.c
+               _00163_DS_   0x00509c    program     static eg.c
+               _00277_DS_   0x0050b0    program     static eg.c
+               _00164_DS_   0x0050bc    program     static eg.c
+               _00279_DS_   0x00512e    program     static eg.c
+               _00166_DS_   0x005142    program     static eg.c
+               _00167_DS_   0x005144    program     static eg.c
+               _00169_DS_   0x005156    program     static eg.c
+               _00172_DS_   0x0051a4    program     static eg.c
+               _00174_DS_   0x0051b6    program     static eg.c
+               _00281_DS_   0x00521e    program     static eg.c
+               _00178_DS_   0x005224    program     static eg.c
+               _00179_DS_   0x00522a    program     static eg.c
+               _00182_DS_   0x005274    program     static eg.c
+               _00286_DS_   0x005288    program     static eg.c
+               _00187_DS_   0x00529a    program     static eg.c
+               _00288_DS_   0x0052ae    program     static eg.c
+               _00188_DS_   0x0052ba    program     static eg.c
+               _00290_DS_   0x00532c    program     static eg.c
+               _00190_DS_   0x005340    program     static eg.c
+               _00191_DS_   0x005342    program     static eg.c
+               _00193_DS_   0x005354    program     static eg.c
+               _00196_DS_   0x0053a2    program     static eg.c
+               _00198_DS_   0x0053b4    program     static eg.c
+               _00292_DS_   0x00541c    program     static eg.c
+               _00202_DS_   0x005422    program     static eg.c
+               _00203_DS_   0x005428    program     static eg.c
+               _00209_DS_   0x005472    program     static eg.c
+                 _EG_Init   0x007c62    program     extern eg.c
+            _eg_add_table   0x005890    program     extern eg.c
+                    r0x00   0x000010       data     static map.c
+                    r0x01   0x000011       data     static map.c
+                    r0x02   0x000012       data     static map.c
+                    r0x03   0x000013       data     static map.c
+               _all_param   0x000f00       data     extern map.c
+      _MAP_Tick_gates_1_1   0x000751       data     static map.c
+                _MAP_Tick   0x0062e6    program     extern map.c
+               _00109_DS_   0x006320    program     static map.c
+               _00110_DS_   0x006336    program     static map.c
+               _00111_DS_   0x00637a    program     static map.c
+               _00112_DS_   0x0063bc    program     static map.c
+               _00114_DS_   0x0063d0    program     static map.c
+               _00115_DS_   0x0063f4    program     static map.c
+               _00116_DS_   0x00640a    program     static map.c
+               _00117_DS_   0x00644e    program     static map.c
+               _00118_DS_   0x006490    program     static map.c
+               _00120_DS_   0x0064a4    program     static map.c
+               _00121_DS_   0x0064c8    program     static map.c
+               _00122_DS_   0x0064de    program     static map.c
+               _00123_DS_   0x006522    program     static map.c
+               _00124_DS_   0x006564    program     static map.c
+               _00126_DS_   0x0065b0    program     static map.c
+               _00127_DS_   0x0065c8    program     static map.c
+               _00128_DS_   0x0065ec    program     static map.c
+               _00129_DS_   0x00661e    program     static map.c
+               _00136_DS_   0x006638    program     static map.c
+               _00133_DS_   0x006684    program     static map.c
+               _00137_DS_   0x00669c    program     static map.c
+               _00139_DS_   0x0066e8    program     static map.c
+               _00140_DS_   0x006700    program     static map.c
+               _00141_DS_   0x006724    program     static map.c
+               _00142_DS_   0x006756    program     static map.c
+               _00149_DS_   0x006770    program     static map.c
+               _00146_DS_   0x0067ba    program     static map.c
+               _00150_DS_   0x0067d2    program     static map.c
+                _MAP_Init   0x007c64    program     extern map.c
+                _sinewave   0x005a90    program     extern map.c
+              _squarewave   0x005b90    program     extern map.c
+            AOUT_INVERTED   0x000f60       data     static C:\trunk/modules/aout/aout.asm
+          AOUT_UPDATE_REQ   0x000f61       data     static C:\trunk/modules/aout/aout.asm
+              AOUT_VALUES   0x000f62       data     static C:\trunk/modules/aout/aout.asm
+              AOUT_InitHW   0x006ffc    program     static C:\trunk/modules/aout\aout_max525.inc
+     _AOUT_DigitalPinsSet   0x007006    program     extern C:\trunk/modules/aout\aout_max525.inc
+      AOUT_DigitalPinsSet   0x007006    program     extern C:\trunk/modules/aout\aout_max525.inc
+             _AOUT_Update   0x007028    program     extern C:\trunk/modules/aout\aout_max525.inc
+              AOUT_Update   0x007028    program     extern C:\trunk/modules/aout\aout_max525.inc
+         AOUT_Update_Loop   0x00703a    program     static C:\trunk/modules/aout\aout_max525.inc
+    AOUT_Update_Loop_Next   0x00705e    program     static C:\trunk/modules/aout\aout_max525.inc
+          AOUT_Update_End   0x00706e    program     static C:\trunk/modules/aout\aout_max525.inc
+          AOUT_Update_Hlp   0x007072    program     static C:\trunk/modules/aout\aout_max525.inc
+ AOUT_Update_Hlp_Inverted   0x00708c    program     static C:\trunk/modules/aout\aout_max525.inc
+AOUT_Update_Hlp_NotInverted   0x007092    program     static C:\trunk/modules/aout\aout_max525.inc
+            AOUT_LoadWord   0x0070a0    program     static C:\trunk/modules/aout\aout_max525.inc
+       AOUT_LoadWord_Loop   0x0070a4    program     static C:\trunk/modules/aout\aout_max525.inc
+               _AOUT_Init   0x0070b8    program     extern C:\trunk/modules/aout\aout.inc
+                AOUT_Init   0x0070b8    program     extern C:\trunk/modules/aout\aout.inc
+           AOUT_Init_Loop   0x0070c2    program     static C:\trunk/modules/aout\aout.inc
+             _AOUT_ReInit   0x0070d0    program     extern C:\trunk/modules/aout\aout.inc
+              AOUT_ReInit   0x0070d0    program     extern C:\trunk/modules/aout\aout.inc
+        _AOUT_InvertedSet   0x0070d8    program     extern C:\trunk/modules/aout\aout.inc
+         AOUT_InvertedSet   0x0070d8    program     extern C:\trunk/modules/aout\aout.inc
+        _AOUT_InvertedGet   0x0070de    program     extern C:\trunk/modules/aout\aout.inc
+         AOUT_InvertedGet   0x0070de    program     extern C:\trunk/modules/aout\aout.inc
+         AOUT_Pin16bitSet   0x0070e4    program     extern C:\trunk/modules/aout\aout.inc
+ AOUT_Pin16bitSet_Changed   0x0070fe    program     static C:\trunk/modules/aout\aout.inc
+AOUT_Pin16bitSet_NotChanged   0x007110    program     static C:\trunk/modules/aout\aout.inc
+          AOUT_Pin7bitSet   0x007112    program     extern C:\trunk/modules/aout\aout.inc
+        _AOUT_Pin16bitSet   0x00711e    program     extern C:\trunk/modules/aout/aout.asm
+         _AOUT_Pin7bitSet   0x00712c    program     extern C:\trunk/modules/aout/aout.asm
+               _buffer_bs   0x000f73       data     extern bankstick.c
+                    r0x00   0x000010       data     static bankstick.c
+                    r0x01   0x000011       data     static bankstick.c
+                    r0x02   0x000012       data     static bankstick.c
+               _load_last   0x000752       data     extern bankstick.c
+              _update_led   0x000753       data     extern bankstick.c
+       _update_preset_led   0x000754       data     extern bankstick.c
+                  _adress   0x000720       data     extern bankstick.c
+_BANKSTICK_LOAD_Evnt_bank_1_1   0x000722       data     static bankstick.c
+_BANKSTICK_LOAD_Evnt_preset_1_1   0x000724       data     static bankstick.c
+_BANKSTICK_SAVE_Evnt_bank_1_1   0x000726       data     static bankstick.c
+_BANKSTICK_SAVE_Evnt_preset_1_1   0x000728       data     static bankstick.c
+_BANKSTICK_preset_LEDs_Update_bank_1_1   0x00072a       data     static bankstick.c
+_BANKSTICK_preset_LEDs_Update_preset_1_1   0x00072c       data     static bankstick.c
+_BANKSTICK_preset_LEDs_Update   0x006bc4    program     extern bankstick.c
+               _00235_DS_   0x006c00    program     static bankstick.c
+               _00237_DS_   0x006c0a    program     static bankstick.c
+               _00239_DS_   0x006c14    program     static bankstick.c
+               _00241_DS_   0x006c1e    program     static bankstick.c
+               _00214_DS_   0x006c20    program     static bankstick.c
+               _00215_DS_   0x006c3c    program     static bankstick.c
+               _00216_DS_   0x006c58    program     static bankstick.c
+               _00217_DS_   0x006c74    program     static bankstick.c
+               _00218_DS_   0x006c8e    program     static bankstick.c
+               _00251_DS_   0x006ca0    program     static bankstick.c
+               _00253_DS_   0x006caa    program     static bankstick.c
+               _00255_DS_   0x006cb4    program     static bankstick.c
+               _00257_DS_   0x006cbe    program     static bankstick.c
+               _00219_DS_   0x006cc0    program     static bankstick.c
+               _00220_DS_   0x006cdc    program     static bankstick.c
+               _00221_DS_   0x006cf8    program     static bankstick.c
+               _00222_DS_   0x006d14    program     static bankstick.c
+               _00223_DS_   0x006d2e    program     static bankstick.c
+ _BANKSTICK_Dout_Update_3   0x0077ec    program     extern bankstick.c
+               _00205_DS_   0x00780e    program     static bankstick.c
+               _00206_DS_   0x00781a    program     static bankstick.c
+               _00208_DS_   0x007838    program     static bankstick.c
+               _00209_DS_   0x007844    program     static bankstick.c
+ _BANKSTICK_Dout_Update_2   0x007136    program     extern bankstick.c
+               _00176_DS_   0x007158    program     static bankstick.c
+               _00177_DS_   0x007164    program     static bankstick.c
+               _00179_DS_   0x007182    program     static bankstick.c
+               _00180_DS_   0x00718e    program     static bankstick.c
+               _00189_DS_   0x0071a8    program     static bankstick.c
+               _00186_DS_   0x0071c2    program     static bankstick.c
+               _00190_DS_   0x0071ce    program     static bankstick.c
+               _00192_DS_   0x0071ec    program     static bankstick.c
+               _00193_DS_   0x0071f8    program     static bankstick.c
+               _00195_DS_   0x007216    program     static bankstick.c
+               _00196_DS_   0x007222    program     static bankstick.c
+               _00198_DS_   0x007240    program     static bankstick.c
+               _00199_DS_   0x00724c    program     static bankstick.c
+   _BANKSTICK_Dout_Update   0x007548    program     extern bankstick.c
+               _00160_DS_   0x007558    program     static bankstick.c
+               _00161_DS_   0x00755c    program     static bankstick.c
+               _00163_DS_   0x007568    program     static bankstick.c
+               _00164_DS_   0x00756c    program     static bankstick.c
+               _00167_DS_   0x00759c    program     static bankstick.c
+               _00168_DS_   0x0075a8    program     static bankstick.c
+               _00169_DS_   0x0075bc    program     static bankstick.c
+               _00170_DS_   0x0075c8    program     static bankstick.c
+     _BANKSTICK_SAVE_Evnt   0x007610    program     extern bankstick.c
+     _BANKSTICK_LOAD_Evnt   0x00775e    program     extern bankstick.c
+          _BANKSTICK_Init   0x006d44    program     extern bankstick.c
+               _00147_DS_   0x006d66    program     static bankstick.c
+               _00108_DS_   0x006d9e    program     static bankstick.c
+               _00111_DS_   0x006dc0    program     static bankstick.c
+               _00112_DS_   0x006dc2    program     static bankstick.c
+               _00115_DS_   0x006de4    program     static bankstick.c
+               _00116_DS_   0x006de6    program     static bankstick.c
+               _00119_DS_   0x006e08    program     static bankstick.c
+               _00120_DS_   0x006e0a    program     static bankstick.c
+               _00123_DS_   0x006e2c    program     static bankstick.c
+               _00124_DS_   0x006e2e    program     static bankstick.c
+               _00127_DS_   0x006e50    program     static bankstick.c
+               _00106_DS_   0x006e7e    program     static bankstick.c
+               _00128_DS_   0x006eb0    program     static bankstick.c
+                   _cinit   0x007bb4    program     extern bankstick.c
+ 

@@ -1,0 +1,1788 @@
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.8.0 #5082 (Mar  9 2008) (MINGW32)
+               00004 ; This file was generated Thu Jul 10 15:16:08 2008
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008 
+               00009         .ident "SDCC version 2.8.0 #5082 [pic16 port]"
+               00010         .file   "bankstick.c"
+               00011         list    p=18f4620
+               00012 
+               00013         radix dec
+               00014 
+               00015 ;--------------------------------------------------------
+               00016 ; public variables in this module
+               00017 ;--------------------------------------------------------
+               00018         global _update_preset_led
+               00019         global _update_led
+               00020         global _load_last
+               00021         global _BANKSTICK_Init
+               00022         global _BANKSTICK_LOAD_Evnt
+               00023         global _BANKSTICK_SAVE_Evnt
+               00024         global _BANKSTICK_Dout_Update
+               00025         global _BANKSTICK_Dout_Update_2
+               00026         global _BANKSTICK_Dout_Update_3
+               00027         global _BANKSTICK_preset_LEDs_Update
+               00028         global _buffer_bs
+               00029         global _adress
+               00030 
+               00031 ;--------------------------------------------------------
+               00032 ; extern variables in this module
+               00033 ;--------------------------------------------------------
+               00034         extern _MIOS_BOX_CFG0
+               00035         extern _MIOS_BOX_CFG1
+               00036         extern _MIOS_BOX_STAT
+               00037         extern _MIOS_PARAMETER1
+               00038         extern _MIOS_PARAMETER2
+               00039         extern _MIOS_PARAMETER3
+               00040         extern _PORTAbits
+               00041         extern _PORTBbits
+               00042         extern _PORTCbits
+               00043         extern _PORTDbits
+               00044         extern _PORTEbits
+               00045         extern _LATAbits
+               00046         extern _LATBbits
+               00047         extern _LATCbits
+               00048         extern _LATDbits
+               00049         extern _LATEbits
+               00050         extern _TRISAbits
+               00051         extern _TRISBbits
+               00052         extern _TRISCbits
+               00053         extern _TRISDbits
+               00054         extern _TRISEbits
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _OSCTUNEbits
+               00056         extern _PIE1bits
+               00057         extern _PIR1bits
+               00058         extern _IPR1bits
+               00059         extern _PIE2bits
+               00060         extern _PIR2bits
+               00061         extern _IPR2bits
+               00062         extern _EECON1bits
+               00063         extern _RCSTAbits
+               00064         extern _TXSTAbits
+               00065         extern _T3CONbits
+               00066         extern _CMCONbits
+               00067         extern _CVRCONbits
+               00068         extern _ECCP1ASbits
+               00069         extern _PWM1CONbits
+               00070         extern _BAUDCONbits
+               00071         extern _CCP2CONbits
+               00072         extern _CCP1CONbits
+               00073         extern _ADCON2bits
+               00074         extern _ADCON1bits
+               00075         extern _ADCON0bits
+               00076         extern _SSPCON2bits
+               00077         extern _SSPCON1bits
+               00078         extern _SSPSTATbits
+               00079         extern _T2CONbits
+               00080         extern _T1CONbits
+               00081         extern _RCONbits
+               00082         extern _WDTCONbits
+               00083         extern _HLVDCONbits
+               00084         extern _OSCCONbits
+               00085         extern _T0CONbits
+               00086         extern _STATUSbits
+               00087         extern _FSR2Hbits
+               00088         extern _BSRbits
+               00089         extern _FSR1Hbits
+               00090         extern _FSR0Hbits
+               00091         extern _INTCON3bits
+               00092         extern _INTCON2bits
+               00093         extern _INTCONbits
+               00094         extern _TBLPTRUbits
+               00095         extern _PCLATHbits
+               00096         extern _PCLATUbits
+               00097         extern _STKPTRbits
+               00098         extern _TOSUbits
+               00099         extern _bank
+               00100         extern _preset
+               00101         extern _looper
+               00102         extern _app_flags
+               00103         extern _midi_note
+               00104         extern _midi_cc_chn0
+               00105         extern _midi_pitch_bender
+               00106         extern _new_note
+               00107         extern _lfo0_value
+               00108         extern _lfo1_value
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _lfo2_value
+               00110         extern _eg0
+               00111         extern _eg1
+               00112         extern _eg2
+               00113         extern _eg3
+               00114         extern _eg0_value
+               00115         extern _eg1_value
+               00116         extern _eg2_value
+               00117         extern _eg3_value
+               00118         extern _all_param
+               00119         extern _PORTA
+               00120         extern _PORTB
+               00121         extern _PORTC
+               00122         extern _PORTD
+               00123         extern _PORTE
+               00124         extern _LATA
+               00125         extern _LATB
+               00126         extern _LATC
+               00127         extern _LATD
+               00128         extern _LATE
+               00129         extern _TRISA
+               00130         extern _TRISB
+               00131         extern _TRISC
+               00132         extern _TRISD
+               00133         extern _TRISE
+               00134         extern _OSCTUNE
+               00135         extern _PIE1
+               00136         extern _PIR1
+               00137         extern _IPR1
+               00138         extern _PIE2
+               00139         extern _PIR2
+               00140         extern _IPR2
+               00141         extern _EECON1
+               00142         extern _EECON2
+               00143         extern _EEDATA
+               00144         extern _EEADR
+               00145         extern _RCSTA
+               00146         extern _TXSTA
+               00147         extern _TXREG
+               00148         extern _RCREG
+               00149         extern _SPBRG
+               00150         extern _SPBRGH
+               00151         extern _T3CON
+               00152         extern _TMR3L
+               00153         extern _TMR3H
+               00154         extern _CMCON
+               00155         extern _CVRCON
+               00156         extern _ECCP1AS
+               00157         extern _PWM1CON
+               00158         extern _BAUDCON
+               00159         extern _CCP2CON
+               00160         extern _CCPR2L
+               00161         extern _CCPR2H
+               00162         extern _CCP1CON
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _CCPR1L
+               00164         extern _CCPR1H
+               00165         extern _ADCON2
+               00166         extern _ADCON1
+               00167         extern _ADCON0
+               00168         extern _ADRESL
+               00169         extern _ADRESH
+               00170         extern _SSPCON2
+               00171         extern _SSPCON1
+               00172         extern _SSPSTAT
+               00173         extern _SSPADD
+               00174         extern _SSPBUF
+               00175         extern _T2CON
+               00176         extern _PR2
+               00177         extern _TMR2
+               00178         extern _T1CON
+               00179         extern _TMR1L
+               00180         extern _TMR1H
+               00181         extern _RCON
+               00182         extern _WDTCON
+               00183         extern _HLVDCON
+               00184         extern _OSCCON
+               00185         extern _T0CON
+               00186         extern _TMR0L
+               00187         extern _TMR0H
+               00188         extern _STATUS
+               00189         extern _FSR2L
+               00190         extern _FSR2H
+               00191         extern _PLUSW2
+               00192         extern _PREINC2
+               00193         extern _POSTDEC2
+               00194         extern _POSTINC2
+               00195         extern _INDF2
+               00196         extern _BSR
+               00197         extern _FSR1L
+               00198         extern _FSR1H
+               00199         extern _PLUSW1
+               00200         extern _PREINC1
+               00201         extern _POSTDEC1
+               00202         extern _POSTINC1
+               00203         extern _INDF1
+               00204         extern _WREG
+               00205         extern _FSR0L
+               00206         extern _FSR0H
+               00207         extern _PLUSW0
+               00208         extern _PREINC0
+               00209         extern _POSTDEC0
+               00210         extern _POSTINC0
+               00211         extern _INDF0
+               00212         extern _INTCON3
+               00213         extern _INTCON2
+               00214         extern _INTCON
+               00215         extern _PRODL
+               00216         extern _PRODH
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _TABLAT
+               00218         extern _TBLPTRL
+               00219         extern _TBLPTRH
+               00220         extern _TBLPTRU
+               00221         extern _PCL
+               00222         extern _PCLATH
+               00223         extern _PCLATU
+               00224         extern _STKPTR
+               00225         extern _TOSL
+               00226         extern _TOSH
+               00227         extern _TOSU
+               00228         extern _MIOS_DOUT_PinSet
+               00229         extern _MIOS_DOUT_SRGet
+               00230         extern _MIOS_DOUT_SRSet
+               00231         extern _MIOS_BANKSTICK_Read
+               00232         extern _MIOS_BANKSTICK_Write
+               00233         extern _MIOS_BANKSTICK_WritePage
+               00234         extern _MIOS_BANKSTICK_ReadPage
+               00235         extern _mios_enc_pin_table
+               00236         extern _mios_mproc_event_table
+               00237         extern _MIOS_MPROC_EVENT_TABLE
+               00238         extern _MIOS_ENC_PIN_TABLE
+               00239 ;--------------------------------------------------------
+               00240 ;       Equates to used internal registers
+               00241 ;--------------------------------------------------------
+  00000FD8     00242 STATUS  equ     0xfd8
+  00000FE1     00243 FSR0L equ 0xfe1 ;; normaly 0xfe9, changed by mios-gpasm
+  00000FE2     00244 FSR0H equ 0xfe2 ;; normaly 0xfea, changed by mios-gpasm
+  00000FE9     00245 FSR1L equ 0xfe9 ;; normaly 0xfe1, changed by mios-gpasm
+  00000FD9     00246 FSR2L   equ     0xfd9
+  00000FE7     00247 INDF0 equ 0xfe7 ;; normaly 0xfef, changed by mios-gpasm
+  00000FED     00248 POSTDEC1 equ 0xfed ;; normaly 0xfe5, changed by mios-gpasm
+  00000FEC     00249 PREINC1 equ 0xfec ;; normaly 0xfe4, changed by mios-gpasm
+  00000FDB     00250 PLUSW2  equ     0xfdb
+               00251 
+               00252 
+               00253         idata
+               00254 _buffer_bs      db      0x00, 0x0e, 0x00
+               00255 
+               00256 
+               00257 ; Internal registers
+               00258 .registers udata_ovr 0x0010 ;; normaly 0x0000, changed by mios-gpasm
+               00259 r0x00   res     1
+               00260 r0x01   res     1
+               00261 r0x02   res     1
+               00262 
+               00263 
+               00264 gpr14   udata
+               00265 
+               00266 udata_bankstick_0       udata
+               00267 _load_last      res     1
+               00268 
+               00269 udata_bankstick_1       udata
+               00270 _update_led     res     1
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271 
+               00272 udata_bankstick_2       udata
+               00273 _update_preset_led      res     1
+               00274 
+               00275 udata_bankstick_3       udata
+               00276 _adress res     2
+               00277 
+               00278 udata_bankstick_4       udata
+               00279 _BANKSTICK_LOAD_Evnt_bank_1_1   res     2
+               00280 
+               00281 udata_bankstick_5       udata
+               00282 _BANKSTICK_LOAD_Evnt_preset_1_1 res     2
+               00283 
+               00284 udata_bankstick_6       udata
+               00285 _BANKSTICK_SAVE_Evnt_bank_1_1   res     2
+               00286 
+               00287 udata_bankstick_7       udata
+               00288 _BANKSTICK_SAVE_Evnt_preset_1_1 res     2
+               00289 
+               00290 udata_bankstick_8       udata
+               00291 _BANKSTICK_preset_LEDs_Update_bank_1_1  res     2
+               00292 
+               00293 udata_bankstick_9       udata
+               00294 _BANKSTICK_preset_LEDs_Update_preset_1_1        res     2
+               00295 
+               00296 ;--------------------------------------------------------
+               00297 ; global & static initialisations
+               00298 ;--------------------------------------------------------
+               00299 ; I code from now on!
+               00300 ; ; Starting pCode block
+               00301 S_bankstick__BANKSTICK_preset_LEDs_Update       code
+0000           00302 _BANKSTICK_preset_LEDs_Update:
+               00303         .line   311; bankstick.c        void BANKSTICK_preset_LEDs_Update( volatile unsigned int bank, volatile unsigned int preset ) __wparam
+0000 CFD9 FFED 00304         MOVFF   FSR2L, POSTDEC1
+0004 CFE9 FFD9 00305         MOVFF   FSR1L, FSR2L
+0008 C000 FFED 00306         MOVFF   r0x00, POSTDEC1
+000C C000 FFED 00307         MOVFF   r0x01, POSTDEC1
+0010 C000 FFED 00308         MOVFF   r0x02, POSTDEC1
+0014 0000      00309         BANKSEL _BANKSTICK_preset_LEDs_Update_bank_1_1
+0016 6F00      00310         MOVWF   _BANKSTICK_preset_LEDs_Update_bank_1_1, B
+0018 0E02      00311         MOVLW   0x02
+001A CFDB F000 00312         MOVFF   PLUSW2, (_BANKSTICK_preset_LEDs_Update_bank_1_1 + 1)
+001E 0E03      00313         MOVLW   0x03
+0020 CFDB F000 00314         MOVFF   PLUSW2, _BANKSTICK_preset_LEDs_Update_preset_1_1
+0024 0E04      00315         MOVLW   0x04
+0026 CFDB F000 00316         MOVFF   PLUSW2, (_BANKSTICK_preset_LEDs_Update_preset_1_1 + 1)
+               00317         .line   315; bankstick.c        switch( bank ) {
+002A C000 F000 00318         MOVFF   _BANKSTICK_preset_LEDs_Update_bank_1_1, r0x00
+002E C000 F000 00319         MOVFF   (_BANKSTICK_preset_LEDs_Update_bank_1_1 + 1), r0x01
+0032 5000      00320         MOVF    r0x00, W
+0034 E100      00321         BNZ     _00235_DS_
+0036 5000      00322         MOVF    r0x01, W
+0038 0A10      00323         XORLW   0x10
+003A E000      00324         BZ      _00214_DS_
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+003C           00325 _00235_DS_:
+003C 5000      00326         MOVF    r0x00, W
+003E E100      00327         BNZ     _00237_DS_
+0040 5000      00328         MOVF    r0x01, W
+0042 0A20      00329         XORLW   0x20
+0044 E000      00330         BZ      _00215_DS_
+0046           00331 _00237_DS_:
+0046 5000      00332         MOVF    r0x00, W
+0048 E100      00333         BNZ     _00239_DS_
+004A 5000      00334         MOVF    r0x01, W
+004C 0A30      00335         XORLW   0x30
+004E E000      00336         BZ      _00216_DS_
+0050           00337 _00239_DS_:
+0050 5000      00338         MOVF    r0x00, W
+0052 E100      00339         BNZ     _00241_DS_
+0054 5000      00340         MOVF    r0x01, W
+0056 0A40      00341         XORLW   0x40
+0058 E000      00342         BZ      _00217_DS_
+005A           00343 _00241_DS_:
+005A D000      00344         BRA     _00218_DS_
+005C           00345 _00214_DS_:
+               00346         .line   317; bankstick.c        sr6_temp = MIOS_DOUT_SRGet(6);
+005C 0E06      00347         MOVLW   0x06
+005E EC00 F000 00348         CALL    _MIOS_DOUT_SRGet
+0062 6E00      00349         MOVWF   r0x00
+               00350         .line   318; bankstick.c        sr6_temp &= 0xf0;
+0064 0EF0      00351         MOVLW   0xf0
+0066 1600      00352         ANDWF   r0x00, F
+               00353         .line   319; bankstick.c        sr6_temp |= 0x01;
+0068 8000      00354         BSF     r0x00, 0
+               00355         .line   320; bankstick.c        MIOS_DOUT_SRSet(6, sr6_temp);
+006A 5000      00356         MOVF    r0x00, W
+006C 6EED      00357         MOVWF   POSTDEC1
+006E 0E06      00358         MOVLW   0x06
+0070 EC00 F000 00359         CALL    _MIOS_DOUT_SRSet
+0074 2AE9      00360         INCF    FSR1L, F
+               00361         .line   321; bankstick.c        break;
+0076 D000      00362         BRA     _00218_DS_
+0078           00363 _00215_DS_:
+               00364         .line   323; bankstick.c        sr6_temp = MIOS_DOUT_SRGet(6);
+0078 0E06      00365         MOVLW   0x06
+007A EC00 F000 00366         CALL    _MIOS_DOUT_SRGet
+007E 6E00      00367         MOVWF   r0x00
+               00368         .line   324; bankstick.c        sr6_temp &= 0xf0;
+0080 0EF0      00369         MOVLW   0xf0
+0082 1600      00370         ANDWF   r0x00, F
+               00371         .line   325; bankstick.c        sr6_temp |= 0x02;
+0084 8200      00372         BSF     r0x00, 1
+               00373         .line   326; bankstick.c        MIOS_DOUT_SRSet(6, sr6_temp);
+0086 5000      00374         MOVF    r0x00, W
+0088 6EED      00375         MOVWF   POSTDEC1
+008A 0E06      00376         MOVLW   0x06
+008C EC00 F000 00377         CALL    _MIOS_DOUT_SRSet
+0090 2AE9      00378         INCF    FSR1L, F
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00379         .line   327; bankstick.c        break;
+0092 D000      00380         BRA     _00218_DS_
+0094           00381 _00216_DS_:
+               00382         .line   329; bankstick.c        sr6_temp = MIOS_DOUT_SRGet(6);
+0094 0E06      00383         MOVLW   0x06
+0096 EC00 F000 00384         CALL    _MIOS_DOUT_SRGet
+009A 6E00      00385         MOVWF   r0x00
+               00386         .line   330; bankstick.c        sr6_temp &= 0xf0;
+009C 0EF0      00387         MOVLW   0xf0
+009E 1600      00388         ANDWF   r0x00, F
+               00389         .line   331; bankstick.c        sr6_temp |= 0x04;
+00A0 8400      00390         BSF     r0x00, 2
+               00391         .line   332; bankstick.c        MIOS_DOUT_SRSet(6, sr6_temp);
+00A2 5000      00392         MOVF    r0x00, W
+00A4 6EED      00393         MOVWF   POSTDEC1
+00A6 0E06      00394         MOVLW   0x06
+00A8 EC00 F000 00395         CALL    _MIOS_DOUT_SRSet
+00AC 2AE9      00396         INCF    FSR1L, F
+               00397         .line   333; bankstick.c        break;
+00AE D000      00398         BRA     _00218_DS_
+00B0           00399 _00217_DS_:
+               00400         .line   335; bankstick.c        sr6_temp = MIOS_DOUT_SRGet(6);
+00B0 0E06      00401         MOVLW   0x06
+00B2 EC00 F000 00402         CALL    _MIOS_DOUT_SRGet
+00B6 6E00      00403         MOVWF   r0x00
+               00404         .line   336; bankstick.c        sr6_temp &= 0xf0;
+00B8 0EF0      00405         MOVLW   0xf0
+00BA 1600      00406         ANDWF   r0x00, F
+               00407         .line   337; bankstick.c        sr6_temp |= 0x08;
+00BC 8600      00408         BSF     r0x00, 3
+               00409         .line   338; bankstick.c        MIOS_DOUT_SRSet(6, sr6_temp);
+00BE 5000      00410         MOVF    r0x00, W
+00C0 6EED      00411         MOVWF   POSTDEC1
+00C2 0E06      00412         MOVLW   0x06
+00C4 EC00 F000 00413         CALL    _MIOS_DOUT_SRSet
+00C8 2AE9      00414         INCF    FSR1L, F
+00CA           00415 _00218_DS_:
+               00416         .line   342; bankstick.c        switch( preset ) {
+00CA C000 F000 00417         MOVFF   _BANKSTICK_preset_LEDs_Update_preset_1_1, r0x01
+00CE C000 F000 00418         MOVFF   (_BANKSTICK_preset_LEDs_Update_preset_1_1 + 1), r0x02
+00D2 5000      00419         MOVF    r0x01, W
+00D4 E100      00420         BNZ     _00251_DS_
+00D6 5000      00421         MOVF    r0x02, W
+00D8 0A01      00422         XORLW   0x01
+00DA E000      00423         BZ      _00219_DS_
+00DC           00424 _00251_DS_:
+00DC 5000      00425         MOVF    r0x01, W
+00DE E100      00426         BNZ     _00253_DS_
+00E0 5000      00427         MOVF    r0x02, W
+00E2 0A02      00428         XORLW   0x02
+00E4 E000      00429         BZ      _00220_DS_
+00E6           00430 _00253_DS_:
+00E6 5000      00431         MOVF    r0x01, W
+00E8 E100      00432         BNZ     _00255_DS_
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00EA 5000      00433         MOVF    r0x02, W
+00EC 0A03      00434         XORLW   0x03
+00EE E000      00435         BZ      _00221_DS_
+00F0           00436 _00255_DS_:
+00F0 5000      00437         MOVF    r0x01, W
+00F2 E100      00438         BNZ     _00257_DS_
+00F4 5000      00439         MOVF    r0x02, W
+00F6 0A04      00440         XORLW   0x04
+00F8 E000      00441         BZ      _00222_DS_
+00FA           00442 _00257_DS_:
+00FA D000      00443         BRA     _00223_DS_
+00FC           00444 _00219_DS_:
+               00445         .line   344; bankstick.c        sr6_temp = MIOS_DOUT_SRGet(5);
+00FC 0E05      00446         MOVLW   0x05
+00FE EC00 F000 00447         CALL    _MIOS_DOUT_SRGet
+0102 6E00      00448         MOVWF   r0x00
+               00449         .line   345; bankstick.c        sr6_temp &= 0x0f;
+0104 0E0F      00450         MOVLW   0x0f
+0106 1600      00451         ANDWF   r0x00, F
+               00452         .line   346; bankstick.c        sr6_temp |= 0x10;
+0108 8800      00453         BSF     r0x00, 4
+               00454         .line   347; bankstick.c        MIOS_DOUT_SRSet(5, sr6_temp);
+010A 5000      00455         MOVF    r0x00, W
+010C 6EED      00456         MOVWF   POSTDEC1
+010E 0E05      00457         MOVLW   0x05
+0110 EC00 F000 00458         CALL    _MIOS_DOUT_SRSet
+0114 2AE9      00459         INCF    FSR1L, F
+               00460         .line   348; bankstick.c        break;
+0116 D000      00461         BRA     _00223_DS_
+0118           00462 _00220_DS_:
+               00463         .line   350; bankstick.c        sr6_temp = MIOS_DOUT_SRGet(5);
+0118 0E05      00464         MOVLW   0x05
+011A EC00 F000 00465         CALL    _MIOS_DOUT_SRGet
+011E 6E00      00466         MOVWF   r0x00
+               00467         .line   351; bankstick.c        sr6_temp &= 0x0f;
+0120 0E0F      00468         MOVLW   0x0f
+0122 1600      00469         ANDWF   r0x00, F
+               00470         .line   352; bankstick.c        sr6_temp |= 0x20;
+0124 8A00      00471         BSF     r0x00, 5
+               00472         .line   353; bankstick.c        MIOS_DOUT_SRSet(5, sr6_temp);
+0126 5000      00473         MOVF    r0x00, W
+0128 6EED      00474         MOVWF   POSTDEC1
+012A 0E05      00475         MOVLW   0x05
+012C EC00 F000 00476         CALL    _MIOS_DOUT_SRSet
+0130 2AE9      00477         INCF    FSR1L, F
+               00478         .line   354; bankstick.c        break;
+0132 D000      00479         BRA     _00223_DS_
+0134           00480 _00221_DS_:
+               00481         .line   356; bankstick.c        sr6_temp = MIOS_DOUT_SRGet(5);
+0134 0E05      00482         MOVLW   0x05
+0136 EC00 F000 00483         CALL    _MIOS_DOUT_SRGet
+013A 6E00      00484         MOVWF   r0x00
+               00485         .line   357; bankstick.c        sr6_temp &= 0x0f;
+013C 0E0F      00486         MOVLW   0x0f
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+013E 1600      00487         ANDWF   r0x00, F
+               00488         .line   358; bankstick.c        sr6_temp |= 0x40;
+0140 8C00      00489         BSF     r0x00, 6
+               00490         .line   359; bankstick.c        MIOS_DOUT_SRSet(5, sr6_temp);
+0142 5000      00491         MOVF    r0x00, W
+0144 6EED      00492         MOVWF   POSTDEC1
+0146 0E05      00493         MOVLW   0x05
+0148 EC00 F000 00494         CALL    _MIOS_DOUT_SRSet
+014C 2AE9      00495         INCF    FSR1L, F
+               00496         .line   360; bankstick.c        break;
+014E D000      00497         BRA     _00223_DS_
+0150           00498 _00222_DS_:
+               00499         .line   362; bankstick.c        sr6_temp = MIOS_DOUT_SRGet(5);
+0150 0E05      00500         MOVLW   0x05
+0152 EC00 F000 00501         CALL    _MIOS_DOUT_SRGet
+0156 6E00      00502         MOVWF   r0x00
+               00503         .line   363; bankstick.c        sr6_temp &= 0x0f;
+0158 0E0F      00504         MOVLW   0x0f
+015A 1600      00505         ANDWF   r0x00, F
+               00506         .line   364; bankstick.c        sr6_temp |= 0x80;
+015C 8E00      00507         BSF     r0x00, 7
+               00508         .line   365; bankstick.c        MIOS_DOUT_SRSet(5, sr6_temp);
+015E 5000      00509         MOVF    r0x00, W
+0160 6EED      00510         MOVWF   POSTDEC1
+0162 0E05      00511         MOVLW   0x05
+0164 EC00 F000 00512         CALL    _MIOS_DOUT_SRSet
+0168 2AE9      00513         INCF    FSR1L, F
+016A           00514 _00223_DS_:
+016A 0000      00515         BANKSEL _update_preset_led
+               00516         .line   367; bankstick.c        update_preset_led = 0x00;
+016C 6B00      00517         CLRF    _update_preset_led, B
+016E CFEC F000 00518         MOVFF   PREINC1, r0x02
+0172 CFEC F000 00519         MOVFF   PREINC1, r0x01
+0176 CFEC F000 00520         MOVFF   PREINC1, r0x00
+017A CFEC FFD9 00521         MOVFF   PREINC1, FSR2L
+017E 0012      00522         RETURN  
+               00523 
+               00524 ; ; Starting pCode block
+               00525 S_bankstick__BANKSTICK_Dout_Update_3    code
+0000           00526 _BANKSTICK_Dout_Update_3:
+               00527         .line   282; bankstick.c        void BANKSTICK_Dout_Update_3(void) __wparam
+0000 C000 FFED 00528         MOVFF   r0x00, POSTDEC1
+0004 0000      00529         BANKSEL (_all_param + 9)
+               00530         .line   286; bankstick.c        if( all_param.router_flags_Eg_to_lfo2.ALL_flags_Eg_to_lfo2 & all_param.eg_select) {
+0006 5100      00531         MOVF    (_all_param + 9), W, B
+0008 0BFF      00532         ANDLW   0xff
+000A 6E00      00533         MOVWF   r0x00
+               00534 ; removed redundant BANKSEL
+000C 5100      00535         MOVF    (_all_param + 38), W, B
+000E 1600      00536         ANDWF   r0x00, F
+0010 5000      00537         MOVF    r0x00, W
+0012 E000      00538         BZ      _00205_DS_
+               00539         .line   287; bankstick.c        MIOS_DOUT_PinSet(29, 1); }
+0014 0E01      00540         MOVLW   0x01
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0016 6EED      00541         MOVWF   POSTDEC1
+0018 0E1D      00542         MOVLW   0x1d
+001A EC00 F000 00543         CALL    _MIOS_DOUT_PinSet
+001E 2AE9      00544         INCF    FSR1L, F
+0020 D000      00545         BRA     _00206_DS_
+0022           00546 _00205_DS_:
+               00547         .line   289; bankstick.c        MIOS_DOUT_PinSet(29, 0); }
+0022 0E00      00548         MOVLW   0x00
+0024 6EED      00549         MOVWF   POSTDEC1
+0026 0E1D      00550         MOVLW   0x1d
+0028 EC00 F000 00551         CALL    _MIOS_DOUT_PinSet
+002C 2AE9      00552         INCF    FSR1L, F
+002E           00553 _00206_DS_:
+002E 0000      00554         BANKSEL (_all_param + 10)
+               00555         .line   293; bankstick.c        if( all_param.router_flags_Eg_to_lfo3.ALL_flags_Eg_to_lfo3 & all_param.eg_select) {
+0030 5100      00556         MOVF    (_all_param + 10), W, B
+0032 0BFF      00557         ANDLW   0xff
+0034 6E00      00558         MOVWF   r0x00
+               00559 ; removed redundant BANKSEL
+0036 5100      00560         MOVF    (_all_param + 38), W, B
+0038 1600      00561         ANDWF   r0x00, F
+003A 5000      00562         MOVF    r0x00, W
+003C E000      00563         BZ      _00208_DS_
+               00564         .line   294; bankstick.c        MIOS_DOUT_PinSet(30, 1); }
+003E 0E01      00565         MOVLW   0x01
+0040 6EED      00566         MOVWF   POSTDEC1
+0042 0E1E      00567         MOVLW   0x1e
+0044 EC00 F000 00568         CALL    _MIOS_DOUT_PinSet
+0048 2AE9      00569         INCF    FSR1L, F
+004A D000      00570         BRA     _00209_DS_
+004C           00571 _00208_DS_:
+               00572         .line   296; bankstick.c        MIOS_DOUT_PinSet(30, 0); }
+004C 0E00      00573         MOVLW   0x00
+004E 6EED      00574         MOVWF   POSTDEC1
+0050 0E1E      00575         MOVLW   0x1e
+0052 EC00 F000 00576         CALL    _MIOS_DOUT_PinSet
+0056 2AE9      00577         INCF    FSR1L, F
+0058           00578 _00209_DS_:
+               00579         .line   300; bankstick.c        value_1 = MIOS_DOUT_SRGet(5);
+0058 0E05      00580         MOVLW   0x05
+005A EC00 F000 00581         CALL    _MIOS_DOUT_SRGet
+005E 6E00      00582         MOVWF   r0x00
+               00583         .line   301; bankstick.c        value_1 &= 0xf0;
+0060 0EF0      00584         MOVLW   0xf0
+0062 1600      00585         ANDWF   r0x00, F
+0064 0000      00586         BANKSEL (_all_param + 38)
+               00587         .line   302; bankstick.c        value_1 |= all_param.eg_select;
+0066 5100      00588         MOVF    (_all_param + 38), W, B
+0068 1200      00589         IORWF   r0x00, F
+               00590         .line   303; bankstick.c        MIOS_DOUT_SRSet(5, value_1);
+006A 5000      00591         MOVF    r0x00, W
+006C 6EED      00592         MOVWF   POSTDEC1
+006E 0E05      00593         MOVLW   0x05
+0070 EC00 F000 00594         CALL    _MIOS_DOUT_SRSet
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0074 2AE9      00595         INCF    FSR1L, F
+0076 0000      00596         BANKSEL _update_led
+               00597         .line   304; bankstick.c        update_led = 0x00;
+0078 6B00      00598         CLRF    _update_led, B
+007A CFEC F000 00599         MOVFF   PREINC1, r0x00
+007E 0012      00600         RETURN  
+               00601 
+               00602 ; ; Starting pCode block
+               00603 S_bankstick__BANKSTICK_Dout_Update_2    code
+0000           00604 _BANKSTICK_Dout_Update_2:
+               00605         .line   231; bankstick.c        void BANKSTICK_Dout_Update_2(void) __wparam
+0000 C000 FFED 00606         MOVFF   r0x00, POSTDEC1
+0004 0000      00607         BANKSEL (_all_param + 3)
+               00608         .line   234; bankstick.c        if( all_param.router_flags_lfo1_att.ALL_flags_lfo1_att & all_param.eg_select) {
+0006 5100      00609         MOVF    (_all_param + 3), W, B
+0008 0BFF      00610         ANDLW   0xff
+000A 6E00      00611         MOVWF   r0x00
+               00612 ; removed redundant BANKSEL
+000C 5100      00613         MOVF    (_all_param + 38), W, B
+000E 1600      00614         ANDWF   r0x00, F
+0010 5000      00615         MOVF    r0x00, W
+0012 E000      00616         BZ      _00176_DS_
+               00617         .line   235; bankstick.c        MIOS_DOUT_PinSet(24, 1); }
+0014 0E01      00618         MOVLW   0x01
+0016 6EED      00619         MOVWF   POSTDEC1
+0018 0E18      00620         MOVLW   0x18
+001A EC00 F000 00621         CALL    _MIOS_DOUT_PinSet
+001E 2AE9      00622         INCF    FSR1L, F
+0020 D000      00623         BRA     _00177_DS_
+0022           00624 _00176_DS_:
+               00625         .line   237; bankstick.c        MIOS_DOUT_PinSet(24, 0); }
+0022 0E00      00626         MOVLW   0x00
+0024 6EED      00627         MOVWF   POSTDEC1
+0026 0E18      00628         MOVLW   0x18
+0028 EC00 F000 00629         CALL    _MIOS_DOUT_PinSet
+002C 2AE9      00630         INCF    FSR1L, F
+002E           00631 _00177_DS_:
+002E 0000      00632         BANKSEL (_all_param + 4)
+               00633         .line   241; bankstick.c        if( all_param.router_flags_lfo1_dec.ALL_flags_lfo1_dec & all_param.eg_select) {
+0030 5100      00634         MOVF    (_all_param + 4), W, B
+0032 0BFF      00635         ANDLW   0xff
+0034 6E00      00636         MOVWF   r0x00
+               00637 ; removed redundant BANKSEL
+0036 5100      00638         MOVF    (_all_param + 38), W, B
+0038 1600      00639         ANDWF   r0x00, F
+003A 5000      00640         MOVF    r0x00, W
+003C E000      00641         BZ      _00179_DS_
+               00642         .line   242; bankstick.c        MIOS_DOUT_PinSet(25, 1); }
+003E 0E01      00643         MOVLW   0x01
+0040 6EED      00644         MOVWF   POSTDEC1
+0042 0E19      00645         MOVLW   0x19
+0044 EC00 F000 00646         CALL    _MIOS_DOUT_PinSet
+0048 2AE9      00647         INCF    FSR1L, F
+004A D000      00648         BRA     _00180_DS_
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+004C           00649 _00179_DS_:
+               00650         .line   244; bankstick.c        MIOS_DOUT_PinSet(25, 0); }
+004C 0E00      00651         MOVLW   0x00
+004E 6EED      00652         MOVWF   POSTDEC1
+0050 0E19      00653         MOVLW   0x19
+0052 EC00 F000 00654         CALL    _MIOS_DOUT_PinSet
+0056 2AE9      00655         INCF    FSR1L, F
+0058           00656 _00180_DS_:
+0058 0000      00657         BANKSEL (_all_param + 5)
+               00658         .line   248; bankstick.c        if( all_param.router_flags_eg_link.eg1_link_eg2 ) {
+005A A100      00659         BTFSS   (_all_param + 5), 0, B
+005C D000      00660         BRA     _00189_DS_
+               00661         .line   249; bankstick.c        if( all_param.eg_select <= 2) {
+005E 0E03      00662         MOVLW   0x03
+               00663 ; removed redundant BANKSEL
+0060 5D00      00664         SUBWF   (_all_param + 38), W, B
+0062 E200      00665         BC      _00190_DS_
+               00666         .line   250; bankstick.c        MIOS_DOUT_PinSet(26, 1); } }
+0064 0E01      00667         MOVLW   0x01
+0066 6EED      00668         MOVWF   POSTDEC1
+0068 0E1A      00669         MOVLW   0x1a
+006A EC00 F000 00670         CALL    _MIOS_DOUT_PinSet
+006E 2AE9      00671         INCF    FSR1L, F
+0070 D000      00672         BRA     _00190_DS_
+0072           00673 _00189_DS_:
+0072 0000      00674         BANKSEL (_all_param + 5)
+               00675         .line   251; bankstick.c        else if( all_param.router_flags_eg_link.eg3_link_eg4 ){
+0074 A300      00676         BTFSS   (_all_param + 5), 1, B
+0076 D000      00677         BRA     _00186_DS_
+               00678         .line   252; bankstick.c        if (all_param.eg_select >= 4) {
+0078 0E04      00679         MOVLW   0x04
+               00680 ; removed redundant BANKSEL
+007A 5D00      00681         SUBWF   (_all_param + 38), W, B
+007C E300      00682         BNC     _00190_DS_
+               00683         .line   253; bankstick.c        MIOS_DOUT_PinSet(26, 1); }}
+007E 0E01      00684         MOVLW   0x01
+0080 6EED      00685         MOVWF   POSTDEC1
+0082 0E1A      00686         MOVLW   0x1a
+0084 EC00 F000 00687         CALL    _MIOS_DOUT_PinSet
+0088 2AE9      00688         INCF    FSR1L, F
+008A D000      00689         BRA     _00190_DS_
+008C           00690 _00186_DS_:
+               00691         .line   255; bankstick.c        MIOS_DOUT_PinSet(26, 0); }
+008C 0E00      00692         MOVLW   0x00
+008E 6EED      00693         MOVWF   POSTDEC1
+0090 0E1A      00694         MOVLW   0x1a
+0092 EC00 F000 00695         CALL    _MIOS_DOUT_PinSet
+0096 2AE9      00696         INCF    FSR1L, F
+0098           00697 _00190_DS_:
+0098 0000      00698         BANKSEL (_all_param + 6)
+               00699         .line   259; bankstick.c        if( all_param.router_flags_eg_v2s.ALL_flags_eg_v2s & all_param.eg_select) {
+009A 5100      00700         MOVF    (_all_param + 6), W, B
+009C 0BFF      00701         ANDLW   0xff
+009E 6E00      00702         MOVWF   r0x00
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00703 ; removed redundant BANKSEL
+00A0 5100      00704         MOVF    (_all_param + 38), W, B
+00A2 1600      00705         ANDWF   r0x00, F
+00A4 5000      00706         MOVF    r0x00, W
+00A6 E000      00707         BZ      _00192_DS_
+               00708         .line   260; bankstick.c        MIOS_DOUT_PinSet(27, 1); }
+00A8 0E01      00709         MOVLW   0x01
+00AA 6EED      00710         MOVWF   POSTDEC1
+00AC 0E1B      00711         MOVLW   0x1b
+00AE EC00 F000 00712         CALL    _MIOS_DOUT_PinSet
+00B2 2AE9      00713         INCF    FSR1L, F
+00B4 D000      00714         BRA     _00193_DS_
+00B6           00715 _00192_DS_:
+               00716         .line   262; bankstick.c        MIOS_DOUT_PinSet(27, 0); }
+00B6 0E00      00717         MOVLW   0x00
+00B8 6EED      00718         MOVWF   POSTDEC1
+00BA 0E1B      00719         MOVLW   0x1b
+00BC EC00 F000 00720         CALL    _MIOS_DOUT_PinSet
+00C0 2AE9      00721         INCF    FSR1L, F
+00C2           00722 _00193_DS_:
+00C2 0000      00723         BANKSEL (_all_param + 7)
+               00724         .line   266; bankstick.c        if( all_param.router_flags_eg_audio_trig.ALL_flags_eg_audio_trig & all_param.eg_select) {
+00C4 5100      00725         MOVF    (_all_param + 7), W, B
+00C6 0BFF      00726         ANDLW   0xff
+00C8 6E00      00727         MOVWF   r0x00
+               00728 ; removed redundant BANKSEL
+00CA 5100      00729         MOVF    (_all_param + 38), W, B
+00CC 1600      00730         ANDWF   r0x00, F
+00CE 5000      00731         MOVF    r0x00, W
+00D0 E000      00732         BZ      _00195_DS_
+               00733         .line   267; bankstick.c        MIOS_DOUT_PinSet(31, 1); }
+00D2 0E01      00734         MOVLW   0x01
+00D4 6EED      00735         MOVWF   POSTDEC1
+00D6 0E1F      00736         MOVLW   0x1f
+00D8 EC00 F000 00737         CALL    _MIOS_DOUT_PinSet
+00DC 2AE9      00738         INCF    FSR1L, F
+00DE D000      00739         BRA     _00196_DS_
+00E0           00740 _00195_DS_:
+               00741         .line   269; bankstick.c        MIOS_DOUT_PinSet(32, 0); }
+00E0 0E00      00742         MOVLW   0x00
+00E2 6EED      00743         MOVWF   POSTDEC1
+00E4 0E20      00744         MOVLW   0x20
+00E6 EC00 F000 00745         CALL    _MIOS_DOUT_PinSet
+00EA 2AE9      00746         INCF    FSR1L, F
+00EC           00747 _00196_DS_:
+00EC 0000      00748         BANKSEL (_all_param + 8)
+               00749         .line   272; bankstick.c        if( all_param.router_flags_Eg_to_lfo1.ALL_flags_Eg_to_lfo1 & all_param.eg_select) {
+00EE 5100      00750         MOVF    (_all_param + 8), W, B
+00F0 0BFF      00751         ANDLW   0xff
+00F2 6E00      00752         MOVWF   r0x00
+               00753 ; removed redundant BANKSEL
+00F4 5100      00754         MOVF    (_all_param + 38), W, B
+00F6 1600      00755         ANDWF   r0x00, F
+00F8 5000      00756         MOVF    r0x00, W
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00FA E000      00757         BZ      _00198_DS_
+               00758         .line   273; bankstick.c        MIOS_DOUT_PinSet(28, 1); }
+00FC 0E01      00759         MOVLW   0x01
+00FE 6EED      00760         MOVWF   POSTDEC1
+0100 0E1C      00761         MOVLW   0x1c
+0102 EC00 F000 00762         CALL    _MIOS_DOUT_PinSet
+0106 2AE9      00763         INCF    FSR1L, F
+0108 D000      00764         BRA     _00199_DS_
+010A           00765 _00198_DS_:
+               00766         .line   275; bankstick.c        MIOS_DOUT_PinSet(28, 0); }
+010A 0E00      00767         MOVLW   0x00
+010C 6EED      00768         MOVWF   POSTDEC1
+010E 0E1C      00769         MOVLW   0x1c
+0110 EC00 F000 00770         CALL    _MIOS_DOUT_PinSet
+0114 2AE9      00771         INCF    FSR1L, F
+0116           00772 _00199_DS_:
+               00773         .line   276; bankstick.c        update_led = 0x01;
+0116 0E01      00774         MOVLW   0x01
+0118 0000      00775         BANKSEL _update_led
+011A 6F00      00776         MOVWF   _update_led, B
+011C CFEC F000 00777         MOVFF   PREINC1, r0x00
+0120 0012      00778         RETURN  
+               00779 
+               00780 ; ; Starting pCode block
+               00781 S_bankstick__BANKSTICK_Dout_Update      code
+0000           00782 _BANKSTICK_Dout_Update:
+               00783         .line   196; bankstick.c        void BANKSTICK_Dout_Update(void) __wparam
+0000 C000 FFED 00784         MOVFF   r0x00, POSTDEC1
+0004 0000      00785         BANKSEL (_all_param + 11)
+               00786         .line   201; bankstick.c        if( all_param.router_flags_system.ttl_switch1 ) {    // if set eg2 selected, if clear, eg1 selected
+0006 A500      00787         BTFSS   (_all_param + 11), 2, B
+0008 D000      00788         BRA     _00160_DS_
+               00789         .line   202; bankstick.c        value_1 = 0x0a; }
+000A 0E0A      00790         MOVLW   0x0a
+000C 6E00      00791         MOVWF   r0x00
+000E D000      00792         BRA     _00161_DS_
+0010           00793 _00160_DS_:
+               00794         .line   204; bankstick.c        value_1 = 0x05; }
+0010 0E05      00795         MOVLW   0x05
+0012 6E00      00796         MOVWF   r0x00
+0014           00797 _00161_DS_:
+0014 0000      00798         BANKSEL (_all_param + 11)
+               00799         .line   205; bankstick.c        if( all_param.router_flags_system.ttl_switch2 ) {    // if set eg3 selected, if clear, eg2 selected
+0016 A700      00800         BTFSS   (_all_param + 11), 3, B
+0018 D000      00801         BRA     _00163_DS_
+               00802         .line   206; bankstick.c        value_1 ^= 0xa0;}
+001A 0EA0      00803         MOVLW   0xa0
+001C 1A00      00804         XORWF   r0x00, F
+001E D000      00805         BRA     _00164_DS_
+0020           00806 _00163_DS_:
+               00807         .line   208; bankstick.c        value_1 ^= 0x50; }
+0020 0E50      00808         MOVLW   0x50
+0022 1A00      00809         XORWF   r0x00, F
+0024           00810 _00164_DS_:
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00811         .line   209; bankstick.c        MIOS_DOUT_SRSet(4, value_1);
+0024 5000      00812         MOVF    r0x00, W
+0026 6EED      00813         MOVWF   POSTDEC1
+0028 0E04      00814         MOVLW   0x04
+002A EC00 F000 00815         CALL    _MIOS_DOUT_SRSet
+002E 2AE9      00816         INCF    FSR1L, F
+               00817         .line   211; bankstick.c        value_1 = all_param.eg_select;
+0030 C000 F000 00818         MOVFF   (_all_param + 38), r0x00
+               00819         .line   212; bankstick.c        MIOS_DOUT_SRSet(6, value_1);    
+0034 5000      00820         MOVF    r0x00, W
+0036 6EED      00821         MOVWF   POSTDEC1
+0038 0E06      00822         MOVLW   0x06
+003A EC00 F000 00823         CALL    _MIOS_DOUT_SRSet
+003E 2AE9      00824         INCF    FSR1L, F
+0040 0000      00825         BANKSEL (_all_param + 11)
+               00826         .line   215; bankstick.c        all_param.router_flags_system.midi_mode ? MIOS_DOUT_PinSet(53, 1) : MIOS_DOUT_PinSet(53, 0);
+0042 A300      00827         BTFSS   (_all_param + 11), 1, B
+0044 D000      00828         BRA     _00167_DS_
+0046 0E01      00829         MOVLW   0x01
+0048 6EED      00830         MOVWF   POSTDEC1
+004A 0E35      00831         MOVLW   0x35
+004C EC00 F000 00832         CALL    _MIOS_DOUT_PinSet
+0050 2AE9      00833         INCF    FSR1L, F
+0052 D000      00834         BRA     _00168_DS_
+0054           00835 _00167_DS_:
+0054 0E00      00836         MOVLW   0x00
+0056 6EED      00837         MOVWF   POSTDEC1
+0058 0E35      00838         MOVLW   0x35
+005A EC00 F000 00839         CALL    _MIOS_DOUT_PinSet
+005E 2AE9      00840         INCF    FSR1L, F
+0060           00841 _00168_DS_:
+0060 0000      00842         BANKSEL (_all_param + 11)
+               00843         .line   216; bankstick.c        all_param.router_flags_system.twin_mode ? MIOS_DOUT_PinSet(52, 1) : MIOS_DOUT_PinSet(52, 0);
+0062 A100      00844         BTFSS   (_all_param + 11), 0, B
+0064 D000      00845         BRA     _00169_DS_
+0066 0E01      00846         MOVLW   0x01
+0068 6EED      00847         MOVWF   POSTDEC1
+006A 0E34      00848         MOVLW   0x34
+006C EC00 F000 00849         CALL    _MIOS_DOUT_PinSet
+0070 2AE9      00850         INCF    FSR1L, F
+0072 D000      00851         BRA     _00170_DS_
+0074           00852 _00169_DS_:
+0074 0E00      00853         MOVLW   0x00
+0076 6EED      00854         MOVWF   POSTDEC1
+0078 0E34      00855         MOVLW   0x34
+007A EC00 F000 00856         CALL    _MIOS_DOUT_PinSet
+007E 2AE9      00857         INCF    FSR1L, F
+0080           00858 _00170_DS_:
+0080 0000      00859         BANKSEL _all_param
+               00860         .line   219; bankstick.c        MIOS_DOUT_SRSet(0, all_param.router_flags_lfo1.ALL_flags_lfo1);
+0082 5100      00861         MOVF    _all_param, W, B
+0084 0BFF      00862         ANDLW   0xff
+0086 6E00      00863         MOVWF   r0x00
+0088 5000      00864         MOVF    r0x00, W
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+008A 6EED      00865         MOVWF   POSTDEC1
+008C 0E00      00866         MOVLW   0x00
+008E EC00 F000 00867         CALL    _MIOS_DOUT_SRSet
+0092 2AE9      00868         INCF    FSR1L, F
+0094 0000      00869         BANKSEL (_all_param + 1)
+               00870         .line   222; bankstick.c        MIOS_DOUT_SRSet(1, all_param.router_flags_lfo2.ALL_flags_lfo2);
+0096 5100      00871         MOVF    (_all_param + 1), W, B
+0098 0BFF      00872         ANDLW   0xff
+009A 6E00      00873         MOVWF   r0x00
+009C 5000      00874         MOVF    r0x00, W
+009E 6EED      00875         MOVWF   POSTDEC1
+00A0 0E01      00876         MOVLW   0x01
+00A2 EC00 F000 00877         CALL    _MIOS_DOUT_SRSet
+00A6 2AE9      00878         INCF    FSR1L, F
+00A8 0000      00879         BANKSEL (_all_param + 2)
+               00880         .line   225; bankstick.c        MIOS_DOUT_SRSet(2, all_param.router_flags_lfo3.ALL_flags_lfo3);
+00AA 5100      00881         MOVF    (_all_param + 2), W, B
+00AC 0BFF      00882         ANDLW   0xff
+00AE 6E00      00883         MOVWF   r0x00
+00B0 5000      00884         MOVF    r0x00, W
+00B2 6EED      00885         MOVWF   POSTDEC1
+00B4 0E02      00886         MOVLW   0x02
+00B6 EC00 F000 00887         CALL    _MIOS_DOUT_SRSet
+00BA 2AE9      00888         INCF    FSR1L, F
+               00889         .line   226; bankstick.c        update_led = 0x01;
+00BC 0E01      00890         MOVLW   0x01
+00BE 0000      00891         BANKSEL _update_led
+00C0 6F00      00892         MOVWF   _update_led, B
+00C2 CFEC F000 00893         MOVFF   PREINC1, r0x00
+00C6 0012      00894         RETURN  
+               00895 
+               00896 ; ; Starting pCode block
+               00897 S_bankstick__BANKSTICK_SAVE_Evnt        code
+0000           00898 _BANKSTICK_SAVE_Evnt:
+               00899         .line   179; bankstick.c        void BANKSTICK_SAVE_Evnt(volatile unsigned int bank, volatile unsigned int preset) __wparam
+0000 CFD9 FFED 00900         MOVFF   FSR2L, POSTDEC1
+0004 CFE9 FFD9 00901         MOVFF   FSR1L, FSR2L
+0008 C000 FFED 00902         MOVFF   r0x00, POSTDEC1
+000C C000 FFED 00903         MOVFF   r0x01, POSTDEC1
+0010 C000 FFED 00904         MOVFF   r0x02, POSTDEC1
+0014 0000      00905         BANKSEL _BANKSTICK_SAVE_Evnt_bank_1_1
+0016 6F00      00906         MOVWF   _BANKSTICK_SAVE_Evnt_bank_1_1, B
+0018 0E02      00907         MOVLW   0x02
+001A CFDB F000 00908         MOVFF   PLUSW2, (_BANKSTICK_SAVE_Evnt_bank_1_1 + 1)
+001E 0E03      00909         MOVLW   0x03
+0020 CFDB F000 00910         MOVFF   PLUSW2, _BANKSTICK_SAVE_Evnt_preset_1_1
+0024 0E04      00911         MOVLW   0x04
+0026 CFDB F000 00912         MOVFF   PLUSW2, (_BANKSTICK_SAVE_Evnt_preset_1_1 + 1)
+002A 0000      00913         BANKSEL _BANKSTICK_SAVE_Evnt_preset_1_1
+               00914         .line   182; bankstick.c        adress = ((bank + preset) & 0xff00);
+002C 5100      00915         MOVF    _BANKSTICK_SAVE_Evnt_preset_1_1, W, B
+002E 0000      00916         BANKSEL _BANKSTICK_SAVE_Evnt_bank_1_1
+0030 2500      00917         ADDWF   _BANKSTICK_SAVE_Evnt_bank_1_1, W, B
+0032 6E00      00918         MOVWF   r0x00
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0034 0000      00919         BANKSEL (_BANKSTICK_SAVE_Evnt_preset_1_1 + 1)
+0036 5100      00920         MOVF    (_BANKSTICK_SAVE_Evnt_preset_1_1 + 1), W, B
+0038 0000      00921         BANKSEL (_BANKSTICK_SAVE_Evnt_bank_1_1 + 1)
+003A 2100      00922         ADDWFC  (_BANKSTICK_SAVE_Evnt_bank_1_1 + 1), W, B
+003C 6E00      00923         MOVWF   r0x01
+003E 0000      00924         BANKSEL _adress
+0040 6B00      00925         CLRF    _adress, B
+0042 5000      00926         MOVF    r0x01, W
+               00927 ; removed redundant BANKSEL
+0044 6F00      00928         MOVWF   (_adress + 1), B
+               00929         .line   183; bankstick.c        MIOS_BANKSTICK_WritePage(adress, buffer_bs); //0xzz0d     
+0046 C000 F000 00930         MOVFF   _buffer_bs, r0x00
+004A C000 F000 00931         MOVFF   (_buffer_bs + 1), r0x01
+004E C000 F000 00932         MOVFF   (_buffer_bs + 2), r0x02
+0052 5000      00933         MOVF    r0x02, W
+0054 6EED      00934         MOVWF   POSTDEC1
+0056 5000      00935         MOVF    r0x01, W
+0058 6EED      00936         MOVWF   POSTDEC1
+005A 5000      00937         MOVF    r0x00, W
+005C 6EED      00938         MOVWF   POSTDEC1
+               00939 ; removed redundant BANKSEL
+005E 5100      00940         MOVF    (_adress + 1), W, B
+0060 6EED      00941         MOVWF   POSTDEC1
+               00942 ; removed redundant BANKSEL
+0062 5100      00943         MOVF    _adress, W, B
+0064 EC00 F000 00944         CALL    _MIOS_BANKSTICK_WritePage
+0068 0E04      00945         MOVLW   0x04
+006A 26E9      00946         ADDWF   FSR1L, F
+006C 0000      00947         BANKSEL _BANKSTICK_SAVE_Evnt_bank_1_1
+               00948         .line   185; bankstick.c        MIOS_BANKSTICK_Write(0x0001, bank); //save last bank number
+006E 5100      00949         MOVF    _BANKSTICK_SAVE_Evnt_bank_1_1, W, B
+0070 6E00      00950         MOVWF   r0x00
+0072 5000      00951         MOVF    r0x00, W
+0074 6EED      00952         MOVWF   POSTDEC1
+0076 0E00      00953         MOVLW   0x00
+0078 6EED      00954         MOVWF   POSTDEC1
+007A 0E01      00955         MOVLW   0x01
+007C EC00 F000 00956         CALL    _MIOS_BANKSTICK_Write
+0080 0E02      00957         MOVLW   0x02
+0082 26E9      00958         ADDWF   FSR1L, F
+0084 0000      00959         BANKSEL _BANKSTICK_SAVE_Evnt_preset_1_1
+               00960         .line   187; bankstick.c        MIOS_BANKSTICK_Write(0x0002, preset); //save last preset number
+0086 5100      00961         MOVF    _BANKSTICK_SAVE_Evnt_preset_1_1, W, B
+0088 6E00      00962         MOVWF   r0x00
+008A 5000      00963         MOVF    r0x00, W
+008C 6EED      00964         MOVWF   POSTDEC1
+008E 0E00      00965         MOVLW   0x00
+0090 6EED      00966         MOVWF   POSTDEC1
+0092 0E02      00967         MOVLW   0x02
+0094 EC00 F000 00968         CALL    _MIOS_BANKSTICK_Write
+0098 0E02      00969         MOVLW   0x02
+009A 26E9      00970         ADDWF   FSR1L, F
+009C 0000      00971         BANKSEL _app_flags
+               00972         .line   188; bankstick.c        app_flags.save_on = 0;
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+009E 9700      00973         BCF     _app_flags, 3, B
+00A0 CFEC F000 00974         MOVFF   PREINC1, r0x02
+00A4 CFEC F000 00975         MOVFF   PREINC1, r0x01
+00A8 CFEC F000 00976         MOVFF   PREINC1, r0x00
+00AC CFEC FFD9 00977         MOVFF   PREINC1, FSR2L
+00B0 0012      00978         RETURN  
+               00979 
+               00980 ; ; Starting pCode block
+               00981 S_bankstick__BANKSTICK_LOAD_Evnt        code
+0000           00982 _BANKSTICK_LOAD_Evnt:
+               00983         .line   167; bankstick.c        void BANKSTICK_LOAD_Evnt( volatile unsigned int bank, volatile unsigned int preset) __wparam
+0000 CFD9 FFED 00984         MOVFF   FSR2L, POSTDEC1
+0004 CFE9 FFD9 00985         MOVFF   FSR1L, FSR2L
+0008 C000 FFED 00986         MOVFF   r0x00, POSTDEC1
+000C C000 FFED 00987         MOVFF   r0x01, POSTDEC1
+0010 C000 FFED 00988         MOVFF   r0x02, POSTDEC1
+0014 0000      00989         BANKSEL _BANKSTICK_LOAD_Evnt_bank_1_1
+0016 6F00      00990         MOVWF   _BANKSTICK_LOAD_Evnt_bank_1_1, B
+0018 0E02      00991         MOVLW   0x02
+001A CFDB F000 00992         MOVFF   PLUSW2, (_BANKSTICK_LOAD_Evnt_bank_1_1 + 1)
+001E 0E03      00993         MOVLW   0x03
+0020 CFDB F000 00994         MOVFF   PLUSW2, _BANKSTICK_LOAD_Evnt_preset_1_1
+0024 0E04      00995         MOVLW   0x04
+0026 CFDB F000 00996         MOVFF   PLUSW2, (_BANKSTICK_LOAD_Evnt_preset_1_1 + 1)
+002A 0000      00997         BANKSEL _BANKSTICK_LOAD_Evnt_preset_1_1
+               00998         .line   169; bankstick.c        adress = ((bank + preset) & 0xff00);
+002C 5100      00999         MOVF    _BANKSTICK_LOAD_Evnt_preset_1_1, W, B
+002E 0000      01000         BANKSEL _BANKSTICK_LOAD_Evnt_bank_1_1
+0030 2500      01001         ADDWF   _BANKSTICK_LOAD_Evnt_bank_1_1, W, B
+0032 6E00      01002         MOVWF   r0x00
+0034 0000      01003         BANKSEL (_BANKSTICK_LOAD_Evnt_preset_1_1 + 1)
+0036 5100      01004         MOVF    (_BANKSTICK_LOAD_Evnt_preset_1_1 + 1), W, B
+0038 0000      01005         BANKSEL (_BANKSTICK_LOAD_Evnt_bank_1_1 + 1)
+003A 2100      01006         ADDWFC  (_BANKSTICK_LOAD_Evnt_bank_1_1 + 1), W, B
+003C 6E00      01007         MOVWF   r0x01
+003E 0000      01008         BANKSEL _adress
+0040 6B00      01009         CLRF    _adress, B
+0042 5000      01010         MOVF    r0x01, W
+               01011 ; removed redundant BANKSEL
+0044 6F00      01012         MOVWF   (_adress + 1), B
+               01013         .line   170; bankstick.c        MIOS_BANKSTICK_ReadPage(adress, buffer_bs);
+0046 C000 F000 01014         MOVFF   _buffer_bs, r0x00
+004A C000 F000 01015         MOVFF   (_buffer_bs + 1), r0x01
+004E C000 F000 01016         MOVFF   (_buffer_bs + 2), r0x02
+0052 5000      01017         MOVF    r0x02, W
+0054 6EED      01018         MOVWF   POSTDEC1
+0056 5000      01019         MOVF    r0x01, W
+0058 6EED      01020         MOVWF   POSTDEC1
+005A 5000      01021         MOVF    r0x00, W
+005C 6EED      01022         MOVWF   POSTDEC1
+               01023 ; removed redundant BANKSEL
+005E 5100      01024         MOVF    (_adress + 1), W, B
+0060 6EED      01025         MOVWF   POSTDEC1
+               01026 ; removed redundant BANKSEL
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0062 5100      01027         MOVF    _adress, W, B
+0064 EC00 F000 01028         CALL    _MIOS_BANKSTICK_ReadPage
+0068 0E04      01029         MOVLW   0x04
+006A 26E9      01030         ADDWF   FSR1L, F
+006C 0000      01031         BANKSEL _load_last
+               01032         .line   171; bankstick.c        load_last = 0x00;
+006E 6B00      01033         CLRF    _load_last, B
+               01034         .line   172; bankstick.c        update_led = 0x01;
+0070 0E01      01035         MOVLW   0x01
+0072 0000      01036         BANKSEL _update_led
+0074 6F00      01037         MOVWF   _update_led, B
+               01038         .line   173; bankstick.c        update_preset_led = 0x01;
+0076 0E01      01039         MOVLW   0x01
+0078 0000      01040         BANKSEL _update_preset_led
+007A 6F00      01041         MOVWF   _update_preset_led, B
+007C CFEC F000 01042         MOVFF   PREINC1, r0x02
+0080 CFEC F000 01043         MOVFF   PREINC1, r0x01
+0084 CFEC F000 01044         MOVFF   PREINC1, r0x00
+0088 CFEC FFD9 01045         MOVFF   PREINC1, FSR2L
+008C 0012      01046         RETURN  
+               01047 
+               01048 ; ; Starting pCode block
+               01049 S_bankstick__BANKSTICK_Init     code
+0000           01050 _BANKSTICK_Init:
+               01051         .line   111; bankstick.c        void BANKSTICK_Init(void) __wparam
+0000 C000 FFED 01052         MOVFF   r0x00, POSTDEC1
+0004 C000 FFED 01053         MOVFF   r0x01, POSTDEC1
+0008 C000 FFED 01054         MOVFF   r0x02, POSTDEC1
+               01055         .line   115; bankstick.c        temp_value = MIOS_BANKSTICK_Read(0x0000); //check cosmologik number
+000C 0E00      01056         MOVLW   0x00
+000E 6EED      01057         MOVWF   POSTDEC1
+0010 0E00      01058         MOVLW   0x00
+0012 EC00 F000 01059         CALL    _MIOS_BANKSTICK_Read
+0016 6E00      01060         MOVWF   r0x00
+0018 2AE9      01061         INCF    FSR1L, F
+               01062         .line   117; bankstick.c        if( temp_value != 0x33 ) {      
+001A 5000      01063         MOVF    r0x00, W
+001C 0A33      01064         XORLW   0x33
+001E E100      01065         BNZ     _00147_DS_
+0020 D000      01066         BRA     _00106_DS_
+0022           01067 _00147_DS_:
+               01068         .line   118; bankstick.c        all_param.router_flags_system.ALL_flags_system = 0x00;
+0022 0E00      01069         MOVLW   0x00
+0024 0000      01070         BANKSEL (_all_param + 11)
+0026 6F00      01071         MOVWF   (_all_param + 11), B
+               01072         .line   119; bankstick.c        all_param.router_flags_lfo1.ALL_flags_lfo1 = 0x01;
+0028 0E01      01073         MOVLW   0x01
+               01074 ; removed redundant BANKSEL
+002A 6F00      01075         MOVWF   _all_param, B
+               01076         .line   120; bankstick.c        all_param.router_flags_lfo2.ALL_flags_lfo2 = 0x01;
+002C 0E01      01077         MOVLW   0x01
+               01078 ; removed redundant BANKSEL
+002E 6F00      01079         MOVWF   (_all_param + 1), B
+               01080         .line   121; bankstick.c        all_param.router_flags_lfo3.ALL_flags_lfo3 = 0x01;
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0030 0E01      01081         MOVLW   0x01
+               01082 ; removed redundant BANKSEL
+0032 6F00      01083         MOVWF   (_all_param + 2), B
+               01084         .line   122; bankstick.c        all_param.eg_select = 0x01;
+0034 0E01      01085         MOVLW   0x01
+               01086 ; removed redundant BANKSEL
+0036 6F00      01087         MOVWF   (_all_param + 38), B
+               01088         .line   123; bankstick.c        all_param.router_flags_lfo1_att.ALL_flags_lfo1_att = 0x00;
+0038 0E00      01089         MOVLW   0x00
+               01090 ; removed redundant BANKSEL
+003A 6F00      01091         MOVWF   (_all_param + 3), B
+               01092         .line   124; bankstick.c        all_param.router_flags_lfo1_dec.ALL_flags_lfo1_dec = 0x00;
+003C 0E00      01093         MOVLW   0x00
+               01094 ; removed redundant BANKSEL
+003E 6F00      01095         MOVWF   (_all_param + 4), B
+               01096         .line   125; bankstick.c        all_param.router_flags_eg_link.ALL_flags_eg_link = 0x00;
+0040 0E00      01097         MOVLW   0x00
+               01098 ; removed redundant BANKSEL
+0042 6F00      01099         MOVWF   (_all_param + 5), B
+               01100         .line   126; bankstick.c        all_param.router_flags_eg_v2s.ALL_flags_eg_v2s = 0x00;
+0044 0E00      01101         MOVLW   0x00
+               01102 ; removed redundant BANKSEL
+0046 6F00      01103         MOVWF   (_all_param + 6), B
+               01104         .line   127; bankstick.c        all_param.router_flags_eg_audio_trig.ALL_flags_eg_audio_trig = 0x00;
+0048 0E00      01105         MOVLW   0x00
+               01106 ; removed redundant BANKSEL
+004A 6F00      01107         MOVWF   (_all_param + 7), B
+               01108         .line   128; bankstick.c        all_param.router_flags_Eg_to_lfo1.ALL_flags_Eg_to_lfo1 = 0x00;
+004C 0E00      01109         MOVLW   0x00
+               01110 ; removed redundant BANKSEL
+004E 6F00      01111         MOVWF   (_all_param + 8), B
+               01112         .line   129; bankstick.c        all_param.router_flags_Eg_to_lfo2.ALL_flags_Eg_to_lfo2 = 0x00;
+0050 0E00      01113         MOVLW   0x00
+               01114 ; removed redundant BANKSEL
+0052 6F00      01115         MOVWF   (_all_param + 9), B
+               01116         .line   130; bankstick.c        all_param.router_flags_Eg_to_lfo3.ALL_flags_Eg_to_lfo3 = 0x00;
+0054 0E00      01117         MOVLW   0x00
+               01118 ; removed redundant BANKSEL
+0056 6F00      01119         MOVWF   (_all_param + 10), B
+               01120         .line   131; bankstick.c        for (tempo_value = 0; tempo_value <=3; tempo_value++) {
+0058 6A00      01121         CLRF    r0x00
+005A           01122 _00108_DS_:
+005A 0E04      01123         MOVLW   0x04
+005C 5C00      01124         SUBWF   r0x00, W
+005E E200      01125         BC      _00111_DS_
+               01126         .line   132; bankstick.c        all_param.eg_channel[tempo_value] = 0x01;}
+0060 0E00      01127         MOVLW   LOW(_all_param + 12)
+0062 2400      01128         ADDWF   r0x00, W
+0064 6E00      01129         MOVWF   r0x01
+0066 6A00      01130         CLRF    r0x02
+0068 0E00      01131         MOVLW   HIGH(_all_param + 12)
+006A 2200      01132         ADDWFC  r0x02, F
+006C C000 FFE1 01133         MOVFF   r0x01, FSR0L
+0070 C000 FFE2 01134         MOVFF   r0x02, FSR0H
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0074 0E01      01135         MOVLW   0x01
+0076 6EE7      01136         MOVWF   INDF0
+               01137         .line   131; bankstick.c        for (tempo_value = 0; tempo_value <=3; tempo_value++) {
+0078 2A00      01138         INCF    r0x00, F
+007A D000      01139         BRA     _00108_DS_
+007C           01140 _00111_DS_:
+               01141         .line   133; bankstick.c        for (tempo_value = 0; tempo_value <=3; tempo_value++) {
+007C 6A00      01142         CLRF    r0x00
+007E           01143 _00112_DS_:
+007E 0E04      01144         MOVLW   0x04
+0080 5C00      01145         SUBWF   r0x00, W
+0082 E200      01146         BC      _00115_DS_
+               01147         .line   134; bankstick.c        all_param.attack[tempo_value] = 0x40;}
+0084 0E00      01148         MOVLW   LOW(_all_param + 16)
+0086 2400      01149         ADDWF   r0x00, W
+0088 6E00      01150         MOVWF   r0x01
+008A 6A00      01151         CLRF    r0x02
+008C 0E00      01152         MOVLW   HIGH(_all_param + 16)
+008E 2200      01153         ADDWFC  r0x02, F
+0090 C000 FFE1 01154         MOVFF   r0x01, FSR0L
+0094 C000 FFE2 01155         MOVFF   r0x02, FSR0H
+0098 0E40      01156         MOVLW   0x40
+009A 6EE7      01157         MOVWF   INDF0
+               01158         .line   133; bankstick.c        for (tempo_value = 0; tempo_value <=3; tempo_value++) {
+009C 2A00      01159         INCF    r0x00, F
+009E D000      01160         BRA     _00112_DS_
+00A0           01161 _00115_DS_:
+               01162         .line   135; bankstick.c        for (tempo_value = 0; tempo_value <=3; tempo_value++) {
+00A0 6A00      01163         CLRF    r0x00
+00A2           01164 _00116_DS_:
+00A2 0E04      01165         MOVLW   0x04
+00A4 5C00      01166         SUBWF   r0x00, W
+00A6 E200      01167         BC      _00119_DS_
+               01168         .line   136; bankstick.c        all_param.decay[tempo_value] = 0x40;}
+00A8 0E00      01169         MOVLW   LOW(_all_param + 20)
+00AA 2400      01170         ADDWF   r0x00, W
+00AC 6E00      01171         MOVWF   r0x01
+00AE 6A00      01172         CLRF    r0x02
+00B0 0E00      01173         MOVLW   HIGH(_all_param + 20)
+00B2 2200      01174         ADDWFC  r0x02, F
+00B4 C000 FFE1 01175         MOVFF   r0x01, FSR0L
+00B8 C000 FFE2 01176         MOVFF   r0x02, FSR0H
+00BC 0E40      01177         MOVLW   0x40
+00BE 6EE7      01178         MOVWF   INDF0
+               01179         .line   135; bankstick.c        for (tempo_value = 0; tempo_value <=3; tempo_value++) {
+00C0 2A00      01180         INCF    r0x00, F
+00C2 D000      01181         BRA     _00116_DS_
+00C4           01182 _00119_DS_:
+               01183         .line   137; bankstick.c        for (tempo_value = 0; tempo_value <=3; tempo_value++) {
+00C4 6A00      01184         CLRF    r0x00
+00C6           01185 _00120_DS_:
+00C6 0E04      01186         MOVLW   0x04
+00C8 5C00      01187         SUBWF   r0x00, W
+00CA E200      01188         BC      _00123_DS_
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               01189         .line   138; bankstick.c        all_param.sustain[tempo_value] = 0x80;}
+00CC 0E00      01190         MOVLW   LOW(_all_param + 24)
+00CE 2400      01191         ADDWF   r0x00, W
+00D0 6E00      01192         MOVWF   r0x01
+00D2 6A00      01193         CLRF    r0x02
+00D4 0E00      01194         MOVLW   HIGH(_all_param + 24)
+00D6 2200      01195         ADDWFC  r0x02, F
+00D8 C000 FFE1 01196         MOVFF   r0x01, FSR0L
+00DC C000 FFE2 01197         MOVFF   r0x02, FSR0H
+00E0 0E80      01198         MOVLW   0x80
+00E2 6EE7      01199         MOVWF   INDF0
+               01200         .line   137; bankstick.c        for (tempo_value = 0; tempo_value <=3; tempo_value++) {
+00E4 2A00      01201         INCF    r0x00, F
+00E6 D000      01202         BRA     _00120_DS_
+00E8           01203 _00123_DS_:
+               01204         .line   139; bankstick.c        for (tempo_value = 0; tempo_value <=3; tempo_value++) {
+00E8 6A00      01205         CLRF    r0x00
+00EA           01206 _00124_DS_:
+00EA 0E04      01207         MOVLW   0x04
+00EC 5C00      01208         SUBWF   r0x00, W
+00EE E200      01209         BC      _00127_DS_
+               01210         .line   140; bankstick.c        all_param.release[tempo_value] = 0x40;}
+00F0 0E00      01211         MOVLW   LOW(_all_param + 28)
+00F2 2400      01212         ADDWF   r0x00, W
+00F4 6E00      01213         MOVWF   r0x01
+00F6 6A00      01214         CLRF    r0x02
+00F8 0E00      01215         MOVLW   HIGH(_all_param + 28)
+00FA 2200      01216         ADDWFC  r0x02, F
+00FC C000 FFE1 01217         MOVFF   r0x01, FSR0L
+0100 C000 FFE2 01218         MOVFF   r0x02, FSR0H
+0104 0E40      01219         MOVLW   0x40
+0106 6EE7      01220         MOVWF   INDF0
+               01221         .line   139; bankstick.c        for (tempo_value = 0; tempo_value <=3; tempo_value++) {
+0108 2A00      01222         INCF    r0x00, F
+010A D000      01223         BRA     _00124_DS_
+010C           01224 _00127_DS_:
+               01225         .line   141; bankstick.c        all_param.lfo0_rate  = 0x80;
+010C 0E80      01226         MOVLW   0x80
+010E 0000      01227         BANKSEL (_all_param + 32)
+0110 6F00      01228         MOVWF   (_all_param + 32), B
+               01229         .line   142; bankstick.c        all_param.lfo1_rate  = 0x80;
+0112 0E80      01230         MOVLW   0x80
+               01231 ; removed redundant BANKSEL
+0114 6F00      01232         MOVWF   (_all_param + 33), B
+               01233         .line   143; bankstick.c        all_param.lfo2_rate  = 0x80;
+0116 0E80      01234         MOVLW   0x80
+               01235 ; removed redundant BANKSEL
+0118 6F00      01236         MOVWF   (_all_param + 34), B
+               01237         .line   144; bankstick.c        all_param.bpm = 0x74;
+011A 0E74      01238         MOVLW   0x74
+               01239 ; removed redundant BANKSEL
+011C 6F00      01240         MOVWF   (_all_param + 39), B
+               01241         .line   145; bankstick.c        all_param.lfo0_bpm   = 0x06;
+011E 0E06      01242         MOVLW   0x06
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 24
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               01243 ; removed redundant BANKSEL
+0120 6F00      01244         MOVWF   (_all_param + 35), B
+               01245         .line   146; bankstick.c        all_param.lfo1_bpm   = 0x06;
+0122 0E06      01246         MOVLW   0x06
+               01247 ; removed redundant BANKSEL
+0124 6F00      01248         MOVWF   (_all_param + 36), B
+               01249         .line   147; bankstick.c        all_param.lfo2_bpm   = 0x06;
+0126 0E06      01250         MOVLW   0x06
+               01251 ; removed redundant BANKSEL
+0128 6F00      01252         MOVWF   (_all_param + 37), B
+               01253         .line   148; bankstick.c        all_param.eg_select = 0x01;
+012A 0E01      01254         MOVLW   0x01
+               01255 ; removed redundant BANKSEL
+012C 6F00      01256         MOVWF   (_all_param + 38), B
+012E 0000      01257         BANKSEL _load_last
+               01258         .line   150; bankstick.c        load_last = 0x00;
+0130 6B00      01259         CLRF    _load_last, B
+               01260         .line   151; bankstick.c        update_led = 0x01;
+0132 0E01      01261         MOVLW   0x01
+0134 0000      01262         BANKSEL _update_led
+0136 6F00      01263         MOVWF   _update_led, B
+0138 D000      01264         BRA     _00128_DS_
+013A           01265 _00106_DS_:
+               01266         .line   156; bankstick.c        bank = MIOS_BANKSTICK_Read(0x0001);     //read last bank number
+013A 0E00      01267         MOVLW   0x00
+013C 6EED      01268         MOVWF   POSTDEC1
+013E 0E01      01269         MOVLW   0x01
+0140 EC00 F000 01270         CALL    _MIOS_BANKSTICK_Read
+0144 6E00      01271         MOVWF   r0x00
+0146 2AE9      01272         INCF    FSR1L, F
+0148 C000 F000 01273         MOVFF   r0x00, _bank
+014C 0000      01274         BANKSEL (_bank + 1)
+014E 6B00      01275         CLRF    (_bank + 1), B
+               01276         .line   158; bankstick.c        preset = MIOS_BANKSTICK_Read(0x0002);  //read last preset number
+0150 0E00      01277         MOVLW   0x00
+0152 6EED      01278         MOVWF   POSTDEC1
+0154 0E02      01279         MOVLW   0x02
+0156 EC00 F000 01280         CALL    _MIOS_BANKSTICK_Read
+015A 6E00      01281         MOVWF   r0x00
+015C 2AE9      01282         INCF    FSR1L, F
+015E C000 F000 01283         MOVFF   r0x00, _preset
+0162 0000      01284         BANKSEL (_preset + 1)
+0164 6B00      01285         CLRF    (_preset + 1), B
+               01286         .line   160; bankstick.c        load_last = 0x01;
+0166 0E01      01287         MOVLW   0x01
+0168 0000      01288         BANKSEL _load_last
+016A 6F00      01289         MOVWF   _load_last, B
+016C           01290 _00128_DS_:
+016C CFEC F000 01291         MOVFF   PREINC1, r0x02
+0170 CFEC F000 01292         MOVFF   PREINC1, r0x01
+0174 CFEC F000 01293         MOVFF   PREINC1, r0x00
+0178 0012      01294         RETURN  
+               01295 
+               01296 
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               01297 
+               01298 ; Statistics:
+               01299 ; code size:     1700 (0x06a4) bytes ( 1.30%)
+               01300 ;                 850 (0x0352) words
+               01301 ; udata size:      17 (0x0011) bytes ( 0.44%)
+               01302 ; access size:      3 (0x0003) bytes
+               01303 
+               01304 
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 26
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FSR0H                             00000FE2
+FSR0L                             00000FE1
+FSR1L                             00000FE9
+FSR2L                             00000FD9
+INDF0                             00000FE7
+PLUSW2                            00000FDB
+POSTDEC1                          00000FED
+PREINC1                           00000FEC
+STATUS                            00000FD8
+_00106_DS_                        0000013A
+_00108_DS_                        0000005A
+_00111_DS_                        0000007C
+_00112_DS_                        0000007E
+_00115_DS_                        000000A0
+_00116_DS_                        000000A2
+_00119_DS_                        000000C4
+_00120_DS_                        000000C6
+_00123_DS_                        000000E8
+_00124_DS_                        000000EA
+_00127_DS_                        0000010C
+_00128_DS_                        0000016C
+_00147_DS_                        00000022
+_00160_DS_                        00000010
+_00161_DS_                        00000014
+_00163_DS_                        00000020
+_00164_DS_                        00000024
+_00167_DS_                        00000054
+_00168_DS_                        00000060
+_00169_DS_                        00000074
+_00170_DS_                        00000080
+_00176_DS_                        00000022
+_00177_DS_                        0000002E
+_00179_DS_                        0000004C
+_00180_DS_                        00000058
+_00186_DS_                        0000008C
+_00189_DS_                        00000072
+_00190_DS_                        00000098
+_00192_DS_                        000000B6
+_00193_DS_                        000000C2
+_00195_DS_                        000000E0
+_00196_DS_                        000000EC
+_00198_DS_                        0000010A
+_00199_DS_                        00000116
+_00205_DS_                        00000022
+_00206_DS_                        0000002E
+_00208_DS_                        0000004C
+_00209_DS_                        00000058
+_00214_DS_                        0000005C
+_00215_DS_                        00000078
+_00216_DS_                        00000094
+_00217_DS_                        000000B0
+_00218_DS_                        000000CA
+_00219_DS_                        000000FC
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 27
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_00220_DS_                        00000118
+_00221_DS_                        00000134
+_00222_DS_                        00000150
+_00223_DS_                        0000016A
+_00235_DS_                        0000003C
+_00237_DS_                        00000046
+_00239_DS_                        00000050
+_00241_DS_                        0000005A
+_00251_DS_                        000000DC
+_00253_DS_                        000000E6
+_00255_DS_                        000000F0
+_00257_DS_                        000000FA
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_BANKSTICK_Dout_Update            00000000
+_BANKSTICK_Dout_Update_2          00000000
+_BANKSTICK_Dout_Update_3          00000000
+_BANKSTICK_Init                   00000000
+_BANKSTICK_LOAD_Evnt              00000000
+_BANKSTICK_LOAD_Evnt_bank_1_1     00000000
+_BANKSTICK_LOAD_Evnt_preset_1_1   00000000
+_BANKSTICK_SAVE_Evnt              00000000
+_BANKSTICK_SAVE_Evnt_bank_1_1     00000000
+_BANKSTICK_SAVE_Evnt_preset_1_1   00000000
+_BANKSTICK_preset_LEDs_Update     00000000
+_BANKSTICK_preset_LEDs_Update_bank_1_1  00000000
+_BANKSTICK_preset_LEDs_Update_preset_1_1  00000000
+_BAUDCON                          00000000
+_BAUDCONbits                      00000000
+_BSR                              00000000
+_BSRbits                          00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_EEADR                            00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 28
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_EECON2                           00000000
+_EEDATA                           00000000
+_FSR0H                            00000000
+_FSR0Hbits                        00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1Hbits                        00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2Hbits                        00000000
+_FSR2L                            00000000
+_HLVDCON                          00000000
+_HLVDCONbits                      00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_MIOS_BANKSTICK_Read              00000000
+_MIOS_BANKSTICK_ReadPage          00000000
+_MIOS_BANKSTICK_Write             00000000
+_MIOS_BANKSTICK_WritePage         00000000
+_MIOS_BOX_CFG0                    00000000
+_MIOS_BOX_CFG1                    00000000
+_MIOS_BOX_STAT                    00000000
+_MIOS_DOUT_PinSet                 00000000
+_MIOS_DOUT_SRGet                  00000000
+_MIOS_DOUT_SRSet                  00000000
+_MIOS_ENC_PIN_TABLE               00000000
+_MIOS_MPROC_EVENT_TABLE           00000000
+_MIOS_PARAMETER1                  00000000
+_MIOS_PARAMETER2                  00000000
+_MIOS_PARAMETER3                  00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 29
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_OSCTUNEbits                      00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATHbits                       00000000
+_PCLATU                           00000000
+_PCLATUbits                       00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PWM1CON                          00000000
+_PWM1CONbits                      00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCSTA                            00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRGH                           00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 30
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TBLPTRUbits                      00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TOSUbits                         00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TXREG                            00000000
+_TXSTA                            00000000
+_TXSTAbits                        00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F4620                         00000001
+_adress                           00000000
+_all_param                        00000000
+_app_flags                        00000000
+_bank                             00000000
+_buffer_bs                        00000000
+_eg0                              00000000
+_eg0_value                        00000000
+gpasm-0.13.6 beta               _output/bankstick__mios-gpasm-tmp.asm7-10-2008  15:16:09          PAGE 31
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_eg1                              00000000
+_eg1_value                        00000000
+_eg2                              00000000
+_eg2_value                        00000000
+_eg3                              00000000
+_eg3_value                        00000000
+_lfo0_value                       00000000
+_lfo1_value                       00000000
+_lfo2_value                       00000000
+_load_last                        00000000
+_looper                           00000000
+_midi_cc_chn0                     00000000
+_midi_note                        00000000
+_midi_pitch_bender                00000000
+_mios_enc_pin_table               00000000
+_mios_mproc_event_table           00000000
+_new_note                         00000000
+_preset                           00000000
+_update_led                       00000000
+_update_preset_led                00000000
+r0x00                             00000010
+r0x01                             00000011
+r0x02                             00000012
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

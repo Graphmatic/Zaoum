@@ -1,0 +1,2606 @@
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ; $Id: aout.asm 232 2008-03-28 18:02:26Z tk $
+               00002 ;
+               00003 ;  Wrapper for aout.inc
+               00004 ;  To be used for relocatable programs
+               00005 ;
+               00006 
+               00007 ; ==========================================================================
+               00008 
+               00009         radix   dec
+               00010 #include <mios.h>
+               00001 ; $Id: mios.h 49 2008-01-30 21:47:31Z tk $
+               00002 ;
+               00003 ; MIOS Definitions file
+               00004 ;
+               00005 ; ==========================================================================
+               00006 ;
+               00007 ;  Copyright 1998-2008 Thorsten Klose (tk@midibox.org)
+               00008 ;  Licensed for personal non-commercial use only.
+               00009 ;  All other rights reserved.
+               00010 ; 
+               00011 ; ==========================================================================
+               00012 
+               00013  
+               00014 ;; ==========================================================================
+               00015 ;;  Assembler directives & device specific include file
+               00016 ;;
+               00017 ;;  Natively supported devices are listed here.
+               00018 ;;  Some basic defines are added which characterize the derivative to
+               00019 ;;  simplify dependencies within MIOS source code
+               00020 ;; ==========================================================================
+               00021 
+               00022 #ifdef __18F452
+               00023         LIST R=DEC
+               00024 #include <p18f452.inc>
+               00025 #define PIC_DERIVATIVE_CODE_SIZE        0x08000
+               00026 #define PIC_DERIVATIVE_RAM_SIZE         0x600
+               00027 #define PIC_DERIVATIVE_EEPROM_SIZE      0x100
+               00028 #define PIC_DERIVATIVE_IRQ_WORKAROUND   0
+               00029 #define PIC_DERIVATIVE_NEW_ADC          0
+               00030 #define PIC_DERIVATIVE_CMCON_INIT       0
+               00031 #define PIC_DERIVATIVE_T08BIT_INVERTED  0
+               00032 #define PIC_DERIVATIVE_SET_LCD_4BIT     0
+               00033 #endif
+               00034 
+               00035 #ifdef __18F4620
+               00036         LIST R=DEC
+               00037 #include <p18f4620.inc>
+               00001         LIST
+               00002 
+               00003 ;==========================================================================
+               00004 ;  $Id: p18f4620.inc 447 2006-08-19 02:39:44Z craigfranklin $
+               00005 ;  MPASM PIC18F4620 processor include
+               00006 ; 
+               00007 ;  (c) Copyright 1999-2005 Microchip Technology, All rights reserved
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00008 ;==========================================================================
+               00009 
+               01321         LIST
+0000           00038 #define PIC_DERIVATIVE_CODE_SIZE        0x10000
+0000           00039 #define PIC_DERIVATIVE_RAM_SIZE         0xf80
+0000           00040 #define PIC_DERIVATIVE_EEPROM_SIZE      0x400
+0000           00041 #define PIC_DERIVATIVE_IRQ_WORKAROUND   1
+0000           00042 #define PIC_DERIVATIVE_NEW_ADC          1
+0000           00043 #define PIC_DERIVATIVE_CMCON_INIT       1
+0000           00044 #define PIC_DERIVATIVE_T08BIT_INVERTED  1
+0000           00045 #define PIC_DERIVATIVE_SET_LCD_4BIT     0
+               00046 #endif
+               00047         
+               00048 #ifdef __18F4520
+               00049         LIST R=DEC
+               00050 #include <p18f4520.inc>
+               00051 #define PIC_DERIVATIVE_CODE_SIZE        0x08000
+               00052 #define PIC_DERIVATIVE_RAM_SIZE         0x600
+               00053 #define PIC_DERIVATIVE_EEPROM_SIZE      0x100
+               00054 #define PIC_DERIVATIVE_IRQ_WORKAROUND   1
+               00055 #define PIC_DERIVATIVE_NEW_ADC          1
+               00056 #define PIC_DERIVATIVE_CMCON_INIT       1
+               00057 #define PIC_DERIVATIVE_T08BIT_INVERTED  0
+               00058 #define PIC_DERIVATIVE_SET_LCD_4BIT     0
+               00059 #endif
+               00060 
+               00061 #ifdef __18F4682
+               00062         LIST R=DEC
+               00063 #include <p18f4682.inc>
+               00064 #define PIC_DERIVATIVE_CODE_SIZE        0x14000
+               00065 #define PIC_DERIVATIVE_RAM_SIZE         0xd00
+               00066 #define PIC_DERIVATIVE_EEPROM_SIZE      0x400
+               00067 #define PIC_DERIVATIVE_IRQ_WORKAROUND   0
+               00068 #define PIC_DERIVATIVE_NEW_ADC          1
+               00069 #define PIC_DERIVATIVE_CMCON_INIT       1
+               00070 #define PIC_DERIVATIVE_T08BIT_INVERTED  0
+               00071 #define PIC_DERIVATIVE_SET_LCD_4BIT     1
+               00072 #endif
+               00073 
+               00074 #ifdef __18F4685
+               00075         LIST R=DEC
+               00076 #include <p18f4685.inc>
+               00077 #define PIC_DERIVATIVE_CODE_SIZE        0x18000
+               00078 #define PIC_DERIVATIVE_RAM_SIZE         0xd00
+               00079 #define PIC_DERIVATIVE_EEPROM_SIZE      0x400
+               00080 #define PIC_DERIVATIVE_IRQ_WORKAROUND   0
+               00081 #define PIC_DERIVATIVE_NEW_ADC          1
+               00082 #define PIC_DERIVATIVE_CMCON_INIT       1
+               00083 #define PIC_DERIVATIVE_T08BIT_INVERTED  0
+               00084 #define PIC_DERIVATIVE_SET_LCD_4BIT     1
+               00085 #endif
+               00086 
+               00087 ;; ==========================================================================
+               00088 ;;  General constants
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00089 ;; ==========================================================================
+               00090 
+               00091 ;; used by MIOS_MIDI_Interface*
+  00000000     00092 MIOS_MIDI_INTERFACE_COMMON      EQU     0x00
+  00000001     00093 MIOS_MIDI_INTERFACE_TO_HOST     EQU     0x01
+               00094 
+               00095 ;; used by MIOS_MIDI_Merger*
+  00000000     00096 MIOS_MIDI_MERGER_DISABLED       EQU     0x00
+  00000001     00097 MIOS_MIDI_MERGER_ENABLED        EQU     0x01
+  00000002     00098 MIOS_MIDI_MERGER_MBLINK_EP      EQU     0x02
+  00000003     00099 MIOS_MIDI_MERGER_MBLINK_FP      EQU     0x03
+               00100 
+               00101 ;; used by MIOS_ENC_PIN_TABLE
+  00000000     00102 MIOS_ENC_MODE_NON_DETENTED      EQU     0x00
+  00000080     00103 MIOS_ENC_MODE_DETENTED          EQU     0x80
+  00000080     00104 MIOS_ENC_MODE_DETENTED1         EQU     0x80
+  00000081     00105 MIOS_ENC_MODE_DETENTED2         EQU     0x81
+  00000082     00106 MIOS_ENC_MODE_DETENTED3         EQU     0x82
+               00107 
+               00108 ;; used by MIOS_ENC_Speed*
+  00000000     00109 MIOS_ENC_SPEED_SLOW             EQU     0
+  00000001     00110 MIOS_ENC_SPEED_NORMAL           EQU     1
+  00000002     00111 MIOS_ENC_SPEED_FAST             EQU     2
+               00112 
+               00113 ;; used by MIOS_LCD_Type*
+  00000000     00114 MIOS_LCD_TYPE_CLCD              EQU     0x00
+  00000001     00115 MIOS_LCD_TYPE_GLCD0             EQU     0x01
+  00000002     00116 MIOS_LCD_TYPE_GLCD1             EQU     0x02
+  00000003     00117 MIOS_LCD_TYPE_GLCD2             EQU     0x03
+  00000004     00118 MIOS_LCD_TYPE_GLCD3             EQU     0x04
+  00000005     00119 MIOS_LCD_TYPE_GLCD4             EQU     0x05
+  00000006     00120 MIOS_LCD_TYPE_MLCD              EQU     0x06
+  00000007     00121 MIOS_LCD_TYPE_GLCD_CUSTOM       EQU     0x07
+               00122 
+               00123 ;; location of default 5x8 font for graphical displays
+  00007CFC     00124 MIOS_GLCD_FONT                  EQU     0x7cfc
+               00125 
+               00126 ;; general config flags (never overwrite this flags directly!!!)
+  00000000     00127 MIOS_BOX_CFG0_LCD_TYPE0         EQU 0   ; selects LCD type, bit 0
+  00000001     00128 MIOS_BOX_CFG0_LCD_TYPE1         EQU 1   ; selects LCD type, bit 1
+  00000002     00129 MIOS_BOX_CFG0_LCD_TYPE2         EQU 2   ; selects LCD type, bit 2
+  00000003     00130 MIOS_BOX_CFG0_USE_GLCD          EQU 3   ; if 1, graphical LCD is connected
+  00000004     00131 MIOS_BOX_CFG0_MERGER            EQU 4   ; if 1, MIDI merger is enabled
+  00000005     00132 MIOS_BOX_CFG0_MBLINK            EQU 5   ; if 1, MIDIbox Link is enabled
+  00000006     00133 MIOS_BOX_CFG0_TO_HOST           EQU 6   ; if 1, MIDI interface will run with 38400 baud instead of 31250
+  00000007     00134 MIOS_BOX_CFG0_20MHz             EQU 7   ; if 1, it is assumed that box is running with 20 MHz, else with 40 MHz
+               00135 
+  00000000     00136 MIOS_BOX_CFG1_BS_A0             EQU 0   ; A0 of BankStick (never change the bit position)
+  00000001     00137 MIOS_BOX_CFG1_BS_A1             EQU 1   ; A1 of BankStick (never change the bit position)
+  00000002     00138 MIOS_BOX_CFG1_BS_A2             EQU 2   ; A2 of BankStick (never change the bit position)
+  00000003     00139 MIOS_BOX_CFG1_BS_DIS_VERIFY     EQU 3   ; if 1, writes to the BankStick will not be verified
+  00000004     00140 MIOS_BOX_CFG1_IIC_STRETCH_CLK   EQU 4   ; if 1, IIC clock stretching enabled
+               00141 
+               00142 ;; general status flags (never overwrite this flags directly!!!)
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+  00000000     00143 MIOS_BOX_STAT_BS_AVAILABLE      EQU 0   ; if 1, BankStick is available
+  00000001     00144 MIOS_BOX_STAT_MBLINK_TUNNEL_PASS EQU 1  ; if 1, a MBLinked event will be tunnled
+  00000002     00145 MIOS_BOX_STAT_SUSPEND_ALL       EQU 2   ; if 1, all system and user tasks are suspended
+  00000003     00146 MIOS_BOX_STAT_SUSPEND_USER      EQU 3   ; if 1, all user tasks are suspended
+  00000004     00147 MIOS_BOX_STAT_AUTOREPEAT        EQU 4   ; if 1, start the auto-repeat handler
+  00000005     00148 MIOS_BOX_STAT_MLCD_TRANSFER     EQU 5   ; if 1, a transfer to the MLCD has been started
+  00000006     00149 MIOS_BOX_STAT_FERR              EQU 6   ; if 1, a frame error happened during MIDI receive
+               00150 
+               00151 ;; ==========================================================================
+               00152 ;;  MIOS Special Function Registers
+               00153 ;; ==========================================================================
+               00154 
+  00000000     00155 MIOS_BOX_CFG0   EQU     0x000
+  00000001     00156 MIOS_BOX_CFG1   EQU     0x001
+  00000002     00157 MIOS_BOX_STAT   EQU     0x002
+  00000003     00158 MIOS_PARAMETER1 EQU     0x003
+  00000004     00159 MIOS_PARAMETER2 EQU     0x004
+  00000005     00160 MIOS_PARAMETER3 EQU     0x005
+               00161 
+               00162 ;; ==========================================================================
+               00163 ;;  temporary registers for main programs
+               00164 ;; ==========================================================================
+  00000006     00165 TMP1            EQU     0x006
+  00000007     00166 TMP2            EQU     0x007
+  00000008     00167 TMP3            EQU     0x008
+  00000009     00168 TMP4            EQU     0x009
+  0000000A     00169 TMP5            EQU     0x00a
+               00170 
+               00171 ;; ==========================================================================
+               00172 ;;  temporary registers for IRQs
+               00173 ;; ==========================================================================
+  0000000B     00174 IRQ_TMP1        EQU     0x00b
+  0000000C     00175 IRQ_TMP2        EQU     0x00c
+  0000000D     00176 IRQ_TMP3        EQU     0x00d
+  0000000E     00177 IRQ_TMP4        EQU     0x00e
+  0000000F     00178 IRQ_TMP5        EQU     0x00f
+               00179 
+               00180 ;; ==========================================================================
+               00181 ;;  free memory space for user application:
+               00182 ;; ==========================================================================
+               00183         ;; 0x010-0x37f
+               00184 
+               00185 ;; ==========================================================================
+               00186 ;;  MIOS System Registers -- not defined here -- 
+               00187 ;;  never use these memory locations!
+               00188 ;; ==========================================================================
+               00189         ;; 0x380-0x6ff
+               00190 
+               00191 ;; ==========================================================================
+               00192 ;;  MIOS System Registers for custom LCD driver
+               00193 ;; ==========================================================================
+  00000570     00194 MIOS_GLCD_BUFFER        EQU     0x570   ; note: the buffer must be located at ...0-...7
+  00000578     00195 MIOS_LCD_OPTION1        EQU     0x578   ; contains the first LCD option given by MIOS_LCD_TypeSet
+  00000579     00196 MIOS_LCD_OPTION2        EQU     0x579   ; contains the second LCD option given by MIOS_LCD_TypeSet
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+  0000057A     00197 MIOS_LCD_CURSOR_POS     EQU     0x57a   ; the current cursor pos of characters (GLCD: multiplied by width)
+  0000057B     00198 MIOS_GLCD_GCURSOR_X     EQU     0x57b   ; for GLCDs: the current X position of graphical cursor
+  0000057C     00199 MIOS_GLCD_GCURSOR_Y     EQU     0x57c   ; for GLCDs: the current Y position of graphical cursor
+  0000057D     00200 MIOS_GLCD_FONT_WIDTH    EQU     0x57d   ; for GLCDs: the fontwidth given by MIOS_GLCD_FontInit
+  0000057E     00201 MIOS_GLCD_FONT_HEIGHT   EQU     0x57e   ; for GLCDs: the fontheight given by MIOS_GLCD_FontInit
+  0000057F     00202 MIOS_GLCD_FONT_X0       EQU     0x57f   ; for GLCDs: the first byte within a char entry
+  00000580     00203 MIOS_GLCD_FONT_OFFSET   EQU     0x580   ; for GLCDs: the byte offset between the characters
+  00000581     00204 MIOS_GLCD_FONT_PTRL     EQU     0x581   ; for GLCDs: pointer to the character table, low-byte
+  00000582     00205 MIOS_GLCD_FONT_PTRH     EQU     0x582   ; for GLCDs: pointer to the character table, high-byte
+  00000583     00206 MIOS_LCD_TIMEOUT0       EQU     0x583   ; can be used for timeout loops
+  00000584     00207 MIOS_LCD_TIMEOUT1       EQU     0x584   ; can be used for timeout loops
+  00000585     00208 MIOS_GLCD_TMP1          EQU     0x585   ; can be used as temporary buffer
+  00000586     00209 MIOS_GLCD_TMP2          EQU     0x586   ; can be used as temporary buffer
+  00000587     00210 MIOS_GLCD_TMP3          EQU     0x587   ; can be used as temporary buffer
+  00000588     00211 MIOS_GLCD_TMP4          EQU     0x588   ; can be used as temporary buffer
+  00000589     00212 MIOS_LCD_Y0_OFFSET      EQU     0x589   ; Y0 offset of LCD
+  0000058A     00213 MIOS_LCD_Y1_OFFSET      EQU     0x58a   ; Y1 offset of LCD
+  0000058B     00214 MIOS_LCD_Y2_OFFSET      EQU     0x58b   ; Y2 offset of LCD
+  0000058C     00215 MIOS_LCD_Y3_OFFSET      EQU     0x58c   ; Y3 offset of LCD
+  0000058D     00216 MIOS_LCD_CURSOR_POS_REAL EQU    0x58d   ; unmapped cursor position which has been set with MIOS_LCD_CursorSet
+  0000058E     00217 MIOS_GLCD_FONT_PTRU     EQU     0x58e   ; for GLCDs: pointer to the character table, upper-byte (>64k flash derivatives only)
+               00011 #include <mios_vectors.inc>
+               00001 ; $Id: mios_vectors.inc 49 2008-01-30 21:47:31Z tk $
+               00002 
+  00002C00     00003 MIOS_MIDI_BeginStream                   EQU     0x2c00
+  00002C04     00004 MIOS_MIDI_DeviceIDAutoSet               EQU     0x2c04
+  00002C08     00005 MIOS_MIDI_DeviceIDGet                   EQU     0x2c08
+  00002C0C     00006 MIOS_MIDI_DeviceIDSet                   EQU     0x2c0c
+  00002C10     00007 MIOS_MIDI_EndStream                     EQU     0x2c10
+  00002C14     00008 MIOS_MIDI_Init                          EQU     0x2c14
+  00002C18     00009 MIOS_MIDI_InterfaceAutoSet              EQU     0x2c18
+  00002C1C     00010 MIOS_MIDI_InterfaceGet                  EQU     0x2c1c
+  00002C20     00011 MIOS_MIDI_InterfaceSet                  EQU     0x2c20
+  00002C24     00012 MIOS_MIDI_MergerGet                     EQU     0x2c24
+  00002C28     00013 MIOS_MIDI_MergerSet                     EQU     0x2c28
+  00002C2C     00014 MIOS_MIDI_RxBufferFree                  EQU     0x2c2c
+  00002C30     00015 MIOS_MIDI_RxBufferGet                   EQU     0x2c30
+  00002C34     00016 MIOS_MIDI_RxBufferPut                   EQU     0x2c34
+  00002C38     00017 MIOS_MIDI_RxBufferUsed                  EQU     0x2c38
+  00002C3C     00018 MIOS_MIDI_TxBufferFlush                 EQU     0x2c3c
+  00002C40     00019 MIOS_MIDI_TxBufferFree                  EQU     0x2c40
+  00002C44     00020 MIOS_MIDI_TxBufferGet                   EQU     0x2c44
+  00002C48     00021 MIOS_MIDI_TxBufferPut                   EQU     0x2c48
+  00002C4C     00022 MIOS_MIDI_TxBufferUsed                  EQU     0x2c4c
+  00002C50     00023 MIOS_MPROC_MergerDisable                EQU     0x2c50
+  00002C54     00024 MIOS_MPROC_MergerEnable                 EQU     0x2c54
+  00002C58     00025 MIOS_MPROC_MergerGet                    EQU     0x2c58
+  00002C5C     00026 MIOS_AIN_DeadbandGet                    EQU     0x2c5c
+  00002C60     00027 MIOS_AIN_DeadbandSet                    EQU     0x2c60
+  00002C64     00028 MIOS_AIN_Muxed                          EQU     0x2c64
+  00002C68     00029 MIOS_AIN_NumberGet                      EQU     0x2c68
+  00002C6C     00030 MIOS_AIN_NumberSet                      EQU     0x2c6c
+  00002C70     00031 MIOS_AIN_Pin7bitGet                     EQU     0x2c70
+  00002C74     00032 MIOS_AIN_PinGet                         EQU     0x2c74
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+  00002C78     00033 MIOS_AIN_PinLSBGet                      EQU     0x2c78
+  00002C7C     00034 MIOS_AIN_PinMSBGet                      EQU     0x2c7c
+  00002C80     00035 MIOS_AIN_UnMuxed                        EQU     0x2c80
+  00002C84     00036 MIOS_MF_PWM_DutyCycleDownGet            EQU     0x2c84
+  00002C88     00037 MIOS_MF_PWM_DutyCycleDownSet            EQU     0x2c88
+  00002C8C     00038 MIOS_MF_PWM_DutyCycleUpGet              EQU     0x2c8c
+  00002C90     00039 MIOS_MF_PWM_DutyCycleUpSet              EQU     0x2c90
+  00002C94     00040 MIOS_MF_DeadbandGet                     EQU     0x2c94
+  00002C98     00041 MIOS_MF_DeadbandSet                     EQU     0x2c98
+  00002C9C     00042 MIOS_MF_Disable                         EQU     0x2c9c
+  00002CA0     00043 MIOS_MF_Enable                          EQU     0x2ca0
+  00002CA4     00044 MIOS_MF_FaderMove                       EQU     0x2ca4
+  00002CA8     00045 MIOS_MF_SuspendDisable                  EQU     0x2ca8
+  00002CAC     00046 MIOS_MF_SuspendEnable                   EQU     0x2cac
+  00002CB0     00047 MIOS_MF_SuspendGet                      EQU     0x2cb0
+  00002CB4     00048 MIOS_DIN_PinGet                         EQU     0x2cb4
+  00002CB8     00049 MIOS_DIN_SRGet                          EQU     0x2cb8
+  00002CBC     00050 MIOS_DOUT_PinGet                        EQU     0x2cbc
+  00002CC0     00051 MIOS_DOUT_PinSet                        EQU     0x2cc0
+  00002CC4     00052 MIOS_DOUT_PinSet0                       EQU     0x2cc4
+  00002CC8     00053 MIOS_DOUT_PinSet1                       EQU     0x2cc8
+  00002CCC     00054 MIOS_DOUT_SRGet                         EQU     0x2ccc
+  00002CD0     00055 MIOS_DOUT_SRSet                         EQU     0x2cd0
+  00002CD4     00056 MIOS_ENC_Abs7bitAdd                     EQU     0x2cd4
+  00002CD8     00057 MIOS_ENC_Abs7bitGet                     EQU     0x2cd8
+  00002CDC     00058 MIOS_ENC_Abs7bitSet                     EQU     0x2cdc
+  00002CE0     00059 MIOS_ENC_NumberGet                      EQU     0x2ce0
+  00002CE4     00060 MIOS_ENC_SpeedGet                       EQU     0x2ce4
+  00002CE8     00061 MIOS_ENC_SpeedSet                       EQU     0x2ce8
+  00002CEC     00062 MIOS_SRIO_NumberGet                     EQU     0x2cec
+  00002CF0     00063 MIOS_SRIO_NumberSet                     EQU     0x2cf0
+  00002CF4     00064 MIOS_SRIO_TS_SensitivityGet             EQU     0x2cf4
+  00002CF8     00065 MIOS_SRIO_TS_SensitivitySet             EQU     0x2cf8
+  00002CFC     00066 MIOS_SRIO_UpdateFrqGet                  EQU     0x2cfc
+  00002D00     00067 MIOS_SRIO_UpdateFrqSet                  EQU     0x2d00
+  00002D04     00068 MIOS_LCD_Clear                          EQU     0x2d04
+  00002D08     00069 MIOS_LCD_Cmd                            EQU     0x2d08
+  00002D0C     00070 MIOS_LCD_CursorGet                      EQU     0x2d0c
+  00002D10     00071 MIOS_LCD_CursorSet                      EQU     0x2d10
+  00002D14     00072 MIOS_LCD_Data                           EQU     0x2d14
+  00002D18     00073 MIOS_LCD_Init                           EQU     0x2d18
+  00002D1C     00074 MIOS_LCD_PrintBCD1                      EQU     0x2d1c
+  00002D20     00075 MIOS_LCD_PrintBCD2                      EQU     0x2d20
+  00002D24     00076 MIOS_LCD_PrintBCD3                      EQU     0x2d24
+  00002D28     00077 MIOS_LCD_PrintChar                      EQU     0x2d28
+  00002D2C     00078 MIOS_LCD_PrintHex1                      EQU     0x2d2c
+  00002D30     00079 MIOS_LCD_PrintHex2                      EQU     0x2d30
+  00002D34     00080 MIOS_LCD_PrintMessage                   EQU     0x2d34
+  00002D38     00081 MIOS_LCD_PrintPreconfString             EQU     0x2d38
+  00002D3C     00082 MIOS_LCD_PrintString                    EQU     0x2d3c
+  00002D40     00083 MIOS_LCD_TypeAutoSet                    EQU     0x2d40
+  00002D44     00084 MIOS_LCD_TypeGet                        EQU     0x2d44
+  00002D48     00085 MIOS_LCD_TypeSet                        EQU     0x2d48
+  00002D4C     00086 MIOS_LCD_YAddressGet                    EQU     0x2d4c
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+  00002D50     00087 MIOS_LCD_YAddressSet                    EQU     0x2d50
+  00002D54     00088 MIOS_GLCD_FontInit                      EQU     0x2d54
+  00002D58     00089 MIOS_GLCD_GCursorGet                    EQU     0x2d58
+  00002D5C     00090 MIOS_GLCD_GCursorSet                    EQU     0x2d5c
+  00002D60     00091 MIOS_EEPROM_Read                        EQU     0x2d60
+  00002D64     00092 MIOS_EEPROM_Write                       EQU     0x2d64
+  00002D68     00093 MIOS_FLASH_Read                         EQU     0x2d68
+  00002D6C     00094 MIOS_FLASH_Write                        EQU     0x2d6c
+  00002D70     00095 MIOS_BANKSTICK_Read                     EQU     0x2d70
+  00002D74     00096 MIOS_BANKSTICK_Write                    EQU     0x2d74
+  00002D78     00097 MIOS_TIMER_Init                         EQU     0x2d78
+  00002D7C     00098 MIOS_TIMER_Start                        EQU     0x2d7c
+  00002D80     00099 MIOS_TIMER_Stop                         EQU     0x2d80
+  00002D84     00100 MIOS_HLP_AddressFromTable               EQU     0x2d84
+  00002D88     00101 MIOS_HLP_GetBitANDMask                  EQU     0x2d88
+  00002D8C     00102 MIOS_HLP_GetBitORMask                   EQU     0x2d8c
+  00002D90     00103 MIOS_HLP_GetIndex_2bytes                EQU     0x2d90
+  00002D94     00104 MIOS_HLP_GetIndex_4bytes                EQU     0x2d94
+  00002D98     00105 MIOS_HLP_IndirectJump                   EQU     0x2d98
+  00002D9C     00106 MIOS_Delay                              EQU     0x2d9c
+  00002DA0     00107 MIOS_GPCounterGet                       EQU     0x2da0
+  00002DA4     00108 MIOS_Reset                              EQU     0x2da4
+  00002DA8     00109 MIOS_SystemResume                       EQU     0x2da8
+  00002DAC     00110 MIOS_SystemSuspend                      EQU     0x2dac
+  00002DB0     00111 MIOS_UserResume                         EQU     0x2db0
+  00002DB4     00112 MIOS_UserSuspend                        EQU     0x2db4
+  00002DB8     00113 MIOS_HLP_16bitAddSaturate               EQU     0x2db8
+  00002DBC     00114 MIOS_DIN_PinAutoRepeatEnable            EQU     0x2dbc
+  00002DC0     00115 MIOS_DIN_PinAutoRepeatDisable           EQU     0x2dc0
+  00002DC4     00116 MIOS_DIN_PinAutoRepeatGet               EQU     0x2dc4
+  00002DC8     00117 MIOS_CLCD_SpecialCharInit               EQU     0x2dc8
+  00002DCC     00118 MIOS_CLCD_SpecialCharsInit              EQU     0x2dcc
+  00002DD0     00119 MIOS_AIN_DynamicPrioSet                 EQU     0x2dd0
+  00002DD4     00120 MIOS_AIN_DynamicPrioGet                 EQU     0x2dd4
+  00002DD8     00121 MIOS_AIN_LastPinsGet                    EQU     0x2dd8
+  00002DDC     00122 MIOS_BANKSTICK_CtrlSet                  EQU     0x2ddc
+  00002DE0     00123 MIOS_BANKSTICK_CtrlGet                  EQU     0x2de0
+  00002DE4     00124 MIOS_BANKSTICK_WritePage                EQU     0x2de4
+  00002DE8     00125 MIOS_HLP_Dec2BCD                        EQU     0x2de8
+  00002DEC     00126 MIOS_LCD_PrintBCD4                      EQU     0x2dec
+  00002DF0     00127 MIOS_LCD_PrintBCD5                      EQU     0x2df0
+  00002DF4     00128 MIOS_LCD_MessageStart                   EQU     0x2df4
+  00002DF8     00129 MIOS_LCD_MessageStop                    EQU     0x2df8
+  00002DFC     00130 MIOS_MF_PWM_PeriodGet                   EQU     0x2dfc
+  00002E00     00131 MIOS_MF_PWM_PeriodSet                   EQU     0x2e00
+  00002E04     00132 MIOS_IIC_Start                          EQU     0x2e04
+  00002E08     00133 MIOS_IIC_Stop                           EQU     0x2e08
+  00002E0C     00134 MIOS_IIC_ByteSend                       EQU     0x2e0c
+  00002E10     00135 MIOS_IIC_ByteReceive                    EQU     0x2e10
+  00002E14     00136 MIOS_IIC_AckSend                        EQU     0x2e14
+  00002E18     00137 MIOS_IIC_NakSend                        EQU     0x2e18
+  00002E1C     00138 MIOS_IIC_CtrlSet                        EQU     0x2e1c
+  00002E20     00139 MIOS_IIC_CtrlGet                        EQU     0x2e20
+  00002E24     00140 MIOS_SRIO_DebounceSet                   EQU     0x2e24
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+  00002E28     00141 MIOS_SRIO_DebounceGet                   EQU     0x2e28
+  00002E2C     00142 MIOS_MF_TouchDetectionReset             EQU     0x2e2c
+  00002E30     00143 MIOS_BANKSTICK_ReadPage                 EQU     0x2e30
+  00002E34     00144 MIOS_EEPROM_ReadPage                    EQU     0x2e34
+  00002E38     00145 MIOS_EEPROM_WritePage                   EQU     0x2e38
+  00002E3C     00146 MIOS_TIMER_ReInit                       EQU     0x2e3c
+  00002E40     00147 MIOS_RESERVED_144                       EQU     0x2e40
+  00002E44     00148 MIOS_RESERVED_145                       EQU     0x2e44
+  00002E48     00149 MIOS_RESERVED_146                       EQU     0x2e48
+  00002E4C     00150 MIOS_RESERVED_147                       EQU     0x2e4c
+  00002E50     00151 MIOS_RESERVED_148                       EQU     0x2e50
+  00002E54     00152 MIOS_RESERVED_149                       EQU     0x2e54
+  00002E58     00153 MIOS_RESERVED_150                       EQU     0x2e58
+  00002E5C     00154 MIOS_RESERVED_151                       EQU     0x2e5c
+  00002E60     00155 MIOS_RESERVED_152                       EQU     0x2e60
+  00002E64     00156 MIOS_RESERVED_153                       EQU     0x2e64
+  00002E68     00157 MIOS_RESERVED_154                       EQU     0x2e68
+  00002E6C     00158 MIOS_RESERVED_155                       EQU     0x2e6c
+  00002E70     00159 MIOS_RESERVED_156                       EQU     0x2e70
+  00002E74     00160 MIOS_RESERVED_157                       EQU     0x2e74
+  00002E78     00161 MIOS_RESERVED_158                       EQU     0x2e78
+  00002E7C     00162 MIOS_RESERVED_159                       EQU     0x2e7c
+  00002E80     00163 MIOS_RESERVED_160                       EQU     0x2e80
+  00002E84     00164 MIOS_RESERVED_161                       EQU     0x2e84
+  00002E88     00165 MIOS_RESERVED_162                       EQU     0x2e88
+  00002E8C     00166 MIOS_RESERVED_163                       EQU     0x2e8c
+  00002E90     00167 MIOS_RESERVED_164                       EQU     0x2e90
+  00002E94     00168 MIOS_RESERVED_165                       EQU     0x2e94
+  00002E98     00169 MIOS_RESERVED_166                       EQU     0x2e98
+  00002E9C     00170 MIOS_RESERVED_167                       EQU     0x2e9c
+  00002EA0     00171 MIOS_RESERVED_168                       EQU     0x2ea0
+  00002EA4     00172 MIOS_RESERVED_169                       EQU     0x2ea4
+  00002EA8     00173 MIOS_RESERVED_170                       EQU     0x2ea8
+  00002EAC     00174 MIOS_RESERVED_171                       EQU     0x2eac
+  00002EB0     00175 MIOS_RESERVED_172                       EQU     0x2eb0
+  00002EB4     00176 MIOS_RESERVED_173                       EQU     0x2eb4
+  00002EB8     00177 MIOS_RESERVED_174                       EQU     0x2eb8
+  00002EBC     00178 MIOS_RESERVED_175                       EQU     0x2ebc
+  00002EC0     00179 MIOS_RESERVED_176                       EQU     0x2ec0
+  00002EC4     00180 MIOS_RESERVED_177                       EQU     0x2ec4
+  00002EC8     00181 MIOS_RESERVED_178                       EQU     0x2ec8
+  00002ECC     00182 MIOS_RESERVED_179                       EQU     0x2ecc
+  00002ED0     00183 MIOS_RESERVED_180                       EQU     0x2ed0
+  00002ED4     00184 MIOS_RESERVED_181                       EQU     0x2ed4
+  00002ED8     00185 MIOS_RESERVED_182                       EQU     0x2ed8
+  00002EDC     00186 MIOS_RESERVED_183                       EQU     0x2edc
+  00002EE0     00187 MIOS_RESERVED_184                       EQU     0x2ee0
+  00002EE4     00188 MIOS_RESERVED_185                       EQU     0x2ee4
+  00002EE8     00189 MIOS_RESERVED_186                       EQU     0x2ee8
+  00002EEC     00190 MIOS_RESERVED_187                       EQU     0x2eec
+  00002EF0     00191 MIOS_RESERVED_188                       EQU     0x2ef0
+  00002EF4     00192 MIOS_RESERVED_189                       EQU     0x2ef4
+  00002EF8     00193 MIOS_RESERVED_190                       EQU     0x2ef8
+  00002EFC     00194 MIOS_RESERVED_191                       EQU     0x2efc
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+  00002F00     00195 MIOS_RESERVED_192                       EQU     0x2f00
+  00002F04     00196 MIOS_RESERVED_193                       EQU     0x2f04
+  00002F08     00197 MIOS_RESERVED_194                       EQU     0x2f08
+  00002F0C     00198 MIOS_RESERVED_195                       EQU     0x2f0c
+  00002F10     00199 MIOS_RESERVED_196                       EQU     0x2f10
+  00002F14     00200 MIOS_RESERVED_197                       EQU     0x2f14
+  00002F18     00201 MIOS_RESERVED_198                       EQU     0x2f18
+  00002F1C     00202 MIOS_RESERVED_199                       EQU     0x2f1c
+  00002F20     00203 MIOS_RESERVED_200                       EQU     0x2f20
+  00002F24     00204 MIOS_RESERVED_201                       EQU     0x2f24
+  00002F28     00205 MIOS_RESERVED_202                       EQU     0x2f28
+  00002F2C     00206 MIOS_RESERVED_203                       EQU     0x2f2c
+  00002F30     00207 MIOS_RESERVED_204                       EQU     0x2f30
+  00002F34     00208 MIOS_RESERVED_205                       EQU     0x2f34
+  00002F38     00209 MIOS_RESERVED_206                       EQU     0x2f38
+  00002F3C     00210 MIOS_RESERVED_207                       EQU     0x2f3c
+  00002F40     00211 MIOS_RESERVED_208                       EQU     0x2f40
+  00002F44     00212 MIOS_RESERVED_209                       EQU     0x2f44
+  00002F48     00213 MIOS_RESERVED_210                       EQU     0x2f48
+  00002F4C     00214 MIOS_RESERVED_211                       EQU     0x2f4c
+  00002F50     00215 MIOS_RESERVED_212                       EQU     0x2f50
+  00002F54     00216 MIOS_RESERVED_213                       EQU     0x2f54
+  00002F58     00217 MIOS_RESERVED_214                       EQU     0x2f58
+  00002F5C     00218 MIOS_RESERVED_215                       EQU     0x2f5c
+  00002F60     00219 MIOS_RESERVED_216                       EQU     0x2f60
+  00002F64     00220 MIOS_RESERVED_217                       EQU     0x2f64
+  00002F68     00221 MIOS_RESERVED_218                       EQU     0x2f68
+  00002F6C     00222 MIOS_RESERVED_219                       EQU     0x2f6c
+  00002F70     00223 MIOS_RESERVED_220                       EQU     0x2f70
+  00002F74     00224 MIOS_RESERVED_221                       EQU     0x2f74
+  00002F78     00225 MIOS_RESERVED_222                       EQU     0x2f78
+  00002F7C     00226 MIOS_RESERVED_223                       EQU     0x2f7c
+  00002F80     00227 MIOS_RESERVED_224                       EQU     0x2f80
+  00002F84     00228 MIOS_RESERVED_225                       EQU     0x2f84
+  00002F88     00229 MIOS_RESERVED_226                       EQU     0x2f88
+  00002F8C     00230 MIOS_RESERVED_227                       EQU     0x2f8c
+  00002F90     00231 MIOS_RESERVED_228                       EQU     0x2f90
+  00002F94     00232 MIOS_RESERVED_229                       EQU     0x2f94
+  00002F98     00233 MIOS_RESERVED_230                       EQU     0x2f98
+  00002F9C     00234 MIOS_RESERVED_231                       EQU     0x2f9c
+  00002FA0     00235 MIOS_RESERVED_232                       EQU     0x2fa0
+  00002FA4     00236 MIOS_RESERVED_233                       EQU     0x2fa4
+  00002FA8     00237 MIOS_RESERVED_234                       EQU     0x2fa8
+  00002FAC     00238 MIOS_RESERVED_235                       EQU     0x2fac
+  00002FB0     00239 MIOS_RESERVED_236                       EQU     0x2fb0
+  00002FB4     00240 MIOS_RESERVED_237                       EQU     0x2fb4
+  00002FB8     00241 MIOS_RESERVED_238                       EQU     0x2fb8
+  00002FBC     00242 MIOS_RESERVED_239                       EQU     0x2fbc
+  00002FC0     00243 MIOS_RESERVED_240                       EQU     0x2fc0
+  00002FC4     00244 MIOS_RESERVED_241                       EQU     0x2fc4
+  00002FC8     00245 MIOS_RESERVED_242                       EQU     0x2fc8
+  00002FCC     00246 MIOS_RESERVED_243                       EQU     0x2fcc
+  00002FD0     00247 MIOS_RESERVED_244                       EQU     0x2fd0
+  00002FD4     00248 MIOS_RESERVED_245                       EQU     0x2fd4
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+  00002FD8     00249 MIOS_RESERVED_246                       EQU     0x2fd8
+  00002FDC     00250 MIOS_RESERVED_247                       EQU     0x2fdc
+  00002FE0     00251 MIOS_RESERVED_248                       EQU     0x2fe0
+  00002FE4     00252 MIOS_RESERVED_249                       EQU     0x2fe4
+  00002FE8     00253 MIOS_RESERVED_250                       EQU     0x2fe8
+  00002FEC     00254 MIOS_RESERVED_251                       EQU     0x2fec
+  00002FF0     00255 MIOS_RESERVED_252                       EQU     0x2ff0
+  00002FF4     00256 MIOS_RESERVED_253                       EQU     0x2ff4
+  00002FF8     00257 MIOS_RESERVED_254                       EQU     0x2ff8
+  00002FFC     00258 MIOS_RESERVED_255                       EQU     0x2ffc
+               00012 #include <macros.h>
+               00001 ; $Id: macros.h 49 2008-01-30 21:47:31Z tk $
+               00002 ;
+               00003 ; Macro Definitions
+               00004 ;
+               00005 ; ==========================================================================
+               00006 ;
+               00007 ;  Copyright 1998-2006 Thorsten Klose (tk@midibox.org)
+               00008 ;  Licensed for personal non-commercial use only.
+               00009 ;  All other rights reserved.
+               00010 ; 
+               00011 ; ==========================================================================
+               00012 
+               00013 BRA_IFSET       MACRO   reg, bit, reg_a, label
+               00014         btfsc   reg, bit, reg_a
+               00015         bra     label
+               00016         ENDM
+               00017 
+               00018 
+               00019 BRA_IFCLR       MACRO   reg, bit, reg_a, label
+               00020         btfss   reg, bit, reg_a
+               00021         bra     label
+               00022         ENDM
+               00023 
+               00024 GOTO_IFSET      MACRO   reg, bit, reg_a, label
+               00025         btfsc   reg, bit, reg_a
+               00026         goto    label
+               00027         ENDM
+               00028 
+               00029 
+               00030 GOTO_IFCLR      MACRO   reg, bit, reg_a, label
+               00031         btfss   reg, bit, reg_a
+               00032         goto    label
+               00033         ENDM
+               00034 
+               00035 CALL_IFSET      MACRO   reg, bit, reg_a, label
+               00036         btfsc   reg, bit, reg_a
+               00037         call    label
+               00038         ENDM
+               00039 
+               00040 
+               00041 CALL_IFCLR      MACRO   reg, bit, reg_a, label
+               00042         btfss   reg, bit, reg_a
+               00043         call    label
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00044         ENDM
+               00045 
+               00046 RCALL_IFSET     MACRO   reg, bit, reg_a, label
+               00047         btfsc   reg, bit, reg_a
+               00048         rcall   label
+               00049         ENDM
+               00050 
+               00051 
+               00052 RCALL_IFCLR     MACRO   reg, bit, reg_a, label
+               00053         btfss   reg, bit, reg_a
+               00054         rcall   label
+               00055         ENDM
+               00056 
+               00057 ;; ==========================================================================
+               00058 
+               00059 IRQ_DISABLE MACRO
+               00060         bcf     INTCON, GIE
+               00061         ENDM
+               00062 
+               00063 IRQ_ENABLE MACRO
+               00064         bsf     INTCON, GIE
+               00065         ENDM
+               00066 
+               00067 ;; ==========================================================================
+               00068 
+               00069 TABLE_ADDR_FULL MACRO addr
+               00070         movlw   LOW(addr)               ; store Lo Byte
+               00071         movwf   TBLPTRL
+               00072         movlw   HIGH(addr)              ; store Hi Byte
+               00073         movwf   TBLPTRH
+               00074         movlw   UPPER(addr)             ; store upper Byte
+               00075         movwf   TBLPTRU
+               00076         ENDM
+               00077         
+               00078 TABLE_ADDR MACRO addr
+               00079         movlw   LOW(addr)               ; store Lo Byte
+               00080         movwf   TBLPTRL
+               00081         movlw   HIGH(addr)              ; store Hi Byte
+               00082         movwf   TBLPTRH
+               00083 #if PIC_DERIVATIVE_CODE_SIZE > 0x10000
+               00084         movlw   UPPER(addr)             ; store Upper Byte
+               00085         movwf   TBLPTRU
+               00086 #endif
+               00087         ENDM
+               00088         
+               00089 TABLE_H MACRO   addr
+               00090         movlw   HIGH(addr)              ; store Hi Byte
+               00091         movwf   TBLPTRH
+               00092         ENDM
+               00093 
+               00094 TABLE_L MACRO   addr
+               00095         movlw   LOW(addr)               ; store Lo Byte
+               00096         movwf   TBLPTRL
+               00097         ENDM
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00098 
+               00099 TABLE_ADD_W MACRO
+               00100         addwf   TBLPTRL, F
+               00101         movlw   0x00
+               00102         addwfc  TBLPTRH, F
+               00103 #if PIC_DERIVATIVE_CODE_SIZE > 0x10000
+               00104         movlw   0x00
+               00105         addwfc  TBLPTRU, F
+               00106 #endif
+               00107         ENDM
+               00108 
+               00109 TABLE_ADDR_MUL_W MACRO addr, multiplicator
+               00110         mullw   multiplicator
+               00111         movlw   LOW(addr)
+               00112         addwf   PRODL, W
+               00113         movwf   TBLPTRL
+               00114         movlw   HIGH(addr)
+               00115         addwfc  PRODH, W
+               00116         movwf   TBLPTRH
+               00117 #if PIC_DERIVATIVE_CODE_SIZE > 0x10000
+               00118         clrf    TBLPTRU
+               00119         movlw   UPPER(addr)
+               00120         addwfc  TBLPTRU, F
+               00121 #endif
+               00122         ENDM
+               00123 
+               00124 ;; ==========================================================================
+               00125 
+               00126 JUMPTABLE_2BYTES MACRO max_value
+               00127         addlw   -(max_value)    ; ensure that jump index is not greater than (max_value-1)
+               00128         skpnc
+               00129         movlw   -(max_value)
+               00130         addlw   max_value
+               00131         call    MIOS_HLP_GetIndex_2bytes
+               00132         ENDM
+               00133 
+               00134 JUMPTABLE_2BYTES_UNSECURE MACRO
+               00135         call    MIOS_HLP_GetIndex_2bytes
+               00136         ENDM
+               00137 
+               00138 JUMPTABLE_4BYTES MACRO max_value
+               00139         addlw   -(max_value)    ; ensure that jump index is not greater than (max_value-1)
+               00140         skpnc
+               00141         return
+               00142         addlw   (max_value)
+               00143         call    MIOS_HLP_GetIndex_4bytes
+               00144         ENDM
+               00145 
+               00146 JUMPTABLE_4BYTES_UNSECURE MACRO
+               00147         call    MIOS_HLP_GetIndex_4bytes
+               00148         ENDM
+               00149 
+               00150 ;; ==========================================================================
+               00151 
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00152 TWOBYTE_ENTRY MACRO low_byte, high_byte
+               00153         dw      (high_byte << 8) | (low_byte)
+               00154         ENDM
+               00155 
+               00156 ;; ==========================================================================
+               00157 
+0000           00158 #define skpnz   btfsc   STATUS, Z 
+0000           00159 #define skpz    btfss   STATUS, Z 
+0000           00160 #define skpndc  btfsc   STATUS, DC 
+0000           00161 #define skpdc   btfss   STATUS, DC
+0000           00162 #define skpnc   btfsc   STATUS, C
+0000           00163 #define skpc    btfss   STATUS, C
+0000           00164 #define clrc    bcf     STATUS, C
+0000           00165 #define setc    bsf     STATUS, C
+0000           00166 #define clrz    bcf     STATUS, Z
+0000           00167 #define setz    bsf     STATUS, Z
+0000           00168 #define rrf     rrcf    
+0000           00169 #define rlf     rlcf
+               00170 
+               00171 rgoto   MACRO   label
+               00172         bra     label
+               00173         ENDM
+               00174 
+               00175 SET_BSR MACRO   reg
+               00176         movlb   HIGH(reg)
+               00177         ENDM
+               00178 
+               00179 ;; ==========================================================================
+               00180 
+               00181 FONT_ENTRY MACRO width, height, x0, char_offset
+               00182         dw      ((height) << 8) | (width), ((char_offset) << 8) | (x0)
+               00183         ENDM
+               00184 
+               00185 ;; ==========================================================================
+               00186 
+               00187 STRING MACRO length, pos, str
+               00188         da      ((length) << 8) | (pos), str
+               00189         ENDM
+               00190 
+               00191 ;; ==========================================================================
+               00013 
+               00014 ; ==========================================================================
+               00015 
+               00016         ;; export lables
+               00017         global  AOUT_Init
+               00018         global  AOUT_ReInit
+               00019         global  AOUT_InvertedSet
+               00020         global  AOUT_InvertedGet
+               00021         global  AOUT_Pin16bitSet
+               00022         global  AOUT_Pin7bitSet
+               00023         global  AOUT_DigitalPinsSet
+               00024         global  AOUT_Update
+               00025 
+               00026         global  _AOUT_Init              ; (for C, declaration in aout.h)
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00027         global  _AOUT_ReInit
+               00028         global  _AOUT_InvertedSet
+               00029         global  _AOUT_InvertedGet
+               00030         global  _AOUT_Pin16bitSet
+               00031         global  _AOUT_Pin7bitSet
+               00032         global  _AOUT_DigitalPinsSet
+               00033         global  _AOUT_Update
+               00034 
+               00035 
+               00036 ; ==========================================================================
+               00037 ;  Declare variables 
+               00038 ; ==========================================================================
+               00039 
+               00040 aout_vars               udata
+               00041 AOUT_INVERTED           res     1
+               00042 AOUT_UPDATE_REQ         res     1
+               00043 AOUT_VALUES             res     2*8
+               00044 
+               00045 ; ==========================================================================
+               00046 AOUT code
+               00047 #include <aout.inc>
+               00001 ; $Id: aout.inc 146 2008-03-01 00:04:43Z tk $
+               00002 ;
+               00003 ; Toplevel of AOUT driver
+               00004 ; 
+               00005 ; ==========================================================================
+               00006 ;
+               00007 ;  Copyright 1998-2008 Thorsten Klose (tk@midibox.org)
+               00008 ;  Licensed for personal non-commercial use only.
+               00009 ;  All other rights reserved.
+               00010 ; 
+               00011 ; ==========================================================================
+               00012 ;
+               00013 ; Pin Configuration
+               00014 ; Can be overloaded from external
+               00015 #ifndef AOUT_LAT_CS
+0000           00016 #define AOUT_LAT_CS     LATC    ; The chip select pin CS#
+               00017 #endif
+               00018 #ifndef AOUT_TRIS_CS
+0000           00019 #define AOUT_TRIS_CS    TRISC   ; is connected to Port C.5
+               00020 #endif
+               00021 #ifndef AOUT_PIN_CS
+0000           00022 #define AOUT_PIN_CS     5       ; (CANNOT be shared with other outputs!)
+               00023 #endif
+               00024 ;
+               00025 #ifndef AOUT_LAT_DIN
+0000           00026 #define AOUT_LAT_DIN    LATC    ; The data input pin DIN
+               00027 #endif
+               00028 #ifndef AOUT_TRIS_DIN
+0000           00029 #define AOUT_TRIS_DIN   TRISC   ; is connected to Port C.4
+               00030 #endif
+               00031 #ifndef AOUT_PIN_DIN
+0000           00032 #define AOUT_PIN_DIN    4       ; (can be shared with other outputs)
+               00033 #endif
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00034 ;
+               00035 #ifndef AOUT_LAT_SCLK
+0000           00036 #define AOUT_LAT_SCLK   LATD    ; The shift clock input pin SCLK
+               00037 #endif
+               00038 #ifndef AOUT_TRIS_SCLK
+0000           00039 #define AOUT_TRIS_SCLK  TRISD   ; is connected to Port D.5
+               00040 #endif
+               00041 #ifndef AOUT_PIN_SCLK
+0000           00042 #define AOUT_PIN_SCLK   5       ; (can be shared with other outputs)
+               00043 #endif
+               00044 ;
+               00045 ; ==========================================================================
+               00046 ; include driver defined by AOUT_INTERFACE_TYPE
+               00047 ; (unfortunately, gpasm doesn't support #elif :-( 
+               00048 #if AOUT_INTERFACE_TYPE == 0
+               00049 #include "aout_dummy.inc"
+               00050 #endif
+               00051 #if AOUT_INTERFACE_TYPE == 1
+               00052 #include "aout_max525.inc"
+               00001 ; $Id: aout_max525.inc 146 2008-03-01 00:04:43Z tk $
+               00002 ;
+               00003 ; AOUT driver for two daisychained MAX525 (-> MBHP_AOUT module)
+               00004 ; 
+               00005 ; See aout.inc for description of the available functions
+               00006 ;
+               00007 ; ==========================================================================
+               00008 ;
+               00009 ;  Copyright 1998-2008 Thorsten Klose (tk@midibox.org)
+               00010 ;  Licensed for personal non-commercial use only.
+               00011 ;  All other rights reserved.
+               00012 ; 
+               00013 ; ==========================================================================
+               00014 
+               00015 ;; --------------------------------------------------------------------------
+               00016 ;;  Hardware specific initialisation (see aout.inc for details)
+               00017 ;; --------------------------------------------------------------------------
+0000           00018 AOUT_InitHW
+               00019         ;; deactivate chip select
+0000 8A8B      00020         bsf     AOUT_LAT_CS, AOUT_PIN_CS
+               00021 
+               00022         ;; enable pin drivers
+0002 9A94      00023         bcf     AOUT_TRIS_CS, AOUT_PIN_CS
+0004 9894      00024         bcf     AOUT_TRIS_DIN, AOUT_PIN_DIN
+0006 9A95      00025         bcf     AOUT_TRIS_SCLK, AOUT_PIN_SCLK
+               00026 
+0008 0012      00027         return
+               00028 
+               00029 
+               00030 ;; --------------------------------------------------------------------------
+               00031 ;;  Sets the digital pins (see aout.inc for details)
+               00032 ;; --------------------------------------------------------------------------
+000A           00033 _AOUT_DigitalPinsSet            ; (for C)
+000A           00034 AOUT_DigitalPinsSet
+               00035         ;; temporary store gate flags in PRODL
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+000A 6EF3      00036         movwf   PRODL
+               00037 
+               00038         ;; commands to set the UPO:
+               00039         ;; UPO=low:  A1=0, A0=0, C1=1, C0=0
+               00040         ;; UPO=high: A1=0, A0=1, C1=1, C0=0
+               00041 
+               00042         ;; ensure that clock starts at low level
+000C 9A8C      00043         bcf     AOUT_LAT_SCLK, AOUT_PIN_SCLK
+               00044 
+               00045         ;; activate chip select
+000E 9A8B      00046         bcf     AOUT_LAT_CS, AOUT_PIN_CS
+               00047 
+               00048         ;; update last MAX525 in the chain
+0010 6A03      00049         clrf    MIOS_PARAMETER1
+0012 0E20      00050         movlw   0x20
+0014 B2F3      00051         btfsc   PRODL, 1        ; bit #1
+0016 0940      00052         iorlw   0x40
+0018 6E04      00053         movwf   MIOS_PARAMETER2
+001A D800      00054         rcall   AOUT_LoadWord
+               00055 
+               00056         ;; update first MAX525 in the chain
+001C 6A03      00057         clrf    MIOS_PARAMETER1
+001E 0E20      00058         movlw   0x20
+0020 B0F3      00059         btfsc   PRODL, 0        ; bit #0
+0022 0940      00060         iorlw   0x40
+0024 6E04      00061         movwf   MIOS_PARAMETER2
+0026 D800      00062         rcall   AOUT_LoadWord
+               00063 
+               00064         ;; deactivate chip select
+0028 8A8B      00065         bsf     AOUT_LAT_CS, AOUT_PIN_CS
+               00066 
+002A 0012      00067         return
+               00068 
+               00069 
+               00070 ;; --------------------------------------------------------------------------
+               00071 ;;  Update function (see aout.inc for details)
+               00072 ;; --------------------------------------------------------------------------
+002C           00073 _AOUT_Update                    ; (for C)
+002C           00074 AOUT_Update
+               00075         ;; skip if no update requested
+               00076         SET_BSR AOUT_UPDATE_REQ
+002C 0100          M         movlb   HIGH(reg)
+002E 5100      00077         movf    AOUT_UPDATE_REQ, W, BANKED
+0030 E000      00078         bz      AOUT_Update_End
+               00079 
+0032 9A8C      00080         bcf     AOUT_LAT_SCLK, AOUT_PIN_SCLK    ; ensure that clock starts at low level
+               00081 
+               00082         ;; check which channels should be updated
+0034 EE10 F000 00083         lfsr    FSR1, AOUT_VALUES       ; base pointer to 16bit value array
+0038 6AF3      00084         clrf    PRODL                   ; loop counter
+003A 0E11      00085         movlw   0x11                    ; AND mask (running ones)
+003C 6EF4      00086         movwf   PRODH
+003E           00087 AOUT_Update_Loop
+               00088         ;; check if one of the two channels has been updated
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+003E 38F4      00089         swapf   PRODH, W
+0040 10F4      00090         iorwf   PRODH, W
+0042 1500      00091         andwf   AOUT_UPDATE_REQ, W, BANKED
+0044 E000      00092         bz      AOUT_Update_Loop_Next
+               00093 
+               00094         ;; activate chip select
+0046 9A8B      00095         bcf     AOUT_LAT_CS, AOUT_PIN_CS
+               00096 
+               00097         ;; update last MAX525 in the chain
+0048 0E08      00098         movlw   4*2             ; switch to appr. array position
+004A 26E1      00099         addwf   FSR1L, F
+004C 0E04      00100         movlw   4
+004E 26F3      00101         addwf   PRODL, F
+0050 3AF4      00102         swapf   PRODH, F        ; (running one now located at high-nibble)
+0052 D800      00103         rcall   AOUT_Update_Hlp
+               00104 
+               00105         ;; update first MAX525 in the chain
+0054 0EF8      00106         movlw   -4*2            ; switch back to initial array position
+0056 26E1      00107         addwf   FSR1L, F
+0058 0EFC      00108         movlw   -4
+005A 26F3      00109         addwf   PRODL, F
+005C 3AF4      00110         swapf   PRODH, F        ; (running one now located at low-nibble)       
+005E D800      00111         rcall   AOUT_Update_Hlp
+               00112 
+0060 8A8B      00113         bsf     AOUT_LAT_CS, AOUT_PIN_CS        ; deactivate chip select
+               00114 
+0062           00115 AOUT_Update_Loop_Next
+               00116         ;; increment loop counter, and exit if all 8 channels processed
+0062 2AF3      00117         incf    PRODL, F
+               00118         BRA_IFSET PRODL, 2, ACCESS, AOUT_Update_End     ; (each iteration services 2 channels)
+0064 B4F3          M         btfsc   reg, bit, reg_a
+0066 D000          M         bra     label
+               00119         ;; else increment pointer to AOUT_VALUESx and check next channel
+0068 0E02      00120         movlw   2
+006A 26E1      00121         addwf   FSR1L, F                        ; (assumed that AOUT_VALUES is located within 256 byte range)
+006C 90D8      00122         clrc                                    ; shiftleft running-one mask
+006E 36F4      00123         rlf     PRODH, F
+               00124         rgoto   AOUT_Update_Loop
+0070 D000          M         bra     label
+               00125 
+0072           00126 AOUT_Update_End
+               00127         ;; clear update flags
+0072 6B00      00128         clrf    AOUT_UPDATE_REQ, BANKED
+               00129 
+0074 0012      00130         return
+               00131 
+               00132 
+               00133 
+               00134 ;; help function used in update loop
+0076           00135 AOUT_Update_Hlp
+               00136         ;; commands to load and update the DAC register:
+               00137         ;; A1=channel number[1], A0=channel number[0], C1=1, C0=1
+0076 38E6      00138         swapf   POSTINC1, W             ; convert 16bit to 12bit value -> MIOS_PARAMETER[12]
+0078 0B0F      00139         andlw   0x0f
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+007A 6E03      00140         movwf   MIOS_PARAMETER1
+               00141 
+007C 38E7      00142         swapf   INDF1, W
+007E 0BF0      00143         andlw   0xf0
+0080 1203      00144         iorwf   MIOS_PARAMETER1, F
+               00145 
+0082 38E5      00146         swapf   POSTDEC1, W
+0084 0B0F      00147         andlw   0x0f
+0086 6E04      00148         movwf   MIOS_PARAMETER2
+               00149 
+               00150         ;; invert value if inversion flag set
+0088 C000 FFE8 00151         movff   AOUT_INVERTED, WREG     ; (note: AOUT_INVERTED could be located in another bank...)
+008C 14F4      00152         andwf   PRODH, W
+008E E000      00153         bz      AOUT_Update_Hlp_NotInverted
+0090           00154 AOUT_Update_Hlp_Inverted
+0090 1E03      00155         comf    MIOS_PARAMETER1, F
+0092 0E0F      00156         movlw   0x0f
+0094 1A04      00157         xorwf   MIOS_PARAMETER2, F
+0096           00158 AOUT_Update_Hlp_NotInverted
+               00159 
+               00160         ;; insert channel number (== loop counter)
+0096 38F3      00161         swapf   PRODL, W        ; located at [7:6]
+0098 34E8      00162         rlf     WREG, W
+009A 34E8      00163         rlf     WREG, W
+009C 0BC0      00164         andlw   0xc0
+009E 0930      00165         iorlw   0x30            ; [5:4] = 3
+00A0 1204      00166         iorwf   MIOS_PARAMETER2, F
+               00167 
+               00168         ;; transfer word to chip
+               00169         rgoto   AOUT_LoadWord
+00A2 D000          M         bra     label
+               00170 
+               00171 
+               00172 ;; --------------------------------------------------------------------------
+               00173 ;;  Internal function to load a 16bit value into MAX525
+               00174 ;;  IN: word in MIOS_PARAMETER[12]
+               00175 ;;  USES: MIOS_PARAMETER3 as temporary register
+               00176 ;; --------------------------------------------------------------------------
+00A4           00177 AOUT_LoadWord
+               00178         ;; NOTE: you will notice that the instructions are sometimes arranged
+               00179         ;; in a special order to ensure proper output signals - for example:
+               00180         ;; between a rising and a falling SCLK edge there is at least one
+               00181         ;; other instruction to ensure that the high pulse of the SCLK
+               00182         ;; is longer than 100 nS
+               00183 
+00A4 0E10      00184         movlw   16                              ; init loop counter
+00A6 6E05      00185         movwf   MIOS_PARAMETER3
+00A8           00186 AOUT_LoadWord_Loop
+00A8 988B      00187         bcf     AOUT_LAT_DIN, AOUT_PIN_DIN      ; set DIN depending on current MSB
+00AA BE04      00188         btfsc   MIOS_PARAMETER2, 7
+00AC 888B      00189         bsf     AOUT_LAT_DIN, AOUT_PIN_DIN
+00AE 3603      00190         rlf     MIOS_PARAMETER1, F              ; start to shift the 16-bit value
+00B0 8A8C      00191         bsf     AOUT_LAT_SCLK, AOUT_PIN_SCLK    ; rising clock edge
+00B2 3604      00192         rlf     MIOS_PARAMETER2, F              ; second step for the 16-bit shift
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00B4 9A8C      00193         bcf     AOUT_LAT_SCLK, AOUT_PIN_SCLK    ; falling clock edge
+00B6 2E05      00194         decfsz  MIOS_PARAMETER3, F              ; loop 16 times
+               00195         rgoto   AOUT_LoadWord_Loop
+00B8 D000          M         bra     label
+               00196 
+00BA 0012      00197         return
+               00198 
+               00053 #endif
+               00054 #if AOUT_INTERFACE_TYPE == 2
+               00055 #include "aout_74hc595.inc"
+               00056 #endif
+               00057 #if AOUT_INTERFACE_TYPE == 3
+               00058 #include "aout_tlv5630.inc"
+               00059 #endif
+               00060 
+               00061 #if AOUT_INTERFACE_TYPE < 0 || AOUT_INTERFACE_TYPE >= 4
+               00062   error "specified AOUT_INTERFACE_TYPE not supported by AOUT driver!!!"
+               00063 #endif
+               00064 
+               00065 ;; --------------------------------------------------------------------------
+               00066 ;;  FUNCTION: AOUT_Init
+               00067 ;;  DESCRIPTION: This function initializes the connected AOUT module
+               00068 ;;  It should be called from USER_Init during startup
+               00069 ;;  OUT:  -
+               00070 ;;  USES: BSR, MIOS_PARAMETER[123] as temporary registers
+               00071 ;; --------------------------------------------------------------------------
+00BC           00072 _AOUT_Init                      ; (for C)
+00BC           00073 AOUT_Init
+               00074         ;; clear inversion flags
+               00075         SET_BSR AOUT_INVERTED
+00BC 0100          M         movlb   HIGH(reg)
+00BE 6B00      00076         clrf    AOUT_INVERTED, BANKED
+               00077 
+               00078         ;; set all voltages to 0V
+00C0 6A03      00079         clrf    MIOS_PARAMETER1 ; using MIOS_PARAMETER1 as loop counter
+00C2 EE10 F000 00080         lfsr    FSR1, AOUT_VALUES
+00C6           00081 AOUT_Init_Loop
+00C6 6AE6      00082         clrf    POSTINC1        ; low-byte
+00C8 6AE6      00083         clrf    POSTINC1        ; high-byte
+00CA 2A03      00084         incf    MIOS_PARAMETER1, F
+               00085         BRA_IFCLR MIOS_PARAMETER1, 3, ACCESS, AOUT_Init_Loop    ; loop 8 times
+00CC A603          M         btfss   reg, bit, reg_a
+00CE D000          M         bra     label
+               00086 
+               00087         ;; init hardware and request AOUT update
+00D0 D800      00088         rcall   AOUT_ReInit
+               00089 
+               00090         ;; update channels and exit
+               00091         rgoto   AOUT_Update
+00D2 D000          M         bra     label
+               00092 
+               00093 
+               00094 ;; --------------------------------------------------------------------------
+               00095 ;;  FUNCTION: AOUT_ReInit
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00096 ;;  DESCRIPTION: This function re-initializes the AOUT module, and requests 
+               00097 ;;  an refresh of all output channels according to the stored values in AOUT_VALUES
+               00098 ;; 
+               00099 ;;  The update will take place once AOUT_Update is called (e.g. from USER_Tick)
+               00100 ;; 
+               00101 ;;  Background info: the AOUT_Pin*Set functions only request an update if the
+               00102 ;;  output value has been changed (comparison between new and previous value)
+               00103 ;;  This improves performance a lot, especially when AOUT values are written
+               00104 ;;  periodically from a timer interrupt (see MIDIbox SID and MIDIbox FM)
+               00105 ;; 
+               00106 ;;  However, sometimes it is useful to force a refresh, e.g. after a patch
+               00107 ;;  change, to ensure that all AOUT channels are up-to-date, because it allows
+               00108 ;;  to connect (or exchange) the AOUT module during runtime.
+               00109 ;;  IN:   -
+               00110 ;;  OUT:  -
+               00111 ;;  USES: BSR
+               00112 ;; --------------------------------------------------------------------------
+00D4           00113 _AOUT_ReInit            ; (for C)
+00D4           00114 AOUT_ReInit
+               00115         ;; call hardware specific initialisation
+               00116         ;; (function located in selected aout_*.inc)
+               00117         ;; especially required for MBHP_AOUT_NG module to initialize TLV5630 registers
+00D4 D800      00118         rcall   AOUT_InitHW
+               00119 
+               00120 
+               00121         ;; request update of all channels
+               00122         SET_BSR AOUT_UPDATE_REQ
+00D6 0100          M         movlb   HIGH(reg)
+00D8 6900      00123         setf    AOUT_UPDATE_REQ, BANKED
+               00124 
+00DA 0012      00125         return
+               00126 
+               00127 
+               00128 ;; --------------------------------------------------------------------------
+               00129 ;;  FUNCTION: AOUT_InvertedSet
+               00130 ;;  DESCRIPTION: This function sets the inversion flags for the 8 AOUT channels
+               00131 ;;  IN:   flags in WREG
+               00132 ;;  OUT:  -
+               00133 ;;  USES: BSR
+               00134 ;; --------------------------------------------------------------------------
+00DC           00135 _AOUT_InvertedSet               ; (for C)
+00DC           00136 AOUT_InvertedSet
+               00137         SET_BSR AOUT_INVERTED
+00DC 0100          M         movlb   HIGH(reg)
+00DE 6F00      00138         movwf   AOUT_INVERTED, BANKED
+00E0 0012      00139         return
+               00140 
+               00141 ;; --------------------------------------------------------------------------
+               00142 ;;  FUNCTION: AOUT_InvertedGet
+               00143 ;;  DESCRIPTION: This function returns the inversion flags for the 8 AOUT channels
+               00144 ;;  IN:   -
+               00145 ;;  OUT:  flags in WREG
+               00146 ;;  USES: BSR
+               00147 ;; --------------------------------------------------------------------------
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+00E2           00148 _AOUT_InvertedGet               ; (for C)
+00E2           00149 AOUT_InvertedGet
+               00150         SET_BSR AOUT_INVERTED
+00E2 0100          M         movlb   HIGH(reg)
+00E4 5100      00151         movf    AOUT_INVERTED, W, BANKED
+00E6 0012      00152         return
+               00153 
+               00154 
+               00155 ;; --------------------------------------------------------------------------
+               00156 ;;  FUNCTION: AOUT_Pin16bitSet
+               00157 ;;  DESCRIPTION: This function sets an output channel to a given 16-bit value.
+               00158 ;;  The output value won't be transfered to the module immediately, but will 
+               00159 ;;  be buffered in AOUT_[LH] instead. By calling AOUT_Update the requested
+               00160 ;;  changes will take place.
+               00161 ;;  IN:   channel number in WREG, 16bit value in MIOS_PARAMETER[12]
+               00162 ;;  OUT:  -
+               00163 ;;  USES: FSR1, BSR, MIOS_PARAMETER3 as temporary register
+               00164 ;; --------------------------------------------------------------------------
+00E8           00165 AOUT_Pin16bitSet
+               00166         ;; temporary store channel number in MIOS_PARAMETER3
+00E8 6E05      00167         movwf   MIOS_PARAMETER3
+               00168 
+               00169         ;; calculate address to array
+00EA EE10 F000 00170         lfsr    FSR1, AOUT_VALUES
+00EE 34E8      00171         rlf     WREG, W
+00F0 0BFE      00172         andlw   0xfe
+00F2 26E1      00173         addwf   FSR1L, F
+               00174 
+               00175         ;; check if value has been changed
+00F4 50E7      00176         movf    INDF1, W
+00F6 1803      00177         xorwf   MIOS_PARAMETER1, W
+00F8 E100      00178         bnz     AOUT_Pin16bitSet_Changed
+00FA 0E01      00179         movlw   1
+00FC 50E3      00180         movf    PLUSW1, W
+00FE 1804      00181         xorwf   MIOS_PARAMETER2, W
+0100 E000      00182         bz      AOUT_Pin16bitSet_NotChanged
+               00183 
+0102           00184 AOUT_Pin16bitSet_Changed        
+               00185         ;; transfer value to AOUT_[LH] array element
+0102 C003 FFE6 00186         movff   MIOS_PARAMETER1, POSTINC1
+0106 C004 FFE5 00187         movff   MIOS_PARAMETER2, POSTDEC1
+               00188 
+               00189         ;; notify that value has to be updated
+010A 5005      00190         movf    MIOS_PARAMETER3, W
+010C ECC6 F016 00191         call    MIOS_HLP_GetBitORMask
+               00192         SET_BSR AOUT_UPDATE_REQ
+0110 0100          M         movlb   HIGH(reg)
+0112 1300      00193         iorwf   AOUT_UPDATE_REQ, F, BANKED
+               00194 
+0114           00195 AOUT_Pin16bitSet_NotChanged
+               00196 
+0114 0012      00197         return
+               00198 
+               00199 
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00200 ;; --------------------------------------------------------------------------
+               00201 ;;  FUNCTION: AOUT_Pin7bitSet
+               00202 ;;  DESCRIPTION: This function sets an output channel to a given 7-bit value.
+               00203 ;;  Since the AOUT driver supports up to 16bit resolution, the lower bits
+               00204 ;;  will be padded with zero
+               00205 ;;  The output value won't be transfered to the module immediately, but will 
+               00206 ;;  be buffered in AOUT_[LH] instead. By calling AOUT_Update the requested
+               00207 ;;  changes will take place.
+               00208 ;;  IN:   channel number in WREG, 7bit value in MIOS_PARAMETER1
+               00209 ;;  OUT:  -
+               00210 ;;  USES: FSR1, BSR, MIOS_PARAMETER[23] as temporary registers
+               00211 ;; --------------------------------------------------------------------------
+0116           00212 AOUT_Pin7bitSet
+               00213         ;; convert 7bit to 16bit value - LSBs padded with zeros
+0116 C003 F004 00214         movff   MIOS_PARAMETER1, MIOS_PARAMETER2
+011A 90D8      00215         clrc
+011C 3604      00216         rlf     MIOS_PARAMETER2, F
+011E 6A03      00217         clrf    MIOS_PARAMETER1
+               00218 
+               00219         ;; change channel
+               00220         rgoto   AOUT_Pin16bitSet
+0120 D000          M         bra     label
+               00221 
+               00222 
+               00223 ;; --------------------------------------------------------------------------
+               00224 ;;  FUNCTION: AOUT_DigitalPinsSet
+               00225 ;;  DESCRIPTION: This function sets the digital pins of an AOUT module
+               00226 ;;  Currently only the MAX525 based MBHP_AOUT module supports two
+               00227 ;;  digital pins - they are addressed with WREG[0] and WREG[1]
+               00228 ;;  IN:   state of digital pins in WREG
+               00229 ;;  OUT:  -
+               00230 ;;  USES: FSR1, BSR, MIOS_PARAMETER3 as temporary register
+               00231 ;; --------------------------------------------------------------------------
+               00232 ;; (function located in selected aout_*.inc)
+               00233 
+               00234 
+               00235 ;; --------------------------------------------------------------------------
+               00236 ;;  FUNCTION: AOUT_Update
+               00237 ;;  DESCRIPTION: updates the output channels of the connected AOUT module
+               00238 ;;  Should be called, whenever changes have been requested via AOUT_Pin*Set
+               00239 ;;  OUT:  -
+               00240 ;;  USES: PROD[LH] and MIOS_PARAMETER[123] as temporary registers
+               00241 ;; --------------------------------------------------------------------------
+               00242 ;; (function located in selected aout_*.inc)
+               00243 
+               00244 
+               00245 
+               00246 
+               00048 
+               00049 ; ==========================================================================
+               00050         ;; C function wrappers
+               00051 
+               00052 ;_AOUT_Init     ; (no parameters)
+               00053 
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 23
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00054 ;_AOUT_ReInit   ; (no parameters)
+               00055 
+               00056 ;_AOUT_InvertedSet      ; (direct parameter passing via WREG)
+               00057 
+               00058 ;_AOUT_InvertedGet      ; (direct parameter passing via WREG)
+               00059 
+0122           00060 _AOUT_Pin16bitSet       ; (unsigned char, unsigned int)
+0122 CFE9 FFD9 00061         movff   FSR0L, FSR2L
+0126 CFDC F003 00062         movff   PREINC2, MIOS_PARAMETER1
+012A CFDC F004 00063         movff   PREINC2, MIOS_PARAMETER2
+               00064         rgoto   AOUT_Pin16bitSet
+012E D000          M         bra     label
+               00065 
+0130           00066 _AOUT_Pin7bitSet        ; (unsigned char, unsigned char)
+0130 CFE9 FFD9 00067         movff   FSR0L, FSR2L
+0134 CFDC F003 00068         movff   PREINC2, MIOS_PARAMETER1
+               00069         rgoto   AOUT_Pin7bitSet
+0138 D000          M         bra     label
+               00070 
+               00071 ;_AOUT_DigitalPinsSet   ; (direct parameter passing via WREG)
+               00072 
+               00073 ;_AOUT_Update   ; (no parameters)
+               00074 
+               00075 ; ==========================================================================
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 24
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+A                                 00000000
+ABDEN                             00000000
+ABDOVF                            00000007
+ACCESS                            00000000
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ACQT0                             00000003
+ACQT1                             00000004
+ACQT2                             00000005
+ADCON0                            00000FC2
+ADCON1                            00000FC1
+ADCON2                            00000FC0
+ADCS0                             00000000
+ADCS1                             00000001
+ADCS2                             00000002
+ADDEN                             00000003
+ADEN                              00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADIP                              00000006
+ADON                              00000000
+ADRES                             00000FC3
+ADRESH                            00000FC4
+ADRESL                            00000FC3
+AN10                              00000001
+AN11                              00000004
+AN12                              00000000
+AN4                               00000005
+AN5                               00000000
+AN6                               00000001
+AN7                               00000002
+AN8                               00000002
+AN9                               00000003
+AOUT_DigitalPinsSet               0000000A
+AOUT_INVERTED                     00000000
+AOUT_Init                         000000BC
+AOUT_InitHW                       00000000
+AOUT_Init_Loop                    000000C6
+AOUT_InvertedGet                  000000E2
+AOUT_InvertedSet                  000000DC
+AOUT_LoadWord                     000000A4
+AOUT_LoadWord_Loop                000000A8
+AOUT_Pin16bitSet                  000000E8
+AOUT_Pin16bitSet_Changed          00000102
+AOUT_Pin16bitSet_NotChanged       00000114
+AOUT_Pin7bitSet                   00000116
+AOUT_ReInit                       000000D4
+AOUT_UPDATE_REQ                   00000001
+AOUT_Update                       0000002C
+AOUT_Update_End                   00000072
+AOUT_Update_Hlp                   00000076
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 25
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+AOUT_Update_Hlp_Inverted          00000090
+AOUT_Update_Hlp_NotInverted       00000096
+AOUT_Update_Loop                  0000003E
+AOUT_Update_Loop_Next             00000062
+AOUT_VALUES                       00000002
+BANKED                            00000001
+BAUDCON                           00000FB8
+BAUDCTL                           00000FB8
+BCLIE                             00000003
+BCLIF                             00000003
+BCLIP                             00000003
+BF                                00000000
+BGST                              00000005
+BOR                               00000000
+BRG16                             00000003
+BRGH                              00000002
+BSR                               00000FE0
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1                              00000002
+CCP1CON                           00000FBD
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1IP                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           00000FBA
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2IP                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCP2_PORTB                        00000003
+CCP2_PORTC                        00000001
+CCPR1                             00000FBE
+CCPR1H                            00000FBF
+CCPR1L                            00000FBE
+CCPR2                             00000FBB
+CCPR2H                            00000FBC
+CCPR2L                            00000FBB
+CFGS                              00000006
+CHS0                              00000002
+CHS1                              00000003
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 26
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+CHS2                              00000004
+CHS3                              00000005
+CIS                               00000003
+CK                                00000006
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             00000FB4
+CMIE                              00000006
+CMIF                              00000006
+CMIP                              00000006
+CREN                              00000004
+CS                                00000002
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            00000FB5
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+CVRSS                             00000004
+D                                 00000005
+DC                                00000001
+DC1B0                             00000004
+DC1B1                             00000005
+DC2B0                             00000004
+DC2B1                             00000005
+DEBUG                             00000FD4
+DONE                              00000001
+D_A                               00000005
+ECCP1AS                           00000FB6
+ECCPAS0                           00000004
+ECCPAS1                           00000005
+ECCPAS2                           00000006
+ECCPASE                           00000007
+EEADR                             00000FA9
+EEADRH                            00000FAA
+EECON1                            00000FA6
+EECON2                            00000FA7
+EEDATA                            00000FA8
+EEIE                              00000004
+EEIF                              00000004
+EEIP                              00000004
+EEPGD                             00000007
+FAST                              00000001
+FERR                              00000002
+FREE                              00000004
+FSR0                              00000000
+FSR0H                             00000FEA
+FSR0L                             00000FE9
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 27
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+FSR1                              00000001
+FSR1H                             00000FE2
+FSR1L                             00000FE1
+FSR2                              00000002
+FSR2H                             00000FDA
+FSR2L                             00000FD9
+GCEN                              00000007
+GIE                               00000007
+GIEH                              00000007
+GIEL                              00000006
+GO                                00000001
+GO_DONE                           00000001
+HLVDCON                           00000FD2
+HLVDEN                            00000004
+HLVDIE                            00000002
+HLVDIF                            00000002
+HLVDIN                            00000005
+HLVDIP                            00000002
+HLVDL0                            00000000
+HLVDL1                            00000001
+HLVDL2                            00000002
+HLVDL3                            00000003
+IBF                               00000007
+IBOV                              00000005
+IDLEN                             00000007
+INDF0                             00000FEF
+INDF1                             00000FE7
+INDF2                             00000FDF
+INT0                              00000000
+INT0E                             00000004
+INT0F                             00000001
+INT0IE                            00000004
+INT0IF                            00000001
+INT1                              00000001
+INT1E                             00000003
+INT1F                             00000000
+INT1IE                            00000003
+INT1IF                            00000000
+INT1IP                            00000006
+INT1P                             00000006
+INT2                              00000002
+INT2E                             00000004
+INT2F                             00000001
+INT2IE                            00000004
+INT2IF                            00000001
+INT2IP                            00000007
+INT2P                             00000007
+INTCON                            00000FF2
+INTCON2                           00000FF1
+INTCON3                           00000FF0
+INTEDG0                           00000006
+INTEDG1                           00000005
+INTEDG2                           00000004
+INTSRC                            00000007
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 28
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+IOFS                              00000002
+IPEN                              00000007
+IPR1                              00000F9F
+IPR2                              00000FA2
+IRCF0                             00000004
+IRCF1                             00000005
+IRCF2                             00000006
+IRQ_TMP1                          0000000B
+IRQ_TMP2                          0000000C
+IRQ_TMP3                          0000000D
+IRQ_TMP4                          0000000E
+IRQ_TMP5                          0000000F
+IRVST                             00000005
+IVRST                             00000005
+KBI0                              00000004
+KBI1                              00000005
+KBI2                              00000006
+KBI3                              00000007
+LATA                              00000F89
+LATA0                             00000000
+LATA1                             00000001
+LATA2                             00000002
+LATA3                             00000003
+LATA4                             00000004
+LATA5                             00000005
+LATA6                             00000006
+LATA7                             00000007
+LATB                              00000F8A
+LATB0                             00000000
+LATB1                             00000001
+LATB2                             00000002
+LATB3                             00000003
+LATB4                             00000004
+LATB5                             00000005
+LATB6                             00000006
+LATB7                             00000007
+LATC                              00000F8B
+LATC0                             00000000
+LATC1                             00000001
+LATC2                             00000002
+LATC3                             00000003
+LATC4                             00000004
+LATC5                             00000005
+LATC6                             00000006
+LATC7                             00000007
+LATD                              00000F8C
+LATD0                             00000000
+LATD1                             00000001
+LATD2                             00000002
+LATD3                             00000003
+LATD4                             00000004
+LATD5                             00000005
+LATD6                             00000006
+LATD7                             00000007
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 29
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+LATE                              00000F8D
+LATE0                             00000000
+LATE1                             00000001
+LATE2                             00000002
+LVDCON                            00000FD2
+LVDEN                             00000004
+LVDIE                             00000002
+LVDIF                             00000002
+LVDIN                             00000005
+LVDIP                             00000002
+LVDL0                             00000000
+LVDL1                             00000001
+LVDL2                             00000002
+LVDL3                             00000003
+LVV0                              00000000
+LVV1                              00000001
+LVV2                              00000002
+LVV3                              00000003
+MCLR                              00000003
+MIOS_AIN_DeadbandGet              00002C5C
+MIOS_AIN_DeadbandSet              00002C60
+MIOS_AIN_DynamicPrioGet           00002DD4
+MIOS_AIN_DynamicPrioSet           00002DD0
+MIOS_AIN_LastPinsGet              00002DD8
+MIOS_AIN_Muxed                    00002C64
+MIOS_AIN_NumberGet                00002C68
+MIOS_AIN_NumberSet                00002C6C
+MIOS_AIN_Pin7bitGet               00002C70
+MIOS_AIN_PinGet                   00002C74
+MIOS_AIN_PinLSBGet                00002C78
+MIOS_AIN_PinMSBGet                00002C7C
+MIOS_AIN_UnMuxed                  00002C80
+MIOS_BANKSTICK_CtrlGet            00002DE0
+MIOS_BANKSTICK_CtrlSet            00002DDC
+MIOS_BANKSTICK_Read               00002D70
+MIOS_BANKSTICK_ReadPage           00002E30
+MIOS_BANKSTICK_Write              00002D74
+MIOS_BANKSTICK_WritePage          00002DE4
+MIOS_BOX_CFG0                     00000000
+MIOS_BOX_CFG0_20MHz               00000007
+MIOS_BOX_CFG0_LCD_TYPE0           00000000
+MIOS_BOX_CFG0_LCD_TYPE1           00000001
+MIOS_BOX_CFG0_LCD_TYPE2           00000002
+MIOS_BOX_CFG0_MBLINK              00000005
+MIOS_BOX_CFG0_MERGER              00000004
+MIOS_BOX_CFG0_TO_HOST             00000006
+MIOS_BOX_CFG0_USE_GLCD            00000003
+MIOS_BOX_CFG1                     00000001
+MIOS_BOX_CFG1_BS_A0               00000000
+MIOS_BOX_CFG1_BS_A1               00000001
+MIOS_BOX_CFG1_BS_A2               00000002
+MIOS_BOX_CFG1_BS_DIS_VERIFY       00000003
+MIOS_BOX_CFG1_IIC_STRETCH_CLK     00000004
+MIOS_BOX_STAT                     00000002
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 30
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+MIOS_BOX_STAT_AUTOREPEAT          00000004
+MIOS_BOX_STAT_BS_AVAILABLE        00000000
+MIOS_BOX_STAT_FERR                00000006
+MIOS_BOX_STAT_MBLINK_TUNNEL_PASS  00000001
+MIOS_BOX_STAT_MLCD_TRANSFER       00000005
+MIOS_BOX_STAT_SUSPEND_ALL         00000002
+MIOS_BOX_STAT_SUSPEND_USER        00000003
+MIOS_CLCD_SpecialCharInit         00002DC8
+MIOS_CLCD_SpecialCharsInit        00002DCC
+MIOS_DIN_PinAutoRepeatDisable     00002DC0
+MIOS_DIN_PinAutoRepeatEnable      00002DBC
+MIOS_DIN_PinAutoRepeatGet         00002DC4
+MIOS_DIN_PinGet                   00002CB4
+MIOS_DIN_SRGet                    00002CB8
+MIOS_DOUT_PinGet                  00002CBC
+MIOS_DOUT_PinSet                  00002CC0
+MIOS_DOUT_PinSet0                 00002CC4
+MIOS_DOUT_PinSet1                 00002CC8
+MIOS_DOUT_SRGet                   00002CCC
+MIOS_DOUT_SRSet                   00002CD0
+MIOS_Delay                        00002D9C
+MIOS_EEPROM_Read                  00002D60
+MIOS_EEPROM_ReadPage              00002E34
+MIOS_EEPROM_Write                 00002D64
+MIOS_EEPROM_WritePage             00002E38
+MIOS_ENC_Abs7bitAdd               00002CD4
+MIOS_ENC_Abs7bitGet               00002CD8
+MIOS_ENC_Abs7bitSet               00002CDC
+MIOS_ENC_MODE_DETENTED            00000080
+MIOS_ENC_MODE_DETENTED1           00000080
+MIOS_ENC_MODE_DETENTED2           00000081
+MIOS_ENC_MODE_DETENTED3           00000082
+MIOS_ENC_MODE_NON_DETENTED        00000000
+MIOS_ENC_NumberGet                00002CE0
+MIOS_ENC_SPEED_FAST               00000002
+MIOS_ENC_SPEED_NORMAL             00000001
+MIOS_ENC_SPEED_SLOW               00000000
+MIOS_ENC_SpeedGet                 00002CE4
+MIOS_ENC_SpeedSet                 00002CE8
+MIOS_FLASH_Read                   00002D68
+MIOS_FLASH_Write                  00002D6C
+MIOS_GLCD_BUFFER                  00000570
+MIOS_GLCD_FONT                    00007CFC
+MIOS_GLCD_FONT_HEIGHT             0000057E
+MIOS_GLCD_FONT_OFFSET             00000580
+MIOS_GLCD_FONT_PTRH               00000582
+MIOS_GLCD_FONT_PTRL               00000581
+MIOS_GLCD_FONT_PTRU               0000058E
+MIOS_GLCD_FONT_WIDTH              0000057D
+MIOS_GLCD_FONT_X0                 0000057F
+MIOS_GLCD_FontInit                00002D54
+MIOS_GLCD_GCURSOR_X               0000057B
+MIOS_GLCD_GCURSOR_Y               0000057C
+MIOS_GLCD_GCursorGet              00002D58
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 31
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+MIOS_GLCD_GCursorSet              00002D5C
+MIOS_GLCD_TMP1                    00000585
+MIOS_GLCD_TMP2                    00000586
+MIOS_GLCD_TMP3                    00000587
+MIOS_GLCD_TMP4                    00000588
+MIOS_GPCounterGet                 00002DA0
+MIOS_HLP_16bitAddSaturate         00002DB8
+MIOS_HLP_AddressFromTable         00002D84
+MIOS_HLP_Dec2BCD                  00002DE8
+MIOS_HLP_GetBitANDMask            00002D88
+MIOS_HLP_GetBitORMask             00002D8C
+MIOS_HLP_GetIndex_2bytes          00002D90
+MIOS_HLP_GetIndex_4bytes          00002D94
+MIOS_HLP_IndirectJump             00002D98
+MIOS_IIC_AckSend                  00002E14
+MIOS_IIC_ByteReceive              00002E10
+MIOS_IIC_ByteSend                 00002E0C
+MIOS_IIC_CtrlGet                  00002E20
+MIOS_IIC_CtrlSet                  00002E1C
+MIOS_IIC_NakSend                  00002E18
+MIOS_IIC_Start                    00002E04
+MIOS_IIC_Stop                     00002E08
+MIOS_LCD_CURSOR_POS               0000057A
+MIOS_LCD_CURSOR_POS_REAL          0000058D
+MIOS_LCD_Clear                    00002D04
+MIOS_LCD_Cmd                      00002D08
+MIOS_LCD_CursorGet                00002D0C
+MIOS_LCD_CursorSet                00002D10
+MIOS_LCD_Data                     00002D14
+MIOS_LCD_Init                     00002D18
+MIOS_LCD_MessageStart             00002DF4
+MIOS_LCD_MessageStop              00002DF8
+MIOS_LCD_OPTION1                  00000578
+MIOS_LCD_OPTION2                  00000579
+MIOS_LCD_PrintBCD1                00002D1C
+MIOS_LCD_PrintBCD2                00002D20
+MIOS_LCD_PrintBCD3                00002D24
+MIOS_LCD_PrintBCD4                00002DEC
+MIOS_LCD_PrintBCD5                00002DF0
+MIOS_LCD_PrintChar                00002D28
+MIOS_LCD_PrintHex1                00002D2C
+MIOS_LCD_PrintHex2                00002D30
+MIOS_LCD_PrintMessage             00002D34
+MIOS_LCD_PrintPreconfString       00002D38
+MIOS_LCD_PrintString              00002D3C
+MIOS_LCD_TIMEOUT0                 00000583
+MIOS_LCD_TIMEOUT1                 00000584
+MIOS_LCD_TYPE_CLCD                00000000
+MIOS_LCD_TYPE_GLCD0               00000001
+MIOS_LCD_TYPE_GLCD1               00000002
+MIOS_LCD_TYPE_GLCD2               00000003
+MIOS_LCD_TYPE_GLCD3               00000004
+MIOS_LCD_TYPE_GLCD4               00000005
+MIOS_LCD_TYPE_GLCD_CUSTOM         00000007
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 32
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+MIOS_LCD_TYPE_MLCD                00000006
+MIOS_LCD_TypeAutoSet              00002D40
+MIOS_LCD_TypeGet                  00002D44
+MIOS_LCD_TypeSet                  00002D48
+MIOS_LCD_Y0_OFFSET                00000589
+MIOS_LCD_Y1_OFFSET                0000058A
+MIOS_LCD_Y2_OFFSET                0000058B
+MIOS_LCD_Y3_OFFSET                0000058C
+MIOS_LCD_YAddressGet              00002D4C
+MIOS_LCD_YAddressSet              00002D50
+MIOS_MF_DeadbandGet               00002C94
+MIOS_MF_DeadbandSet               00002C98
+MIOS_MF_Disable                   00002C9C
+MIOS_MF_Enable                    00002CA0
+MIOS_MF_FaderMove                 00002CA4
+MIOS_MF_PWM_DutyCycleDownGet      00002C84
+MIOS_MF_PWM_DutyCycleDownSet      00002C88
+MIOS_MF_PWM_DutyCycleUpGet        00002C8C
+MIOS_MF_PWM_DutyCycleUpSet        00002C90
+MIOS_MF_PWM_PeriodGet             00002DFC
+MIOS_MF_PWM_PeriodSet             00002E00
+MIOS_MF_SuspendDisable            00002CA8
+MIOS_MF_SuspendEnable             00002CAC
+MIOS_MF_SuspendGet                00002CB0
+MIOS_MF_TouchDetectionReset       00002E2C
+MIOS_MIDI_BeginStream             00002C00
+MIOS_MIDI_DeviceIDAutoSet         00002C04
+MIOS_MIDI_DeviceIDGet             00002C08
+MIOS_MIDI_DeviceIDSet             00002C0C
+MIOS_MIDI_EndStream               00002C10
+MIOS_MIDI_INTERFACE_COMMON        00000000
+MIOS_MIDI_INTERFACE_TO_HOST       00000001
+MIOS_MIDI_Init                    00002C14
+MIOS_MIDI_InterfaceAutoSet        00002C18
+MIOS_MIDI_InterfaceGet            00002C1C
+MIOS_MIDI_InterfaceSet            00002C20
+MIOS_MIDI_MERGER_DISABLED         00000000
+MIOS_MIDI_MERGER_ENABLED          00000001
+MIOS_MIDI_MERGER_MBLINK_EP        00000002
+MIOS_MIDI_MERGER_MBLINK_FP        00000003
+MIOS_MIDI_MergerGet               00002C24
+MIOS_MIDI_MergerSet               00002C28
+MIOS_MIDI_RxBufferFree            00002C2C
+MIOS_MIDI_RxBufferGet             00002C30
+MIOS_MIDI_RxBufferPut             00002C34
+MIOS_MIDI_RxBufferUsed            00002C38
+MIOS_MIDI_TxBufferFlush           00002C3C
+MIOS_MIDI_TxBufferFree            00002C40
+MIOS_MIDI_TxBufferGet             00002C44
+MIOS_MIDI_TxBufferPut             00002C48
+MIOS_MIDI_TxBufferUsed            00002C4C
+MIOS_MPROC_MergerDisable          00002C50
+MIOS_MPROC_MergerEnable           00002C54
+MIOS_MPROC_MergerGet              00002C58
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 33
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+MIOS_PARAMETER1                   00000003
+MIOS_PARAMETER2                   00000004
+MIOS_PARAMETER3                   00000005
+MIOS_RESERVED_144                 00002E40
+MIOS_RESERVED_145                 00002E44
+MIOS_RESERVED_146                 00002E48
+MIOS_RESERVED_147                 00002E4C
+MIOS_RESERVED_148                 00002E50
+MIOS_RESERVED_149                 00002E54
+MIOS_RESERVED_150                 00002E58
+MIOS_RESERVED_151                 00002E5C
+MIOS_RESERVED_152                 00002E60
+MIOS_RESERVED_153                 00002E64
+MIOS_RESERVED_154                 00002E68
+MIOS_RESERVED_155                 00002E6C
+MIOS_RESERVED_156                 00002E70
+MIOS_RESERVED_157                 00002E74
+MIOS_RESERVED_158                 00002E78
+MIOS_RESERVED_159                 00002E7C
+MIOS_RESERVED_160                 00002E80
+MIOS_RESERVED_161                 00002E84
+MIOS_RESERVED_162                 00002E88
+MIOS_RESERVED_163                 00002E8C
+MIOS_RESERVED_164                 00002E90
+MIOS_RESERVED_165                 00002E94
+MIOS_RESERVED_166                 00002E98
+MIOS_RESERVED_167                 00002E9C
+MIOS_RESERVED_168                 00002EA0
+MIOS_RESERVED_169                 00002EA4
+MIOS_RESERVED_170                 00002EA8
+MIOS_RESERVED_171                 00002EAC
+MIOS_RESERVED_172                 00002EB0
+MIOS_RESERVED_173                 00002EB4
+MIOS_RESERVED_174                 00002EB8
+MIOS_RESERVED_175                 00002EBC
+MIOS_RESERVED_176                 00002EC0
+MIOS_RESERVED_177                 00002EC4
+MIOS_RESERVED_178                 00002EC8
+MIOS_RESERVED_179                 00002ECC
+MIOS_RESERVED_180                 00002ED0
+MIOS_RESERVED_181                 00002ED4
+MIOS_RESERVED_182                 00002ED8
+MIOS_RESERVED_183                 00002EDC
+MIOS_RESERVED_184                 00002EE0
+MIOS_RESERVED_185                 00002EE4
+MIOS_RESERVED_186                 00002EE8
+MIOS_RESERVED_187                 00002EEC
+MIOS_RESERVED_188                 00002EF0
+MIOS_RESERVED_189                 00002EF4
+MIOS_RESERVED_190                 00002EF8
+MIOS_RESERVED_191                 00002EFC
+MIOS_RESERVED_192                 00002F00
+MIOS_RESERVED_193                 00002F04
+MIOS_RESERVED_194                 00002F08
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 34
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+MIOS_RESERVED_195                 00002F0C
+MIOS_RESERVED_196                 00002F10
+MIOS_RESERVED_197                 00002F14
+MIOS_RESERVED_198                 00002F18
+MIOS_RESERVED_199                 00002F1C
+MIOS_RESERVED_200                 00002F20
+MIOS_RESERVED_201                 00002F24
+MIOS_RESERVED_202                 00002F28
+MIOS_RESERVED_203                 00002F2C
+MIOS_RESERVED_204                 00002F30
+MIOS_RESERVED_205                 00002F34
+MIOS_RESERVED_206                 00002F38
+MIOS_RESERVED_207                 00002F3C
+MIOS_RESERVED_208                 00002F40
+MIOS_RESERVED_209                 00002F44
+MIOS_RESERVED_210                 00002F48
+MIOS_RESERVED_211                 00002F4C
+MIOS_RESERVED_212                 00002F50
+MIOS_RESERVED_213                 00002F54
+MIOS_RESERVED_214                 00002F58
+MIOS_RESERVED_215                 00002F5C
+MIOS_RESERVED_216                 00002F60
+MIOS_RESERVED_217                 00002F64
+MIOS_RESERVED_218                 00002F68
+MIOS_RESERVED_219                 00002F6C
+MIOS_RESERVED_220                 00002F70
+MIOS_RESERVED_221                 00002F74
+MIOS_RESERVED_222                 00002F78
+MIOS_RESERVED_223                 00002F7C
+MIOS_RESERVED_224                 00002F80
+MIOS_RESERVED_225                 00002F84
+MIOS_RESERVED_226                 00002F88
+MIOS_RESERVED_227                 00002F8C
+MIOS_RESERVED_228                 00002F90
+MIOS_RESERVED_229                 00002F94
+MIOS_RESERVED_230                 00002F98
+MIOS_RESERVED_231                 00002F9C
+MIOS_RESERVED_232                 00002FA0
+MIOS_RESERVED_233                 00002FA4
+MIOS_RESERVED_234                 00002FA8
+MIOS_RESERVED_235                 00002FAC
+MIOS_RESERVED_236                 00002FB0
+MIOS_RESERVED_237                 00002FB4
+MIOS_RESERVED_238                 00002FB8
+MIOS_RESERVED_239                 00002FBC
+MIOS_RESERVED_240                 00002FC0
+MIOS_RESERVED_241                 00002FC4
+MIOS_RESERVED_242                 00002FC8
+MIOS_RESERVED_243                 00002FCC
+MIOS_RESERVED_244                 00002FD0
+MIOS_RESERVED_245                 00002FD4
+MIOS_RESERVED_246                 00002FD8
+MIOS_RESERVED_247                 00002FDC
+MIOS_RESERVED_248                 00002FE0
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 35
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+MIOS_RESERVED_249                 00002FE4
+MIOS_RESERVED_250                 00002FE8
+MIOS_RESERVED_251                 00002FEC
+MIOS_RESERVED_252                 00002FF0
+MIOS_RESERVED_253                 00002FF4
+MIOS_RESERVED_254                 00002FF8
+MIOS_RESERVED_255                 00002FFC
+MIOS_Reset                        00002DA4
+MIOS_SRIO_DebounceGet             00002E28
+MIOS_SRIO_DebounceSet             00002E24
+MIOS_SRIO_NumberGet               00002CEC
+MIOS_SRIO_NumberSet               00002CF0
+MIOS_SRIO_TS_SensitivityGet       00002CF4
+MIOS_SRIO_TS_SensitivitySet       00002CF8
+MIOS_SRIO_UpdateFrqGet            00002CFC
+MIOS_SRIO_UpdateFrqSet            00002D00
+MIOS_SystemResume                 00002DA8
+MIOS_SystemSuspend                00002DAC
+MIOS_TIMER_Init                   00002D78
+MIOS_TIMER_ReInit                 00002E3C
+MIOS_TIMER_Start                  00002D7C
+MIOS_TIMER_Stop                   00002D80
+MIOS_UserResume                   00002DB0
+MIOS_UserSuspend                  00002DB4
+N                                 00000004
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BOR                           00000000
+NOT_CS                            00000002
+NOT_DONE                          00000001
+NOT_MCLR                          00000003
+NOT_PD                            00000002
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RD                            00000000
+NOT_RI                            00000004
+NOT_SS                            00000005
+NOT_T1SYNC                        00000002
+NOT_T3SYNC                        00000002
+NOT_TO                            00000003
+NOT_W                             00000002
+NOT_WR                            00000001
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OSCCON                            00000FD3
+OSCFIE                            00000007
+OSCFIF                            00000007
+OSCFIP                            00000007
+OSCTUNE                           00000F9B
+OSTS                              00000003
+OV                                00000003
+P                                 00000004
+P1B                               00000005
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 36
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+P1C                               00000006
+P1D                               00000007
+PC                                00000FF9
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000FF9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+PD                                00000002
+PDC0                              00000000
+PDC1                              00000001
+PDC2                              00000002
+PDC3                              00000003
+PDC4                              00000004
+PDC5                              00000005
+PDC6                              00000006
+PEIE                              00000006
+PEN                               00000002
+PGC                               00000006
+PGD                               00000007
+PGM                               00000005
+PIE1                              00000F9D
+PIE2                              00000FA0
+PIR1                              00000F9E
+PIR2                              00000FA1
+PLLEN                             00000006
+PLUSW0                            00000FEB
+PLUSW1                            00000FE3
+PLUSW2                            00000FDB
+POR                               00000001
+PORTA                             00000F80
+PORTB                             00000F81
+PORTC                             00000F82
+PORTD                             00000F83
+PORTE                             00000F84
+POSTDEC0                          00000FED
+POSTDEC1                          00000FE5
+POSTDEC2                          00000FDD
+POSTINC0                          00000FEE
+POSTINC1                          00000FE6
+POSTINC2                          00000FDE
+PR2                               00000FCB
+PREINC0                           00000FEC
+PREINC1                           00000FE4
+PREINC2                           00000FDC
+PROD                              00000FF3
+PRODH                             00000FF4
+PRODL                             00000FF3
+PRSEN                             00000007
+PSA                               00000003
+PSP0                              00000000
+PSP1                              00000001
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 37
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+PSP2                              00000002
+PSP3                              00000003
+PSP4                              00000004
+PSP5                              00000005
+PSP6                              00000006
+PSP7                              00000007
+PSPIE                             00000007
+PSPIF                             00000007
+PSPIP                             00000007
+PSPMODE                           00000004
+PSSAC0                            00000002
+PSSAC1                            00000003
+PSSBD0                            00000000
+PSSBD1                            00000001
+PWM1CON                           00000FB7
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RA6                               00000006
+RA7                               00000007
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RBIP                              00000000
+RBPU                              00000007
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RCEN                              00000003
+RCIDL                             00000006
+RCIE                              00000005
+RCIF                              00000005
+RCIP                              00000005
+RCON                              00000FD0
+RCREG                             00000FAE
+RCSTA                             00000FAB
+RD                                00000000
+RD0                               00000000
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 38
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+RD1                               00000001
+RD16                              00000007
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+RE3                               00000003
+RI                                00000004
+RSEN                              00000001
+RX                                00000007
+RX9                               00000006
+RX9D                              00000000
+R_W                               00000002
+S                                 00000003
+SBOREN                            00000006
+SCK                               00000003
+SCKP                              00000004
+SCL                               00000003
+SCS0                              00000000
+SCS1                              00000001
+SDA                               00000004
+SDI                               00000004
+SDO                               00000005
+SEN                               00000000
+SENDB                             00000003
+SMP                               00000007
+SP0                               00000000
+SP1                               00000001
+SP2                               00000002
+SP3                               00000003
+SP4                               00000004
+SPBRG                             00000FAF
+SPBRGH                            00000FB0
+SPEN                              00000007
+SREN                              00000005
+SS                                00000005
+SSPADD                            00000FC8
+SSPBUF                            00000FC9
+SSPCON1                           00000FC6
+SSPCON2                           00000FC5
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPIP                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 39
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+SSPSTAT                           00000FC7
+STATUS                            00000FD8
+STKFUL                            00000007
+STKOVF                            00000007
+STKPTR                            00000FFC
+STKPTR0                           00000000
+STKPTR1                           00000001
+STKPTR2                           00000002
+STKPTR3                           00000003
+STKPTR4                           00000004
+STKUNF                            00000006
+SWDTE                             00000000
+SWDTEN                            00000000
+SYNC                              00000004
+T016BIT                           00000006
+T08BIT                            00000006
+T0CKI                             00000004
+T0CON                             00000FD5
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0PS0                             00000000
+T0PS1                             00000001
+T0PS2                             00000002
+T0SE                              00000004
+T13CKI                            00000000
+T1CKI                             00000000
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000FCD
+T1OSCEN                           00000003
+T1OSI                             00000001
+T1OSO                             00000000
+T1RUN                             00000006
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000FCA
+T2OUTPS0                          00000003
+T2OUTPS1                          00000004
+T2OUTPS2                          00000005
+T2OUTPS3                          00000006
+T3CCP1                            00000003
+T3CCP2                            00000006
+T3CKPS0                           00000004
+T3CKPS1                           00000005
+T3CON                             00000FB1
+T3SYNC                            00000002
+TABLAT                            00000FF5
+TBLPTR                            00000FF6
+TBLPTRH                           00000FF7
+TBLPTRL                           00000FF6
+TBLPTRU                           00000FF8
+TMP1                              00000006
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 40
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+TMP2                              00000007
+TMP3                              00000008
+TMP4                              00000009
+TMP5                              0000000A
+TMR0H                             00000FD7
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR0IP                            00000002
+TMR0L                             00000FD6
+TMR0ON                            00000007
+TMR1CS                            00000001
+TMR1H                             00000FCF
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1IP                            00000000
+TMR1L                             00000FCE
+TMR1ON                            00000000
+TMR2                              00000FCC
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2IP                            00000001
+TMR2ON                            00000002
+TMR3CS                            00000001
+TMR3H                             00000FB3
+TMR3IE                            00000001
+TMR3IF                            00000001
+TMR3IP                            00000001
+TMR3L                             00000FB2
+TMR3ON                            00000000
+TO                                00000003
+TOS                               00000FFD
+TOSH                              00000FFE
+TOSL                              00000FFD
+TOSU                              00000FFF
+TRISA                             00000F92
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISA6                            00000006
+TRISA7                            00000007
+TRISB                             00000F93
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000F94
+TRISC0                            00000000
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 41
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000F95
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000F96
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TUN0                              00000000
+TUN1                              00000001
+TUN2                              00000002
+TUN3                              00000003
+TUN4                              00000004
+TX                                00000006
+TX9                               00000006
+TX9D                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXIP                              00000004
+TXREG                             00000FAD
+TXSTA                             00000FAC
+UA                                00000001
+VCFG0                             00000004
+VCFG1                             00000005
+VDIRMAG                           00000007
+VPP                               00000003
+W                                 00000000
+WCOL                              00000007
+WDTCON                            00000FD1
+WR                                00000001
+WREG                              00000FE8
+WREN                              00000002
+WRERR                             00000003
+WUE                               00000001
+Z                                 00000002
+_AOUT_DigitalPinsSet              0000000A
+_AOUT_Init                        000000BC
+_AOUT_InvertedGet                 000000E2
+_AOUT_InvertedSet                 000000DC
+_AOUT_Pin16bitSet                 00000122
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 42
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_AOUT_Pin7bitSet                  00000130
+_AOUT_ReInit                      000000D4
+_AOUT_Update                      0000002C
+_BOREN_NOSLP_2L                   000000FD
+_BOREN_OFF_2L                     000000F9
+_BOREN_ON_2L                      000000FB
+_BOREN_SBORDIS_2L                 000000FF
+_BORV_0_2L                        000000E7
+_BORV_1_2L                        000000EF
+_BORV_2_2L                        000000F7
+_BORV_3_2L                        000000FF
+_CCP2MX_PORTBE_3H                 000000FE
+_CCP2MX_PORTC_3H                  000000FF
+_CONFIG1H                         00300001
+_CONFIG2H                         00300003
+_CONFIG2L                         00300002
+_CONFIG3H                         00300005
+_CONFIG4L                         00300006
+_CONFIG5H                         00300009
+_CONFIG5L                         00300008
+_CONFIG6H                         0030000B
+_CONFIG6L                         0030000A
+_CONFIG7H                         0030000D
+_CONFIG7L                         0030000C
+_CP0_OFF_5L                       000000FF
+_CP0_ON_5L                        000000FE
+_CP1_OFF_5L                       000000FF
+_CP1_ON_5L                        000000FD
+_CP2_OFF_5L                       000000FF
+_CP2_ON_5L                        000000FB
+_CP3_OFF_5L                       000000FF
+_CP3_ON_5L                        000000F7
+_CPB_OFF_5H                       000000FF
+_CPB_ON_5H                        000000BF
+_CPD_OFF_5H                       000000FF
+_CPD_ON_5H                        0000007F
+_DEBUG_OFF_4L                     000000FF
+_DEBUG_ON_4L                      0000007F
+_DEVID1                           003FFFFE
+_DEVID2                           003FFFFF
+_EBTR0_OFF_7L                     000000FF
+_EBTR0_ON_7L                      000000FE
+_EBTR1_OFF_7L                     000000FF
+_EBTR1_ON_7L                      000000FD
+_EBTR2_OFF_7L                     000000FF
+_EBTR2_ON_7L                      000000FB
+_EBTR3_OFF_7L                     000000FF
+_EBTR3_ON_7L                      000000F7
+_EBTRB_OFF_7H                     000000FF
+_EBTRB_ON_7H                      000000BF
+_FCMEN_OFF_1H                     000000BF
+_FCMEN_ON_1H                      000000FF
+_IDLOC0                           00200000
+_IDLOC1                           00200001
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 43
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_IDLOC2                           00200002
+_IDLOC3                           00200003
+_IDLOC4                           00200004
+_IDLOC5                           00200005
+_IDLOC6                           00200006
+_IDLOC7                           00200007
+_IESO_OFF_1H                      0000007F
+_IESO_ON_1H                       000000FF
+_LPT1OSC_OFF_3H                   000000FB
+_LPT1OSC_ON_3H                    000000FF
+_LVP_OFF_4L                       000000FB
+_LVP_ON_4L                        000000FF
+_MCLRE_OFF_3H                     0000007F
+_MCLRE_ON_3H                      000000FF
+_OSC_ECIO6_1H                     000000F5
+_OSC_EC_1H                        000000F4
+_OSC_HSPLL_1H                     000000F6
+_OSC_HS_1H                        000000F2
+_OSC_INTIO67_1H                   000000F8
+_OSC_INTIO7_1H                    000000F9
+_OSC_LP_1H                        000000F0
+_OSC_RCIO6_1H                     000000F7
+_OSC_RC_1H                        000000F3
+_OSC_XT_1H                        000000F1
+_PBADEN_OFF_3H                    000000FD
+_PBADEN_ON_3H                     000000FF
+_PWRT_OFF_2L                      000000FF
+_PWRT_ON_2L                       000000FE
+_STVREN_OFF_4L                    000000FE
+_STVREN_ON_4L                     000000FF
+_WDTPS_1024_2H                    000000F5
+_WDTPS_128_2H                     000000EF
+_WDTPS_16384_2H                   000000FD
+_WDTPS_16_2H                      000000E9
+_WDTPS_1_2H                       000000E1
+_WDTPS_2048_2H                    000000F7
+_WDTPS_256_2H                     000000F1
+_WDTPS_2_2H                       000000E3
+_WDTPS_32768_2H                   000000FF
+_WDTPS_32_2H                      000000EB
+_WDTPS_4096_2H                    000000F9
+_WDTPS_4_2H                       000000E5
+_WDTPS_512_2H                     000000F3
+_WDTPS_64_2H                      000000ED
+_WDTPS_8192_2H                    000000FB
+_WDTPS_8_2H                       000000E7
+_WDT_OFF_2H                       000000FE
+_WDT_ON_2H                        000000FF
+_WRT0_OFF_6L                      000000FF
+_WRT0_ON_6L                       000000FE
+_WRT1_OFF_6L                      000000FF
+_WRT1_ON_6L                       000000FD
+_WRT2_OFF_6L                      000000FF
+_WRT2_ON_6L                       000000FB
+gpasm-0.13.6 beta               C:\trunk/modules/aout/aout.asm7-10-2008  15:16:08          PAGE 44
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_WRT3_OFF_6L                      000000FF
+_WRT3_ON_6L                       000000F7
+_WRTB_OFF_6H                      000000FF
+_WRTB_ON_6H                       000000BF
+_WRTC_OFF_6H                      000000FF
+_WRTC_ON_6H                       000000DF
+_WRTD_OFF_6H                      000000FF
+_WRTD_ON_6H                       0000007F
+_XINST_OFF_4L                     000000BF
+_XINST_ON_4L                      000000FF
+__18F4620                         00000001
+AOUT_LAT_CS                       LATC
+AOUT_LAT_DIN                      LATC
+AOUT_LAT_SCLK                     LATD
+AOUT_PIN_CS                       5
+AOUT_PIN_DIN                      4
+AOUT_PIN_SCLK                     5
+AOUT_TRIS_CS                      TRISC
+AOUT_TRIS_DIN                     TRISC
+AOUT_TRIS_SCLK                    TRISD
+DDRA                              TRISA
+DDRB                              TRISB
+DDRC                              TRISC
+DDRD                              TRISD
+DDRE                              TRISE
+PIC_DERIVATIVE_CMCON_INIT         1
+PIC_DERIVATIVE_CODE_SIZE          0x10000
+PIC_DERIVATIVE_EEPROM_SIZE        0x400
+PIC_DERIVATIVE_IRQ_WORKAROUND     1
+PIC_DERIVATIVE_NEW_ADC            1
+PIC_DERIVATIVE_RAM_SIZE           0xf80
+PIC_DERIVATIVE_SET_LCD_4BIT       0
+PIC_DERIVATIVE_T08BIT_INVERTED    1
+clrc                              bcf	STATUS, C
+clrz                              bcf	STATUS, Z
+rlf                               rlcf
+rrf                               rrcf
+setc                              bsf	STATUS, C
+setz                              bsf	STATUS, Z
+skpc                              btfss	STATUS, C
+skpdc                             btfss	STATUS, DC
+skpnc                             btfsc	STATUS, C
+skpndc                            btfsc	STATUS, DC
+skpnz                             btfsc	STATUS, Z
+skpz                              btfss	STATUS, Z
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+
