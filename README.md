@@ -24,3 +24,8 @@ Using TTL switch, even if it's hard to make them 100% "clickless" (without any a
 
 some more info on the original MIDIbox forum post:
 http://midibox.org/forums/topic/9943-the-mox-philteranalog-toolbox-based/
+
+
+
+another one of my MIDIbox projects : MB_SEQ V2:
+![florian1](https://user-images.githubusercontent.com/6513268/224491552-1c1923c0-46ea-4b8a-94a7-533a1eb918c3.jpg)
