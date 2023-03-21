@@ -3,6 +3,7 @@
 Firmware for MIOS based Dual analog Multimode filter with digital modulations.
 
 The analog filters of the prototype are using CEM3378 Analog Filter & VCA ICs, unfortunately this chips are now impossible to source, even for a high price :-(
+
 cem3378/79 : http://www.buchty.net/ensoniq/files/cem3379.pdf
 
 It's seems that the Multimode filter CEM3320 chip have been reissued at a reasonable price (info here:
